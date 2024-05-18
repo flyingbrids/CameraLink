@@ -1,0 +1,17 @@
+*.dcp
+*.veo
+*.vho
+CPU_system/
+LizzieSate/
+IP/*/*.xdc
+IP/*/*.xml
+IP/*/*.v
+IP/*/*.vhd
+IP/*/*.vhdl
+IP/*/*.txt
+IP/*/*/*.xdc
+IP/*/*/*.xml
+IP/*/*/*.v
+IP/*/*/*.vhd
+IP/*/*/*.vhdl
+IP/*/*/*.txt
