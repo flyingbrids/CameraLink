@@ -21,21 +21,24 @@
 module cameralink_base_phy(
 input		        sys_rst,					
 input		        sys_clk,	
-input               ref_clk,			
+input               delay_ready,			
 input		        clkin_p,  clkin_n,	
 input      [3:0]	datain_p, datain_n,
+input      [15:0]   lineWidth,
 output     [23:0]	pixel_data_o,   // 2 pixel with 12 bit each px		
 output reg          pixel_vld,
 output              new_frame,
 output              frame_valid,
-output              locked
+output              locked,
+input               camera_in_progress,
+input               cameraSel
 ) ; 	
 		
 wire		rx_mmcm_lckdps ;		
 wire    	rx_mmcm_lckdpsbs ;	
 wire		rx_mmcm_lckd ;	
-wire		rxclk_div ;			
-wire		delay_ready ;		
+wire		rxclk_div ;		
+		
 wire [27:0]	rxdall ;	
 wire [6:0]  X0;
 wire [6:0]  X1;
@@ -57,12 +60,6 @@ assign portC = {X3[1],X3[2],X2[3],X2[4],X2[5],X2[6],X1[0],X1[1]};
 assign LVAL = X2[2];
 assign FVAL = X2[1];
 assign DVAL = X2[0];
-
-IDELAYCTRL icontrol (              			
-	.REFCLK			(ref_clk),
-	.RST			(sys_rst),
-	.RDY			(delay_ready)
-);
 	
 SerdesWrap #(
 	.N			        (1),
@@ -102,22 +99,43 @@ reg [1:0] frame_valid_d;
 reg pixel_wr;
 wire empty;
 wire rd_en;
+reg line_rd;
+wire dmaIdle;
+wire dmaBusy2Idle;
+wire cameraSel_sync;
 
-assign rd_en = ~empty & frame_valid_d[1];
+assign rd_en = ~empty & line_rd;
 
 reg [1:0] frame_valid_state;
 reg Fvalid;
+wire fifo_rst; 
+assign fifo_rst = (frame_valid_state == 2'd2)? 1'b0: 1'b1;
+
 always @ (posedge rxclk_div) begin
-     pixel_wr <= rx_mmcm_lckdpsbs & LVAL & FVAL & DVAL & frame_valid_state[1]; 
-     Fvalid   <= rx_mmcm_lckdpsbs & FVAL & frame_valid_state[1];
+     pixel_wr <= rx_mmcm_lckdpsbs & LVAL & FVAL & DVAL & frame_valid_state[1];      
      pixel_data_in <= {portB[7:4], portC, portB[3:0], portA};
+     
+     if (rx_mmcm_lckdpsbs & (frame_valid_state == 2'd2)) begin
+         if (FVAL)
+            Fvalid <= 1'b1;
+         else if (empty)
+            Fvalid <= 1'b0; 
+     end else begin
+        Fvalid <= 1'b0;
+     end 
+         
      if (rx_mmcm_lckdpsbs) begin
         if ((frame_valid_state == 0) & FVAL) 
             frame_valid_state <= 2'd1;  
-        else if ((frame_valid_state == 1) & ~FVAL)
-            frame_valid_state <= 2'd2;    
+        else if ((frame_valid_state == 1) & ~FVAL & dmaIdle & cameraSel_sync)
+            frame_valid_state <= 2'd2; 
+        else if ((frame_valid_state == 2) & dmaBusy2Idle)   
+            frame_valid_state <= 2'd3; 
+        else if ((frame_valid_state == 3) & ~FVAL & dmaIdle & cameraSel_sync)
+            frame_valid_state <= 2'd2; 
      end else 
-        frame_valid_state <= 0;
+        frame_valid_state <= 0;        
+  
 end 
 
 always @ (posedge sys_clk) begin
@@ -125,16 +143,46 @@ always @ (posedge sys_clk) begin
      frame_valid_d <= {frame_valid_d[0],frame_valid};
 end 
 
+wire full, full_sync;
+
 cameralink_base_fifo cameralink_base_fifo_inst
 (
    .din   (pixel_data_in)
-  ,.wr_en (pixel_wr)
+  ,.wr_en (pixel_wr & ~fifo_rst)
+  ,.prog_full (full) 
   ,.empty (empty)
   ,.dout  (pixel_data_o)
   ,.rd_en (rd_en)
-  ,.rst   (sys_rst)
+  ,.rst   (sys_rst | fifo_rst)
   ,.wr_clk (rxclk_div)
   ,.rd_clk (sys_clk)  
+);
+
+reg [15:0] rd_cnt;
+always @ (posedge sys_clk, posedge sys_rst) begin
+      if (sys_rst) begin
+          line_rd <= 1'b0;
+          rd_cnt  <= 16'd0;
+      end else if (fifo_rst) begin
+          line_rd <= 1'b0;
+          rd_cnt  <= 16'd0;
+      end else if (frame_valid_d[1]) begin
+          if (full_sync & ~line_rd) begin
+             line_rd <= 1'b1;
+             rd_cnt  <= 16'd0;         
+          end else if (line_rd) begin
+             rd_cnt  <= rd_cnt + 16'd2;
+             line_rd <=  (rd_cnt < lineWidth-2)? 1'b1 : 1'b0; 
+          end 
+      end 
+end 
+
+CDC_sync FULL_CDC (
+  .sig_in  (full)
+ ,.clk_b   (sys_clk)
+ ,.rst_b   (sys_rst)
+ ,.sig_sync(full_sync)
+ ,.pulse_sync()
 );
 
 CDC_sync FVAL_CDC (
@@ -150,6 +198,22 @@ CDC_sync LOCKED_CDC (
  ,.clk_b   (sys_clk)
  ,.rst_b   (sys_rst)
  ,.sig_sync(locked)
+ ,.pulse_sync()
+);
+
+CDC_sync BUSY_CDC (
+  .sig_in  (~camera_in_progress)
+ ,.clk_b   (rxclk_div)
+ ,.rst_b   (~rx_mmcm_lckdpsbs)
+ ,.sig_sync(dmaIdle)
+ ,.pulse_sync(dmaBusy2Idle)
+);
+
+CDC_sync SEL_CDC (
+  .sig_in  (cameraSel)
+ ,.clk_b   (rxclk_div)
+ ,.rst_b   (~rx_mmcm_lckdpsbs)
+ ,.sig_sync(cameraSel_sync)
  ,.pulse_sync()
 );
 

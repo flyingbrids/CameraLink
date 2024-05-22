@@ -30,8 +30,8 @@ module cameralink_generator
        ,output logic [1:0] clk_n
        ,input  logic [15:0] imageWidth
        ,input  logic [15:0] imageHeight
-       ,input  logic [15:0] frame_cnt
-       ,input  logic sys_rst
+       ,input  logic frame_end
+       ,input  logic sys_rst       
 );
 
 bit bit_clk;
@@ -66,24 +66,21 @@ endfunction
 
 logic [11:0] imageData [PIX_PER_TAP-1:0];
 logic [2:0]shiftCnt;  
+int i,j,k,d,t;
     
-task automatic load_image;
-  int i,j,k,d,t;
+task automatic load_image;  
   int img, file;
   string pixel;
   begin
     // file process
+    while (~frame_end) begin
     file = $fopen("imgr.hex","r");
-    img  = $fopen($sformatf("imgr%0d.pgm",frame_cnt+1),"w");
-    $fwrite(img,"P2\n%d%d\n# CREATOR: Shen\n1023\n",imageWidth,imageHeight);
+    img = $fopen($sformatf("Loadimgr_%0dppc.txt", PIX_PER_TAP),"w"); 
     for (i = 0; i < imageHeight; i++) begin
       Fval = 1;
       // 1 clk delay between each row
-      @(posedge pixel_clk)
       Lval = 1'b0;
-      for (d = 0; d < 1; d++) begin
-        @(posedge pixel_clk);
-      end
+      Dval = 1'b0;
       wait (shiftCnt == 6);
       wait (shiftCnt == 0);
       for (j = 0; j < imageWidth/PIX_PER_TAP; j++) begin  
@@ -97,16 +94,17 @@ task automatic load_image;
         wait (shiftCnt == 6);
         wait (shiftCnt == 0); 
       end
-      $display("<<TESTBENCH NOTE>> image row %d is captured!",i);
+      //$display("<<TESTBENCH NOTE>> image row %d is captured!",i);
     end
     Lval = 1'b0;
     Dval = 1'b0;
     Fval = 1'b0;
-    $display("<<TESTBENCH NOTE>> raw image captured!");
+    //$display("<<TESTBENCH NOTE>> raw image captured!");
     $fclose(img);
     $fclose(file);
     #500;    
   end
+  end 
 endtask
     
 // Scramble cameralink data

@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 module cameralink_tb();
 
-localparam FRAME_CNT    = 2;   // # of test image 
+localparam FRAME_CNT    = 4;   // # of test image 
 
 localparam CLOCK_FREQ_1   = 125; // MHz
 localparam CLOCK_PERIOD_1 = (1000ns/CLOCK_FREQ_1);
@@ -67,47 +67,62 @@ task wait_for_new_frame;
   $display("<<TESTBENCH NOTE>> frame %0d requested", frame_cnt+1);
 endtask
 
-bit clk_p_hawk, x_3_p_hawk, x_2_p_hawk, x_1_p_hawk, x_0_p_hawk;
-bit clk_n_hawk, x_3_n_hawk, x_2_n_hawk, x_1_n_hawk, x_0_n_hawk;
+logic [2*4-1:0]  datain1_p; 
+logic [2*4-1:0]  datain1_n;
+logic [1:0]  clk1_p; 
+logic [1:0]  clk1_n;
 
-logic [2*4-1:0]  datain_p; 
-logic [2*4-1:0]  datain_n;
-logic [1:0]  clk_p; 
-logic [1:0]  clk_n;
+logic [2*4-1:0]  datain0_p; 
+logic [2*4-1:0]  datain0_n;
+logic [1:0]  clk0_p; 
+logic [1:0]  clk0_n;
+
 logic [15:0] imageWidth_hawk;
 logic [15:0] imageHeight_hawk;
-logic serde_locked ;
+logic [15:0] imageWidth_owl;
+logic [15:0] imageHeight_owl;
+
+logic serde_locked;
+logic frame_end = '0;
 
 assign imageWidth_hawk = 1944;
 assign imageHeight_hawk = 2;
+assign imageWidth_owl = 1280;
+assign imageHeight_owl = 2;
+
+cameralink_generator
+#(
+       .PIXEL_CLOCK_PERIOD (1000ns/70.00)
+      ,.PIX_PER_TAP (4)
+)
+owlCamera
+(
+        .datain_p   (datain1_p)
+       ,.datain_n   (datain1_n)
+       ,.clk_p      (clk1_p)
+       ,.clk_n      (clk1_n)
+       ,.imageWidth (imageWidth_owl)
+       ,.imageHeight(imageHeight_owl)
+       ,.frame_end  (frame_end)
+       ,.sys_rst    (sys_rst)
+);
 
 cameralink_generator
 #(
        .PIXEL_CLOCK_PERIOD (1000ns/74.25)
       ,.PIX_PER_TAP (2)
 )
- hawk_camera
+hawkCamera
 (
-        .datain_p   (datain_p)
-       ,.datain_n   (datain_n)
-       ,.clk_p      (clk_p)
-       ,.clk_n      (clk_n)
+        .datain_p   (datain0_p)
+       ,.datain_n   (datain0_n)
+       ,.clk_p      (clk0_p)
+       ,.clk_n      (clk0_n)
        ,.imageWidth (imageWidth_hawk)
        ,.imageHeight(imageHeight_hawk)
-       ,.frame_cnt  (frame_cnt)
+       ,.frame_end  (frame_end)
        ,.sys_rst    (sys_rst)
 );
-
-assign x_3_p_hawk = datain_p[3];
-assign x_2_p_hawk = datain_p[2];
-assign x_1_p_hawk = datain_p[1];
-assign x_0_p_hawk = datain_p[0];
-assign x_3_n_hawk = datain_n[3];
-assign x_2_n_hawk = datain_n[2];
-assign x_1_n_hawk = datain_n[1];
-assign x_0_n_hawk = datain_n[0];
-assign clk_p_hawk = clk_p[0];
-assign clk_n_hawk = clk_n[0];
 
 logic [63:0]S_AXIS_S2MM_0_tdata;
 logic [7:0]S_AXIS_S2MM_0_tkeep;
@@ -117,50 +132,94 @@ logic S_AXIS_S2MM_0_tready;
 always @ (posedge sys_clk, posedge sys_rst) begin
      if (sys_rst)
         S_AXIS_S2MM_0_tready <= '0;
-     else if (DUT.DMAWrite_inst.data_count[3])
+     else if (camera_receiver.DMAWrite_inst.data_count[3])
         S_AXIS_S2MM_0_tready <= '1;
-     else if (DUT.DMAWrite_inst.empty & ~DUT.DMAWrite_inst.data_end)
+     else if (camera_receiver.DMAWrite_inst.empty & ~camera_receiver.DMAWrite_inst.data_end)
         S_AXIS_S2MM_0_tready <= '0;
 end 
 
- HawkCameraCtrl DUT
- (
-        .clkin_p             (clk_p_hawk)
-       ,.clkin_n	         (clk_n_hawk)
-       ,.datain_p            ({x_3_p_hawk,x_2_p_hawk,x_1_p_hawk,x_0_p_hawk})
-       ,.datain_n            ({x_3_n_hawk,x_2_n_hawk,x_1_n_hawk,x_0_n_hawk})
-       ,.imageWidth          (imageWidth_hawk)
-       ,.imageHeight         (imageHeight_hawk)
-       ,.sys_clk             (sys_clk)
-       ,.ref_clk             (ref_clk)
-       ,.sys_rst             (sys_rst)
-       ,.capture             (new_frame)
-       ,.serde_locked        (serde_locked)
-       ,.testMode            (0)
-       ,.S_AXIS_S2MM_0_tdata (S_AXIS_S2MM_0_tdata)
-       ,.S_AXIS_S2MM_0_tkeep (S_AXIS_S2MM_0_tkeep)
-       ,.S_AXIS_S2MM_0_tlast (S_AXIS_S2MM_0_tlast)
-       ,.S_AXIS_S2MM_0_tready((|frame_cnt) | S_AXIS_S2MM_0_tready)
-       ,.S_AXIS_S2MM_0_tvalid(S_AXIS_S2MM_0_tvalid)  
- );
+logic cameraSel,camera_in_progress;
+assign cameraSel = frame_cnt[0]; 
+
+camera camera_receiver(
+       // camera link
+       .hawk_clk_n   (clk0_n[0])
+      ,.hawk_clk_p   (clk0_p[0])
+      ,.owl_clk_1_n  (clk1_n[0])
+      ,.owl_clk_1_p  (clk1_p[0])
+      ,.owl_clk_2_n  (clk1_n[1])
+      ,.owl_clk_2_p  (clk1_p[1])
+      ,.data_hawk_p  (datain0_p[3:0])
+      ,.data_hawk_n  (datain0_n[3:0])
+      ,.data_owl_p   (datain1_p)
+      ,.data_owl_n   (datain1_n)
+      // system 
+      ,.ref_clk      (ref_clk)
+      ,.sys_clk      (sys_clk)
+      ,.sys_rst      (sys_rst)
+      ,.new_capture  (new_frame)
+      ,.cameraSel    (cameraSel)
+      ,.testMode     (0)
+      ,.hawk_image_height (imageHeight_hawk)
+      ,.hawk_image_width  (imageWidth_hawk)
+      ,.owl_image_height  (imageHeight_owl)
+      ,.owl_image_width   (imageWidth_owl)
+      ,.serde_locked      (serde_locked)
+      ,.camera_in_progress(camera_in_progress)
+      // DMA
+      ,.S_AXIS_S2MM_0_tdata (S_AXIS_S2MM_0_tdata)
+      ,.S_AXIS_S2MM_0_tkeep (S_AXIS_S2MM_0_tkeep)
+      ,.S_AXIS_S2MM_0_tlast (S_AXIS_S2MM_0_tlast)
+      ,.S_AXIS_S2MM_0_tready(S_AXIS_S2MM_0_tready)
+      ,.S_AXIS_S2MM_0_tvalid(S_AXIS_S2MM_0_tvalid)               
+);
+
+task image_receive;
+   while (frame_cnt < FRAME_CNT) begin   
+         wait (serde_locked == 1'b1);     
+         wait_for_new_frame ();
+         wait (camera_in_progress == 1);
+         wait (camera_in_progress == 0);
+         frame_cnt = frame_cnt + 1;
+   end 
+   frame_end = 1'b1;
+endtask
+
+logic [191:0] DMAdata;
+logic [1:0] buffer_full_cnt;
+
+task DMA_data_write;
+int file; 
+   while (frame_cnt < FRAME_CNT) begin  
+        file = $fopen($sformatf("DMAimgr%0d.txt",frame_cnt+1),"w"); 
+        buffer_full_cnt = 0;
+        wait (camera_in_progress == 1'b1);
+        while (camera_in_progress) begin              
+              wait (S_AXIS_S2MM_0_tready & S_AXIS_S2MM_0_tvalid == 1'b1);              
+              DMAdata = {S_AXIS_S2MM_0_tdata,DMAdata[191:64]};
+              buffer_full_cnt = buffer_full_cnt + 1;
+              if (buffer_full_cnt == 3) begin
+                 buffer_full_cnt = 0;
+                 for (int i = 0 ; i < 16; i++ )
+                  $fwrite(file,"%d\n",DMAdata[i*12 +: 12]);              
+              end
+              @(posedge sys_clk); 
+              #1;               
+        end
+        $fclose(file); 
+   end 
+endtask
 
 // main function
 initial begin
-  wait_for_reset();
-  while (~serde_locked) begin  
-  hawk_camera.load_image();  
-  end 
-  for (frame_cnt = 0; frame_cnt < FRAME_CNT; frame_cnt++) begin
-       wait_for_new_frame();
-       hawk_camera.load_image();
-       wait (DUT.DMAWrite_inst.S_AXIS_S2MM_0_tlast_lat == 1'b1);
-       #500;
-  end 
+  wait_for_reset(); 
+  fork  
+     owlCamera.load_image();
+     hawkCamera.load_image();
+     image_receive();
+     DMA_data_write();
+  join
   $stop();
 end   
-       
-
-
-
-
+ 
 endmodule

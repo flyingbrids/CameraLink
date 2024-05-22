@@ -41,25 +41,18 @@ module LizzeSat_Top(
   ,inout  logic  [53:0]FIXED_IO_mio
   ,inout  logic  FIXED_IO_ps_clk
   ,inout  logic  FIXED_IO_ps_porb
-  ,inout  logic  FIXED_IO_ps_srstb
-  // LVDS cameralink 
-  ,input  logic  clk_p_hawk
-  ,input  logic  clk_n_hawk
-  ,input  logic  x_0_p_hawk
-  ,input  logic  x_0_n_hawk
-  ,input  logic  x_1_p_hawk
-  ,input  logic  x_1_n_hawk  
-  ,input  logic  x_2_p_hawk
-  ,input  logic  x_2_n_hawk
-  ,input  logic  x_3_p_hawk
-  ,input  logic  x_3_n_hawk    
-  // Device UART
-//  ,input  logic  uart_hawk_rxd
-//  ,output logic  uart_hawk_txd
-//  ,input  logic  uart_owl_rxd
-//  ,output logic  uart_owl_txd 
-//  ,input  logic  uart_xband_rxd
-//  ,output logic  uart_xband_txd    
+  ,inout  logic  FIXED_IO_ps_srstb   
+  // camera link
+  ,input  logic hawk_clk_n
+  ,input  logic hawk_clk_p
+  ,input  logic owl_clk_1_n
+  ,input  logic owl_clk_1_p  
+  ,input  logic owl_clk_2_n
+  ,input  logic owl_clk_2_p
+  ,input  logic [3:0] data_hawk_p
+  ,input  logic [3:0] data_hawk_n
+  ,input  logic [7:0] data_owl_p
+  ,input  logic [7:0] data_owl_n 
 );
 
 logic sys_clk, ref_clk;
@@ -157,9 +150,11 @@ CPU_system_wrapper(
 //    .uart_rtl_2_txd  (uart_xband_txd)
 );    
 // AXI4-Lite Register bank
-logic capture, testMode;
+logic capture, testMode, cameraSel, serde_locked, camera_in_progress;
 logic [15:0] HawkImageWidth;
 logic [15:0] HawkImageHeight;
+logic [15:0] OwlImageWidth;
+logic [15:0] OwlImageHeight;
 
 axi_register axi_register_bank(
 	    .S_AXI_ACLK    (sys_clk),
@@ -185,60 +180,38 @@ axi_register axi_register_bank(
 		.S_AXI_RREADY  (AXI_0_rready)
 	);
 
-// Hawk Camera interface
-//logic [3:0] T; 
-//logic [3:0] I;
-
-//IOBUFDS IOBUFDS_inst0 (
-//.O(O), // data received from cameralink
-//.I(I[0]), // data driven by FPGA
-//.IO(x_0_p_hawk), // 1-bit inout: Diff_p inout (connect directly to top-level port)
-//.IOB(x_0_n_hawk), // 1-bit inout: Diff_n inout (connect directly to top-level port)
-//.T(T[0]) // 1-bit input: 3-state enable input
-//);
-
-//IOBUFDS IOBUFDS_inst1 (
-//.O(O), // data received from cameralink
-//.I(I[0]), // data driven by FPGA
-//.IO(x_1_p_hawk), // 1-bit inout: Diff_p inout (connect directly to top-level port)
-//.IOB(x_1_n_hawk), // 1-bit inout: Diff_n inout (connect directly to top-level port)
-//.T(T[1]) // 1-bit input: 3-state enable input
-//);
-
-//IOBUFDS IOBUFDS_inst2 (
-//.O(O), // data received from cameralink
-//.I(I[0]), // data driven by FPGA
-//.IO(x_2_p_hawk), // 1-bit inout: Diff_p inout (connect directly to top-level port)
-//.IOB(x_2_n_hawk), // 1-bit inout: Diff_n inout (connect directly to top-level port)
-//.T(T[2]) // 1-bit input: 3-state enable input
-//);
-
-//IOBUFDS IOBUFDS_inst3 (
-//.O(O), // data received from cameralink
-//.I(I[0]), // data driven by FPGA
-//.IO(x_3_p_hawk), // 1-bit inout: Diff_p inout (connect directly to top-level port)
-//.IOB(x_3_n_hawk), // 1-bit inout: Diff_n inout (connect directly to top-level port)
-//.T(T[3]) // 1-bit input: 3-state enable input
-//);
-
- HawkCameraCtrl HawkCameraCtrl_inst(
-        .clkin_p             (clk_p_hawk)
-       ,.clkin_n	         (clk_n_hawk)
-       ,.datain_p            ({x_3_p_hawk,x_2_p_hawk,x_1_p_hawk,x_0_p_hawk})
-       ,.datain_n            ({x_3_n_hawk,x_2_n_hawk,x_1_n_hawk,x_0_n_hawk})
-       ,.imageWidth          (HawkImageWidth)
-       ,.imageHeight         (HawkImageHeight)
-       ,.sys_clk             (sys_clk)
-       ,.ref_clk             (ref_clk)
-       ,.sys_rst             (sys_rst)
-       ,.capture             (capture)
-       ,.testMode            (testMode)
-       ,.S_AXIS_S2MM_0_tdata (S_AXIS_S2MM_0_tdata)
-       ,.S_AXIS_S2MM_0_tkeep (S_AXIS_S2MM_0_tkeep)
-       ,.S_AXIS_S2MM_0_tlast (S_AXIS_S2MM_0_tlast)
-       ,.S_AXIS_S2MM_0_tready(S_AXIS_S2MM_0_tready)
-       ,.S_AXIS_S2MM_0_tvalid(S_AXIS_S2MM_0_tvalid)  
+// camera
+camera camera_receiver(
+       // camera link
+       .hawk_clk_n   (hawk_clk_n)
+      ,.hawk_clk_p   (hawk_clk_p)
+      ,.owl_clk_1_n  (owl_clk_1_n)
+      ,.owl_clk_1_p  (owl_clk_1_p)
+      ,.owl_clk_2_n  (owl_clk_2_n)
+      ,.owl_clk_2_p  (owl_clk_2_p)
+      ,.data_hawk_p  (data_hawk_p)
+      ,.data_hawk_n  (data_hawk_n)
+      ,.data_owl_p   (data_owl_p)
+      ,.data_owl_n   (data_owl_n )
+      // system 
+      ,.ref_clk      (ref_clk)
+      ,.sys_clk      (sys_clk)
+      ,.sys_rst      (sys_rst)
+      ,.new_capture  (capture)
+      ,.cameraSel    (cameraSel)
+      ,.testMode     (testMode)
+      ,.hawk_image_height (HawkImageHeight)
+      ,.hawk_image_width  (HawkImageWidth)
+      ,.owl_image_height  (OwlImageHeight)
+      ,.owl_image_width   (OwlImageWidth)
+      ,.serde_locked      (serde_locked)
+      ,.camera_in_progress(camera_in_progress)
+      // DMA
+      ,.S_AXIS_S2MM_0_tdata (S_AXIS_S2MM_0_tdata)
+      ,.S_AXIS_S2MM_0_tkeep (S_AXIS_S2MM_0_tkeep)
+      ,.S_AXIS_S2MM_0_tlast (S_AXIS_S2MM_0_tlast)
+      ,.S_AXIS_S2MM_0_tready(S_AXIS_S2MM_0_tready)
+      ,.S_AXIS_S2MM_0_tvalid(S_AXIS_S2MM_0_tvalid)               
 );
-
     
 endmodule

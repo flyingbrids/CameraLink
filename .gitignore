@@ -1,6 +1,7 @@
 *.dcp
 *.veo
 *.vho
+*.log
 CPU_system/
 LizzieSate/
 IP/*/*.xdc
