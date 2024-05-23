@@ -144,11 +144,8 @@ CPU_system_wrapper(
     // Device UART
 //    .uart_rtl_0_rxd  (uart_hawk_rxd),
 //    .uart_rtl_0_txd  (uart_hawk_txd),
-//    .uart_rtl_1_rxd  (uart_owl_rxd),
-//    .uart_rtl_1_txd  (uart_owl_txd),
-//    .uart_rtl_2_rxd  (uart_xband_rxd),
-//    .uart_rtl_2_txd  (uart_xband_txd)
 );    
+
 // AXI4-Lite Register bank
 logic capture, testMode, cameraSel, serde_locked, camera_in_progress;
 logic [15:0] HawkImageWidth;
