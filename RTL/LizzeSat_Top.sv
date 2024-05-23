@@ -155,10 +155,23 @@ logic [15:0] HawkImageWidth;
 logic [15:0] HawkImageHeight;
 logic [15:0] OwlImageWidth;
 logic [15:0] OwlImageHeight;
+logic [31:0] timeOut;
 
 axi_register axi_register_bank(
 	    .S_AXI_ACLK    (sys_clk),
 		.S_AXI_ARESETN (sys_rst_n),
+		// Register data
+        .capture      (capture),
+        .cameraSel    (cameraSel),
+        .testMode     (testMode),
+        .HawkImageHeight (HawkImageHeight),
+        .HawkImageWidth  (HawkImageWidth),
+        .OwlImageHeight  (OwlImageHeight),
+        .OwlImageWidth   (OwlImageWidth),
+        .serde_locked      (serde_locked),
+        .camera_in_progress(camera_in_progress),
+        .timeOut           (timeOut),		
+		// AXI4Lite 
 		.S_AXI_AWADDR  (AXI_0_awaddr),
 		.S_AXI_AWPROT  (AXI_0_awprot),
 		.S_AXI_AWVALID (AXI_0_awvalid),
@@ -206,6 +219,7 @@ camera camera_receiver(
       ,.owl_image_width   (OwlImageWidth)
       ,.serde_locked      (serde_locked)
       ,.camera_in_progress(camera_in_progress)
+      ,.timeOut           (timeOut)
       // DMA
       ,.S_AXIS_S2MM_0_tdata (S_AXIS_S2MM_0_tdata)
       ,.S_AXIS_S2MM_0_tkeep (S_AXIS_S2MM_0_tkeep)

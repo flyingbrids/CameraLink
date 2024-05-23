@@ -43,6 +43,7 @@ module camera(
       ,input  logic [15:0] owl_image_width
       ,output logic serde_locked
       ,output logic camera_in_progress
+      ,input  logic [31:0] timeOut
       // DMA
       ,output logic [63:0]S_AXIS_S2MM_0_tdata
       ,output logic [7:0]S_AXIS_S2MM_0_tkeep
@@ -56,9 +57,13 @@ logic capture_end, cameraSelRegister, hawk_serde_locked, owl_serde_locked, frame
 
 assign camera_in_progress = (cameraState == '0)? 1'b0 : 1'b1;
 
+logic [31:0] timeOutCnt;
 always @ (posedge sys_clk) begin
       if (~camera_in_progress) begin
-         cameraSelRegister <= cameraSel;      
+         cameraSelRegister <= cameraSel;    
+         timeOutCnt <= '0;  
+      end else begin
+         timeOutCnt <= timeOutCnt + 1'b1;
       end 
 end 
 
@@ -81,7 +86,7 @@ always @ (posedge sys_clk, posedge sys_rst) begin
           case (cameraState) 
           2'b00:  if (frame_rst) cameraState <= 2'b01;
           2'b01:  if (capture_end) cameraState <= 2'b10;
-          2'b10:  if (S_AXIS_S2MM_0_tlast) cameraState <= 2'b00;
+          2'b10:  if (S_AXIS_S2MM_0_tlast | (timeOutCnt == timeOut)) cameraState <= 2'b00;
           default: cameraState <= 2'b00;  
           endcase 
        end
@@ -124,7 +129,7 @@ assign datain1_n = data_owl_n[3:0];
 assign datain2_p = data_owl_p[7:4]; 
 assign datain2_n = data_owl_n[7:4];
 
-OwlCameraCtrl OwlCamera
+ OwlCameraCtrl OwlCamera
  (
         .clkin1_p             (owl_clk_1_p)
        ,.clkin1_n	          (owl_clk_1_n)

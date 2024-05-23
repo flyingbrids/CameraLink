@@ -166,6 +166,7 @@ camera camera_receiver(
       ,.owl_image_width   (imageWidth_owl)
       ,.serde_locked      (serde_locked)
       ,.camera_in_progress(camera_in_progress)
+      ,.timeOut           ('1)
       // DMA
       ,.S_AXIS_S2MM_0_tdata (S_AXIS_S2MM_0_tdata)
       ,.S_AXIS_S2MM_0_tkeep (S_AXIS_S2MM_0_tkeep)

@@ -31,7 +31,14 @@ module axi_register #(
 	)
 	(
 		// Users to add ports here
-
+        output reg capture, testMode, cameraSel, cameralinkRst,
+        output reg [15:0] HawkImageWidth,
+        output reg [15:0] HawkImageHeight,
+        output reg [15:0] OwlImageWidth,
+        output reg [15:0] OwlImageHeight,    
+        output reg [31:0] timeOut,        
+        
+        input wire  serde_locked,camera_in_progress,   
 		// User ports ends
 		// Do not modify the ports beyond this line
 
@@ -1778,6 +1785,17 @@ module axi_register #(
 	end    
 
 	// Add user logic here
+     always @ (S_AXI_ACLK) begin
+         capture    <= slv_reg0[0];
+         testMode   <= slv_reg0[1];
+         cameraSel  <= slv_reg0[2];
+         cameralinkRst <= slv_reg0[3];
+         HawkImageWidth <= slv_reg1[15:0];
+         HawkImageHeight<= slv_reg1[31:16];
+         OwlImageWidth <= slv_reg2[15:0];
+         OwlImageHeight <= slv_reg2[31:16];   
+         timeOut <= slv_reg3; 
+     end   
 
 	// User logic ends
 
