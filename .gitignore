@@ -16,3 +16,20 @@ IP/*/*/*.v
 IP/*/*/*.vhd
 IP/*/*/*.vhdl
 IP/*/*/*.txt
+
+# Ignore build output directory
+build/
+
+# Ignore object files and dependent files
+*.o
+*.d
+
+#Ignore logs folder and log files
+logs/
+*.log
+
+#Ignore lock files
+*.lock
+
+*.bin
+*.pdi

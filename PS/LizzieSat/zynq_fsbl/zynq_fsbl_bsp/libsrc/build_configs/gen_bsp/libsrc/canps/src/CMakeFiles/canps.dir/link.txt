@@ -1,0 +1,2 @@
+arm-none-eabi-ar qc libcanps.a CMakeFiles/canps.dir/xcanps.c.obj CMakeFiles/canps.dir/xcanps_selftest.c.obj CMakeFiles/canps.dir/xcanps_hw.c.obj CMakeFiles/canps.dir/xcanps_intr.c.obj CMakeFiles/canps.dir/xcanps_g.c.obj CMakeFiles/canps.dir/xcanps_sinit.c.obj
+C:/Xilinx/Vitis/2023.2/gnu/aarch32/nt/gcc-arm-none-eabi/bin/arm-none-eabi-ranlib.exe libcanps.a
