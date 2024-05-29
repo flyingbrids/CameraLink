@@ -1,0 +1,307 @@
+-- Configuring done
+-- Generating done
+-- Build files have been written to: C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/build_configs/gen_bsp
+-- Cache values
+// Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel ...
+CMAKE_BUILD_TYPE:STRING=
+
+// Install path prefix, prepended onto install directories.
+CMAKE_INSTALL_PREFIX:PATH=C:/Program Files (x86)/bsp
+
+// Size
+CMAKE_SIZE:FILEPATH=arm-none-eabi-size
+
+// Specs file path for using CMAKE toolchain files
+CMAKE_SPECS_FILE:STRING=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/Xilinx.spec
+
+// Device Id
+DEVICE_ID:STRING=7z020
+
+// The directory containing a CMake configuration file for INTC.
+INTC_DIR:PATH=INTC_DIR-NOTFOUND
+
+// MAC Instances
+MAC_INSTANCES:STRING=ps7_ethernet_0
+
+// Non Yocto embeddedsw FLOW
+NON_YOCTO:BOOL=ON
+
+// Number of slrs
+NUMBER_OF_SLRS:STRING=0x1
+
+// ASM FLAGS
+TOOLCHAIN_ASM_FLAGS:STRING= -O2 -DSDT -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard
+
+// CXXFLAGS
+TOOLCHAIN_CXX_FLAGS:STRING= -O2 -DSDT -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard
+
+// CFLAGS
+TOOLCHAIN_C_FLAGS:STRING= -O2 -DSDT -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard
+
+// Flags used by compiler to generate dependency files
+TOOLCHAIN_DEP_FLAGS:STRING= -MMD -MP
+
+// Extra CFLAGS
+TOOLCHAIN_EXTRA_C_FLAGS:STRING= -g -Wall -Wextra -fno-tree-loop-distribute-patterns
+
+// Enables support for AMD family devices
+XILFLASH_enable_amd:BOOL=OFF
+
+// Enables support for Intel family devices
+XILFLASH_enable_intel:BOOL=ON
+
+// Enable Interval Timer
+XILTIMER_en_interval_timer:BOOL=OFF
+
+// This parameter is used to select specific timer for sleep functionality
+XILTIMER_sleep_timer:STRING=ps7_scutimer_0
+
+// This parameter is used to select specific timer for tick functionality
+XILTIMER_tick_timer:STRING=None
+
+// Mode of operation for lwIP (RAW API/Sockets API)
+lwip213_api_mode:STRING=RAW_API
+
+// If enabled outgoing packets are queued during hardware address resolution.
+lwip213_arp_queueing:STRING=1
+
+// Number of active hardware address IP address pairs cached.
+lwip213_arp_table_size:STRING=10
+
+// Turn on lwIP Debug?
+lwip213_debug:BOOL=OFF
+
+// Turn on lwIP Debug?
+lwip213_debug_options:BOOL=ON
+
+// Size of TCP receive mbox queue.
+lwip213_default_tcp_recvmbox_size:STRING=200
+
+// Size of UDP receive mbox queue.
+lwip213_default_udp_recvmbox_size:STRING=100
+
+// Is DHCP required?
+lwip213_dhcp:BOOL=OFF
+
+// ARP check on offered addresses?
+lwip213_dhcp_does_arp_check:BOOL=OFF
+
+// Is DHCP required?
+lwip213_dhcp_options:BOOL=ON
+
+// Debug ICMP protocol
+lwip213_icmp_debug:BOOL=OFF
+
+// ICMP Options
+lwip213_icmp_options:BOOL=ON
+
+// ICMP TTL value
+lwip213_icmp_ttl:STRING=255
+
+// Debug IGMP protocol
+lwip213_igmp_debug:BOOL=OFF
+
+// IGMP Options
+lwip213_igmp_options:BOOL=OFF
+
+// Debug IP layer
+lwip213_ip_debug:BOOL=OFF
+
+// Global default TTL used by transport layers
+lwip213_ip_default_ttl:STRING=255
+
+// Enable forwarding IP packets across network interfaces.
+lwip213_ip_forward:STRING=0
+
+// Fragment outgoing IP packets if their size exceeds MTU
+lwip213_ip_frag:STRING=1
+
+// Assumed max MTU on any interface for IP frag buffer
+lwip213_ip_frag_max_mtu:STRING=1500
+
+// 1 = IP options are allowed (but not parsed). 0 = packets with IP options are dropped
+lwip213_ip_options:STRING=0
+
+// Reassembly PBUF Queue Length
+lwip213_ip_reass_max_pbufs:STRING=128
+
+// Reassemble incoming fragmented IP packets
+lwip213_ip_reassembly:STRING=1
+
+// IPv6 enable value
+lwip213_ipv6_enable:BOOL=OFF
+
+// IPv6 Options
+lwip213_ipv6_options:BOOL=ON
+
+// TCPIP input core locking
+lwip213_lwip_tcpip_core_locking_input:BOOL=OFF
+
+// Size of the heap memory (bytes).
+lwip213_mem_size:STRING=131072
+
+// Number of memp struct pbufs. Set this high if application sends lot of data out of ROM
+lwip213_memp_n_pbuf:STRING=16
+
+// Number of simultaneously active timeouts
+lwip213_memp_n_sys_timeout:STRING=8
+
+// Number of active TCP PCBs. One per active TCP connection
+lwip213_memp_n_tcp_pcb:STRING=32
+
+// Number of listening TCP connections
+lwip213_memp_n_tcp_pcb_listen:STRING=8
+
+// Number of simultaneously queued TCP segments
+lwip213_memp_n_tcp_seg:STRING=256
+
+// Number of active UDP PCBs. One per active UDP connection
+lwip213_memp_n_udp_pcb:STRING=4
+
+// Number of api msg structures (socket mode only)
+lwip213_memp_num_api_msg:STRING=16
+
+// Number of struct netbufs (socket mode only)
+lwip213_memp_num_netbuf:STRING=8
+
+// Number of struct netconns (socket mode only)
+lwip213_memp_num_netconn:STRING=16
+
+// Number of tcpip msg structures (socket mode only)
+lwip213_memp_num_tcpip_msg:STRING=64
+
+// Setting for RX Interrupt coalescing.
+lwip213_n_rx_coalesce:STRING=1
+
+// Number of RX Buffer Descriptors to be used in SDMA mode
+lwip213_n_rx_descriptors:STRING=64
+
+// Setting for TX Interrupt coalescing.
+lwip213_n_tx_coalesce:STRING=1
+
+// Number of TX Buffer Descriptors to be used in SDMA mode
+lwip213_n_tx_descriptors:STRING=64
+
+// Debug network interface layer
+lwip213_netif_debug:BOOL=OFF
+
+// Drops support for sys_timeout when NO_SYS==1
+lwip213_no_sys_no_timers:BOOL=ON
+
+// Debug pbuf layer
+lwip213_pbuf_debug:BOOL=OFF
+
+// Number of bytes that should be allocated for a link level header.
+lwip213_pbuf_link_hlen:STRING=16
+
+// Size of each pbuf in pbuf pool.
+lwip213_pbuf_pool_bufsize:STRING=1700
+
+// Number of buffers in pbuf pool.
+lwip213_pbuf_pool_size:STRING=256
+
+// Priority of threads in socket mode
+lwip213_socket_mode_thread_prio:STRING=2
+
+// Turn on lwIP statistics?
+lwip213_stats:BOOL=OFF
+
+// Turn on lwIP statistics?
+lwip213_stats_options:BOOL=ON
+
+// Debug sys arch layer
+lwip213_sys_debug:BOOL=OFF
+
+// Is TCP required ?
+lwip213_tcp:BOOL=ON
+
+// Debug TCP layer
+lwip213_tcp_debug:BOOL=OFF
+
+// Enable keepalive processing with default interval
+lwip213_tcp_keepalive:BOOL=OFF
+
+// TCP Maximum retransmission value
+lwip213_tcp_maxrtx:STRING=12
+
+// TCP Maximum segment size (bytes)
+lwip213_tcp_mss:STRING=1460
+
+// Is TCP required ?
+lwip213_tcp_options:BOOL=ON
+
+// Should TCP queue segments arriving out of order. Set to 0 if your device is low on memory
+lwip213_tcp_queue_ooseq:STRING=1
+
+// TCP sender buffer space (bytes)
+lwip213_tcp_snd_buf:STRING=8192
+
+// TCP Maximum SYN retransmission value
+lwip213_tcp_synmaxrtx:STRING=4
+
+// TCP TTL value
+lwip213_tcp_ttl:STRING=255
+
+// TCP Window (bytes)
+lwip213_tcp_wnd:STRING=2048
+
+// Size of TCPIP mbox queue.
+lwip213_tcpip_mbox_size:STRING=200
+
+// Zynq Ethernet Interface number
+lwip213_temac_emac_number:STRING=0
+
+// link speed as negotiated by the PHY
+lwip213_temac_phy_link_speed:STRING=CONFIG_LINKSPEED_AUTODETECT
+
+// Offload TCP and IP Receive checksum calculation (hardware support required)
+lwip213_temac_tcp_ip_rx_checksum_offload:BOOL=OFF
+
+// Offload TCP and IP Transmit checksum calculation (hardware support required)
+lwip213_temac_tcp_ip_tx_checksum_offload:BOOL=OFF
+
+// Offload TCP Receive checksum calculation (hardware support required)
+lwip213_temac_tcp_rx_checksum_offload:BOOL=OFF
+
+// Offload TCP Transmit checksum calculation (hardware support required)
+lwip213_temac_tcp_tx_checksum_offload:BOOL=OFF
+
+// use jumbo frames
+lwip213_temac_use_jumbo_frames:BOOL=OFF
+
+// Is UDP required
+lwip213_udp:BOOL=ON
+
+// Debug UDP layer
+lwip213_udp_debug:BOOL=OFF
+
+// UDP Options
+lwip213_udp_options:BOOL=ON
+
+// UDP TTL value
+lwip213_udp_ttl:STRING=255
+
+// Archiver
+proc_archiver:STRING=arm-none-eabi-gcc-ar.exe
+
+// Assembler
+proc_assembler:STRING=arm-none-eabi-gcc
+
+// Compiler
+proc_compiler:STRING=arm-none-eabi-gcc.exe
+
+// Compiler Flags
+proc_compiler_flags:STRING= -O2 -DSDT -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard;-c
+
+// Extra Compiler Flags
+proc_extra_compiler_flags:STRING= -g -Wall -Wextra -fno-tree-loop-distribute-patterns
+
+// Enable fixed link for GEM SGMII at 1Gbps
+sgmii_fixed_link:STRING=0
+
+// stdin peripheral
+standalone_stdin:STRING=ps7_uart_1
+
+// stdout peripheral
+standalone_stdout:STRING=ps7_uart_1
+

@@ -18,7 +18,50 @@
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
+`define ZED;
 module LizzeSat_Top(
+ `ifdef ZED
+  // DDR3 memory
+  inout logic [14:0]DDR_addr
+ ,inout logic [2:0]DDR_ba
+ ,inout logic DDR_cas_n
+ ,inout logic DDR_ck_n
+ ,inout logic DDR_ck_p
+ ,inout logic DDR_cke
+ ,inout logic DDR_cs_n
+ ,inout logic [3:0]DDR_dm
+ ,inout logic [31:0]DDR_dq
+ ,inout logic [3:0]DDR_dqs_n
+ ,inout logic [3:0]DDR_dqs_p
+ ,inout logic DDR_odt
+ ,inout logic DDR_ras_n
+ ,inout logic DDR_reset_n
+ ,inout logic DDR_we_n
+ // fixed IO
+ ,inout logic FIXED_IO_ddr_vrn
+ ,inout logic FIXED_IO_ddr_vrp
+ ,inout logic [53:0]FIXED_IO_mio
+ ,inout logic FIXED_IO_ps_clk
+ ,inout logic FIXED_IO_ps_porb
+ ,inout logic FIXED_IO_ps_srstb
+ // switches
+ ,input logic SW0
+ ,input logic SW1
+ ,input logic SW2
+ ,input logic SW3 
+ ,input logic SW4
+ ,input logic SW5
+ ,input logic SW6
+ // LED
+ ,output logic LD0
+ ,output logic LD1   
+ ,output logic LD2
+ ,output logic LD3  
+ ,output logic LD4
+ ,output logic LD5   
+ ,output logic LD6
+ ,output logic LD7   
+ `elsif
    // DDR3 memory
    inout  logic [14:0]DDR_addr
   ,inout  logic [2:0]DDR_ba
@@ -42,6 +85,8 @@ module LizzeSat_Top(
   ,inout  logic  FIXED_IO_ps_clk
   ,inout  logic  FIXED_IO_ps_porb
   ,inout  logic  FIXED_IO_ps_srstb   
+  `endif
+  
   // camera link
   ,input  logic hawk_clk_n
   ,input  logic hawk_clk_p
@@ -52,7 +97,11 @@ module LizzeSat_Top(
   ,input  logic [3:0] data_hawk_p
   ,input  logic [3:0] data_hawk_n
   ,input  logic [7:0] data_owl_p
-  ,input  logic [7:0] data_owl_n 
+  ,input  logic [7:0] data_owl_n  
+  ,input  logic SerTFG_p 
+  ,input  logic SerTFG_n
+  ,output logic SerTC_p
+  ,output logic SerTC_n
 );
 
 logic sys_clk, ref_clk;
@@ -85,6 +134,7 @@ logic [7:0]S_AXIS_S2MM_0_tkeep;
 logic S_AXIS_S2MM_0_tlast;
 logic S_AXIS_S2MM_0_tready;
 logic S_AXIS_S2MM_0_tvalid;
+logic uart_0_rxd,uart_0_txd;
 
 CPU_system_wrapper(
      // DDR3 memory 
@@ -140,25 +190,59 @@ CPU_system_wrapper(
     .S_AXIS_S2MM_0_tkeep (S_AXIS_S2MM_0_tkeep),
     .S_AXIS_S2MM_0_tlast (S_AXIS_S2MM_0_tlast),
     .S_AXIS_S2MM_0_tready(S_AXIS_S2MM_0_tready),
-    .S_AXIS_S2MM_0_tvalid(S_AXIS_S2MM_0_tvalid)
+    .S_AXIS_S2MM_0_tvalid(S_AXIS_S2MM_0_tvalid),
     // Device UART
-//    .uart_rtl_0_rxd  (uart_hawk_rxd),
-//    .uart_rtl_0_txd  (uart_hawk_txd),
-//    .uart_rtl_1_rxd  (uart_owl_rxd),
-//    .uart_rtl_1_txd  (uart_owl_txd),
-//    .uart_rtl_2_rxd  (uart_xband_rxd),
-//    .uart_rtl_2_txd  (uart_xband_txd)
+    .uart_rtl_0_rxd  (uart_0_rxd),
+    .uart_rtl_0_txd  (uart_0_txd)
 );    
+
+IBUFDS RX_LVDS 
+(
+	.I    			(SerTFG_p),
+	.IB       		(SerTFG_n),
+	.O         		(uart_0_rxd)
+);
+
+OBUFDS TX_LVDS 
+(
+	.I    			(uart_0_txd),
+	.OB       		(SerTC_n),
+	.O         		(SerTC_p)
+);
+
+`ifdef ZED
+heartBeatPulse #(.FREQ(124000000)) 
+sys_tick(.clk(sys_clk), .rst(sys_rst), .tick(LD0));
+
+heartBeatPulse #(.FREQ(200000000)) 
+sys_tick1(.clk(ref_clk), .rst(sys_rst), .tick(LD1));
+`endif 
+
 // AXI4-Lite Register bank
 logic capture, testMode, cameraSel, serde_locked, camera_in_progress;
 logic [15:0] HawkImageWidth;
 logic [15:0] HawkImageHeight;
 logic [15:0] OwlImageWidth;
 logic [15:0] OwlImageHeight;
+logic [31:0] timeOut;
 
 axi_register axi_register_bank(
 	    .S_AXI_ACLK    (sys_clk),
 		.S_AXI_ARESETN (sys_rst_n),
+		// Register data
+        .capture      (capture),
+        .cameraSel    (cameraSel),
+        .testMode     (testMode),
+        .HawkImageHeight (HawkImageHeight),
+        .HawkImageWidth  (HawkImageWidth),
+        .OwlImageHeight  (OwlImageHeight),
+        .OwlImageWidth   (OwlImageWidth),
+        .serde_locked      (serde_locked),
+        .camera_in_progress(camera_in_progress),
+        .timeOut           (timeOut),
+        .HwVersion         ({24'h0F5AA5,1'b0,SW6,SW5,SW4,SW3,SW2,SW1,SW0}),
+        .ledTest           ({LD7,LD6,LD5,LD4,LD3,LD2}),		
+		// AXI4Lite 
 		.S_AXI_AWADDR  (AXI_0_awaddr),
 		.S_AXI_AWPROT  (AXI_0_awprot),
 		.S_AXI_AWVALID (AXI_0_awvalid),
@@ -179,7 +263,7 @@ axi_register axi_register_bank(
 		.S_AXI_RVALID  (AXI_0_rvalid),
 		.S_AXI_RREADY  (AXI_0_rready)
 	);
-
+	
 // camera
 camera camera_receiver(
        // camera link

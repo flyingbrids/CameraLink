@@ -1,0 +1,2 @@
+arm-none-eabi-ar qc libuartns550.a CMakeFiles/uartns550.dir/xuartns550.c.obj CMakeFiles/uartns550.dir/xuartns550_format.c.obj CMakeFiles/uartns550.dir/xuartns550_g.c.obj CMakeFiles/uartns550.dir/xuartns550_intr.c.obj CMakeFiles/uartns550.dir/xuartns550_l.c.obj CMakeFiles/uartns550.dir/xuartns550_options.c.obj CMakeFiles/uartns550.dir/xuartns550_selftest.c.obj CMakeFiles/uartns550.dir/xuartns550_sinit.c.obj CMakeFiles/uartns550.dir/xuartns550_stats.c.obj
+C:/Xilinx/Vitis/2023.2/gnu/aarch32/nt/gcc-arm-none-eabi/bin/arm-none-eabi-ranlib.exe libuartns550.a

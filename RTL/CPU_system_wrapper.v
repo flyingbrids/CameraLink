@@ -2,7 +2,7 @@
 //Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2023.2 (win64) Build 4029153 Fri Oct 13 20:14:34 MDT 2023
-//Date        : Fri May 10 16:02:53 2024
+//Date        : Wed May 29 09:50:56 2024
 //Host        : L3520-003 running 64-bit major release  (build 9200)
 //Command     : generate_target CPU_system_wrapper.bd
 //Design      : CPU_system_wrapper
@@ -73,35 +73,7 @@ module CPU_system_wrapper
     uart_rtl_0_rxd,
     uart_rtl_0_rxrdyn,
     uart_rtl_0_txd,
-    uart_rtl_0_txrdyn,
-    uart_rtl_1_baudoutn,
-    uart_rtl_1_ctsn,
-    uart_rtl_1_dcdn,
-    uart_rtl_1_ddis,
-    uart_rtl_1_dsrn,
-    uart_rtl_1_dtrn,
-    uart_rtl_1_out1n,
-    uart_rtl_1_out2n,
-    uart_rtl_1_ri,
-    uart_rtl_1_rtsn,
-    uart_rtl_1_rxd,
-    uart_rtl_1_rxrdyn,
-    uart_rtl_1_txd,
-    uart_rtl_1_txrdyn,
-    uart_rtl_2_baudoutn,
-    uart_rtl_2_ctsn,
-    uart_rtl_2_dcdn,
-    uart_rtl_2_ddis,
-    uart_rtl_2_dsrn,
-    uart_rtl_2_dtrn,
-    uart_rtl_2_out1n,
-    uart_rtl_2_out2n,
-    uart_rtl_2_ri,
-    uart_rtl_2_rtsn,
-    uart_rtl_2_rxd,
-    uart_rtl_2_rxrdyn,
-    uart_rtl_2_txd,
-    uart_rtl_2_txrdyn);
+    uart_rtl_0_txrdyn);
   inout [14:0]DDR_addr;
   inout [2:0]DDR_ba;
   inout DDR_cas_n;
@@ -165,34 +137,6 @@ module CPU_system_wrapper
   output uart_rtl_0_rxrdyn;
   output uart_rtl_0_txd;
   output uart_rtl_0_txrdyn;
-  output uart_rtl_1_baudoutn;
-  input uart_rtl_1_ctsn;
-  input uart_rtl_1_dcdn;
-  output uart_rtl_1_ddis;
-  input uart_rtl_1_dsrn;
-  output uart_rtl_1_dtrn;
-  output uart_rtl_1_out1n;
-  output uart_rtl_1_out2n;
-  input uart_rtl_1_ri;
-  output uart_rtl_1_rtsn;
-  input uart_rtl_1_rxd;
-  output uart_rtl_1_rxrdyn;
-  output uart_rtl_1_txd;
-  output uart_rtl_1_txrdyn;
-  output uart_rtl_2_baudoutn;
-  input uart_rtl_2_ctsn;
-  input uart_rtl_2_dcdn;
-  output uart_rtl_2_ddis;
-  input uart_rtl_2_dsrn;
-  output uart_rtl_2_dtrn;
-  output uart_rtl_2_out1n;
-  output uart_rtl_2_out2n;
-  input uart_rtl_2_ri;
-  output uart_rtl_2_rtsn;
-  input uart_rtl_2_rxd;
-  output uart_rtl_2_rxrdyn;
-  output uart_rtl_2_txd;
-  output uart_rtl_2_txrdyn;
 
   wire [14:0]DDR_addr;
   wire [2:0]DDR_ba;
@@ -257,34 +201,6 @@ module CPU_system_wrapper
   wire uart_rtl_0_rxrdyn;
   wire uart_rtl_0_txd;
   wire uart_rtl_0_txrdyn;
-  wire uart_rtl_1_baudoutn;
-  wire uart_rtl_1_ctsn;
-  wire uart_rtl_1_dcdn;
-  wire uart_rtl_1_ddis;
-  wire uart_rtl_1_dsrn;
-  wire uart_rtl_1_dtrn;
-  wire uart_rtl_1_out1n;
-  wire uart_rtl_1_out2n;
-  wire uart_rtl_1_ri;
-  wire uart_rtl_1_rtsn;
-  wire uart_rtl_1_rxd;
-  wire uart_rtl_1_rxrdyn;
-  wire uart_rtl_1_txd;
-  wire uart_rtl_1_txrdyn;
-  wire uart_rtl_2_baudoutn;
-  wire uart_rtl_2_ctsn;
-  wire uart_rtl_2_dcdn;
-  wire uart_rtl_2_ddis;
-  wire uart_rtl_2_dsrn;
-  wire uart_rtl_2_dtrn;
-  wire uart_rtl_2_out1n;
-  wire uart_rtl_2_out2n;
-  wire uart_rtl_2_ri;
-  wire uart_rtl_2_rtsn;
-  wire uart_rtl_2_rxd;
-  wire uart_rtl_2_rxrdyn;
-  wire uart_rtl_2_txd;
-  wire uart_rtl_2_txrdyn;
 
   CPU_system CPU_system_i
        (.DDR_addr(DDR_addr),
@@ -349,33 +265,5 @@ module CPU_system_wrapper
         .uart_rtl_0_rxd(uart_rtl_0_rxd),
         .uart_rtl_0_rxrdyn(uart_rtl_0_rxrdyn),
         .uart_rtl_0_txd(uart_rtl_0_txd),
-        .uart_rtl_0_txrdyn(uart_rtl_0_txrdyn),
-        .uart_rtl_1_baudoutn(uart_rtl_1_baudoutn),
-        .uart_rtl_1_ctsn(uart_rtl_1_ctsn),
-        .uart_rtl_1_dcdn(uart_rtl_1_dcdn),
-        .uart_rtl_1_ddis(uart_rtl_1_ddis),
-        .uart_rtl_1_dsrn(uart_rtl_1_dsrn),
-        .uart_rtl_1_dtrn(uart_rtl_1_dtrn),
-        .uart_rtl_1_out1n(uart_rtl_1_out1n),
-        .uart_rtl_1_out2n(uart_rtl_1_out2n),
-        .uart_rtl_1_ri(uart_rtl_1_ri),
-        .uart_rtl_1_rtsn(uart_rtl_1_rtsn),
-        .uart_rtl_1_rxd(uart_rtl_1_rxd),
-        .uart_rtl_1_rxrdyn(uart_rtl_1_rxrdyn),
-        .uart_rtl_1_txd(uart_rtl_1_txd),
-        .uart_rtl_1_txrdyn(uart_rtl_1_txrdyn),
-        .uart_rtl_2_baudoutn(uart_rtl_2_baudoutn),
-        .uart_rtl_2_ctsn(uart_rtl_2_ctsn),
-        .uart_rtl_2_dcdn(uart_rtl_2_dcdn),
-        .uart_rtl_2_ddis(uart_rtl_2_ddis),
-        .uart_rtl_2_dsrn(uart_rtl_2_dsrn),
-        .uart_rtl_2_dtrn(uart_rtl_2_dtrn),
-        .uart_rtl_2_out1n(uart_rtl_2_out1n),
-        .uart_rtl_2_out2n(uart_rtl_2_out2n),
-        .uart_rtl_2_ri(uart_rtl_2_ri),
-        .uart_rtl_2_rtsn(uart_rtl_2_rtsn),
-        .uart_rtl_2_rxd(uart_rtl_2_rxd),
-        .uart_rtl_2_rxrdyn(uart_rtl_2_rxrdyn),
-        .uart_rtl_2_txd(uart_rtl_2_txd),
-        .uart_rtl_2_txrdyn(uart_rtl_2_txrdyn));
+        .uart_rtl_0_txrdyn(uart_rtl_0_txrdyn));
 endmodule

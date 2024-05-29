@@ -1,0 +1,2 @@
+arm-none-eabi-ar qc libxilflash.a CMakeFiles/xilflash.dir/xilflash.c.obj CMakeFiles/xilflash.dir/xilflash_amd.c.obj CMakeFiles/xilflash.dir/xilflash_cfi.c.obj CMakeFiles/xilflash.dir/xilflash_intel.c.obj
+C:/Xilinx/Vitis/2023.2/gnu/aarch32/nt/gcc-arm-none-eabi/bin/arm-none-eabi-ranlib.exe libxilflash.a
