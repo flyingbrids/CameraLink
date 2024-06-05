@@ -46,6 +46,7 @@
                  <0xf8f00200 &global_timer 0xf8f00200 0x100>,
                  <0xe000a000 &gpio0 0xe000a000 0x1000>,
                  <0xf8900000 &ps7_gpv_0 0xf8900000 0x100000>,
+                 <0xe0004000 &i2c0 0xe0004000 0x1000>,
                  <0xf8f01000 &intc 0xf8f01000 0x1000>,
                  <0xe0200000 &ps7_iop_bus_config_0 0xe0200000 0x1000>,
                  <0xf8f02000 &L2 0xf8f02000 0x1000>,
@@ -58,7 +59,6 @@
                  <0xf8f00620 &scuwdt 0xf8f00620 0xe0>,
                  <0xe0100000 &sdhci0 0xe0100000 0x1000>,
                  <0xf8000000 &slcr 0xf8000000 0x1000>,
-                 <0xe0007000 &spi1 0xe0007000 0x1000>,
                  <0xe0001000 &uart1 0xe0001000 0x1000>,
                  <0xf8007100 &adc 0xf8007100 0x21>;
                 #ranges-address-cells = <0x1>;
@@ -250,7 +250,7 @@
 
                 i2c0: i2c@e0004000 {
                         compatible = "cdns,i2c-r1p10";
-                        status = "disabled";
+                        status = "okay";
                         clocks = <&clkc 0x26>;
                         clock-frequency = <0x61a80>;
                         interrupt-parent = <&intc>;
@@ -258,7 +258,14 @@
                         reg = <0xe0004000 0x1000>;
                         #address-cells = <0x1>;
                         #size-cells = <0x0>;
-                        phandle = <0x36>;
+                        xlnx,rable = <0x0>;
+                        xlnx,has-interrupt = <0x0>;
+                        xlnx,clock-freq = <0x69f6bc3>;
+                        xlnx,interconnect-s-axi-masters = "ps7_cortexa9_0.M_AXI_DP , & , ps7_cortexa9_1.M_AXI_DP";
+                        xlnx,i2c-clk-freq-hz = <0x69f6bc3>;
+                        xlnx,ip-name = "ps7_i2c";
+                        xlnx,name = "ps7_i2c_0";
+                        phandle = <0x15>;
                 };
 
                 i2c1: i2c@e0005000 {
@@ -271,7 +278,7 @@
                         reg = <0xe0005000 0x1000>;
                         #address-cells = <0x1>;
                         #size-cells = <0x0>;
-                        phandle = <0x37>;
+                        phandle = <0x36>;
                 };
 
                 intc: interrupt-controller@f8f01000 {
@@ -287,7 +294,7 @@
                         xlnx,ip-name = "ps7_intc_dist";
                         xlnx,ppi-s-axi-highaddr = <0xf8f01fff>;
                         xlnx,name = "ps7_intc_dist_0";
-                        phandle = <0x15>;
+                        phandle = <0x16>;
                 };
 
                 L2: cache-controller@f8f02000 {
@@ -303,7 +310,7 @@
                         xlnx,interconnect-s-axi-masters = "ps7_cortexa9_0.M_AXI_DP , & , ps7_cortexa9_1.M_AXI_DP";
                         xlnx,ip-name = "ps7_pl310";
                         xlnx,name = "ps7_pl310_0";
-                        phandle = <0x17>;
+                        phandle = <0x18>;
                 };
 
                 mc: memory-controller@f8006000 {
@@ -322,7 +329,7 @@
                 ocm: sram@fffc0000 {
                         compatible = "mmio-sram";
                         reg = <0xfffc0000 0x10000>;
-                        phandle = <0x38>;
+                        phandle = <0x37>;
                 };
 
                 uart0: serial@e0000000 {
@@ -334,7 +341,7 @@
                         reg = <0xe0000000 0x1000>;
                         interrupts = <0x0 0x1b 0x4>;
                         interrupt-parent = <&intc>;
-                        phandle = <0x39>;
+                        phandle = <0x38>;
                 };
 
                 uart1: serial@e0001000 {
@@ -369,13 +376,13 @@
                         clock-names = "ref_clk", "pclk";
                         #address-cells = <0x1>;
                         #size-cells = <0x0>;
-                        phandle = <0x3a>;
+                        phandle = <0x39>;
                 };
 
                 spi1: spi@e0007000 {
                         compatible = "xlnx,zynq-spi-r1p6";
                         reg = <0xe0007000 0x1000>;
-                        status = "okay";
+                        status = "disabled";
                         interrupt-parent = <&intc>;
                         interrupts = <0x0 0x31 0x4>;
                         clocks = <&clkc 0x1a>,
@@ -383,16 +390,7 @@
                         clock-names = "ref_clk", "pclk";
                         #address-cells = <0x1>;
                         #size-cells = <0x0>;
-                        xlnx,rable = <0x0>;
-                        xlnx,interconnect-s-axi-masters = "ps7_cortexa9_0.M_AXI_DP , & , ps7_cortexa9_1.M_AXI_DP";
-                        xlnx,has-ss0 = <0x1>;
-                        xlnx,ip-name = "ps7_spi";
-                        xlnx,has-ss1 = <0x0>;
-                        num-cs = <0x1>;
-                        xlnx,spi-clk-freq-hz = <0x7735931>;
-                        xlnx,has-ss2 = <0x0>;
-                        xlnx,name = "ps7_spi_1";
-                        phandle = <0x21>;
+                        phandle = <0x3a>;
                 };
 
                 qspi: spi@e000d000 {
@@ -421,7 +419,7 @@
                         xlnx,name = "ps7_qspi_0";
                         xlnx,qspi-bus-width = <0x2>;
                         is-dual = <0x0>;
-                        phandle = <0x1a>;
+                        phandle = <0x1b>;
                 };
 
                 gem0: ethernet@e000b000 {
@@ -521,7 +519,7 @@
                         xlnx,has-wp = <0x0>;
                         xlnx,has-cd = <0x0>;
                         xlnx,name = "ps7_sd_0";
-                        phandle = <0x1f>;
+                        phandle = <0x20>;
                 };
 
                 sdhci1: mmc@e0101000 {
@@ -548,7 +546,7 @@
                         xlnx,interconnect-s-axi-masters = "ps7_cortexa9_0.M_AXI_DP , & , ps7_cortexa9_1.M_AXI_DP";
                         xlnx,ip-name = "ps7_slcr";
                         xlnx,name = "ps7_slcr_0";
-                        phandle = <0x20>;
+                        phandle = <0x21>;
 
                         clkc: clkc@100 {
                                 u-boot,dm-pre-reloc;
@@ -565,14 +563,14 @@
                                 compatible = "xlnx,zynq-reset";
                                 reg = <0x200 0x48>;
                                 #reset-cells = <0x1>;
-                                syscon = <0x20>;
+                                syscon = <0x21>;
                                 phandle = <0x40>;
                         };
 
                         pinctrl0: pinctrl@700 {
                                 compatible = "xlnx,pinctrl-zynq";
                                 reg = <0x700 0x200>;
-                                syscon = <0x20>;
+                                syscon = <0x21>;
                                 phandle = <0x41>;
                         };
                 };
@@ -609,7 +607,7 @@
                          <&clkc 0x11>,
                          <&clkc 0x12>;
                         clock-names = "ref_clk", "fclk0", "fclk1", "fclk2", "fclk3";
-                        syscon = <0x20>;
+                        syscon = <0x21>;
                         xlnx,rable = <0x0>;
                         status = "okay";
                         xlnx,interconnect-s-axi-masters = "ps7_cortexa9_0.M_AXI_DP , & , ps7_cortexa9_1.M_AXI_DP";
@@ -667,7 +665,7 @@
                         xlnx,interconnect-s-axi-masters = "ps7_cortexa9_0.M_AXI_DP , & , ps7_cortexa9_1.M_AXI_DP";
                         xlnx,ip-name = "ps7_scutimer";
                         xlnx,name = "ps7_scutimer_0";
-                        phandle = <0x1d>;
+                        phandle = <0x1e>;
                 };
 
                 scuwdt: scuwatchdog@f8f00620 {
@@ -680,7 +678,7 @@
                         xlnx,interconnect-s-axi-masters = "ps7_cortexa9_0.M_AXI_DP , & , ps7_cortexa9_1.M_AXI_DP";
                         xlnx,ip-name = "ps7_scuwdt";
                         xlnx,name = "ps7_scuwdt_0";
-                        phandle = <0x1e>;
+                        phandle = <0x1f>;
                 };
 
                 usb0: usb@e0002000 {
@@ -889,7 +887,7 @@
                         xlnx,pcw-cpu-peripheral-clksrc = "ARM , PLL";
                         xlnx,pcw-mio-53-pullup = "disabled";
                         xlnx,pcw-use-axi-nonsecure = <0x0>;
-                        xlnx,pcw-spi1-grp-ss0-io = "MIO , 13";
+                        xlnx,pcw-spi1-grp-ss0-io = "<Select>";
                         xlnx,pcw-uiparam-ddr-dqs-1-propogation-delay = <0xa0>;
                         xlnx,pcw-nor-cs1-t-pc = <0x1>;
                         xlnx,pcw-s-axi-gp0-id-width = <0x6>;
@@ -919,7 +917,7 @@
                         xlnx,pcw-i2c0-grp-int-enable = <0x0>;
                         xlnx,pcw-ddr-port2-hpr-enable = <0x0>;
                         xlnx,pcw-act-tpiu-peripheral-freqmhz = <0xc8>;
-                        xlnx,pcw-package-name = "fbg484";
+                        xlnx,pcw-package-name = "clg484";
                         xlnx,pcw-s-axi-hp0-id-width = <0x6>;
                         xlnx,pcw-package-ddr-dqs-to-clk-delay-0 = <0xffffd8f0>;
                         xlnx,pcw-uiparam-ddr-dqs-3-length-mm = <0x0>;
@@ -932,7 +930,7 @@
                         xlnx,pcw-mio-38-direction = "inout";
                         xlnx,pcw-package-ddr-dqs-to-clk-delay-3 = <0x2328>;
                         xlnx,pcw-en-spi0 = <0x0>;
-                        xlnx,pcw-en-spi1 = <0x1>;
+                        xlnx,pcw-en-spi1 = <0x0>;
                         xlnx,pcw-include-acp-trans-check = <0x0>;
                         xlnx,pcw-ttc1-clk1-peripheral-divisor0 = <0x1>;
                         xlnx,en-emio-pjtag = <0x0>;
@@ -966,7 +964,7 @@
                         xlnx,pcw-value-silversion = <0x3>;
                         xlnx,pcw-nor-cs1-t-wp = <0x1>;
                         xlnx,pcw-pcap-peripheral-divisor0 = <0x5>;
-                        xlnx,pcw-spi1-spi1-io = "MIO , 10 , .. , 15";
+                        xlnx,pcw-spi1-spi1-io = "<Select>";
                         xlnx,pcw-can0-baseaddr = <0xe0008000>;
                         xlnx,pcw-wdt-peripheral-freqmhz = <0x7f28155>;
                         xlnx,pcw-mio-18-pullup = "enabled";
@@ -1133,7 +1131,7 @@
                         xlnx,pcw-qspi-grp-fbclk-io = "<Select>";
                         xlnx,use-s-axi-gp0 = <0x0>;
                         xlnx,use-s-axi-gp1 = <0x0>;
-                        xlnx,pcw-i2c0-peripheral-enable = <0x0>;
+                        xlnx,pcw-i2c0-peripheral-enable = <0x1>;
                         xlnx,pcw-uiparam-ddr-dq-2-length-mm = <0x0>;
                         xlnx,pcw-nor-grp-sram-cs0-io = "<Select>";
                         xlnx,pcw-enet1-grp-mdio-io = "<Select>";
@@ -1165,7 +1163,7 @@
                         xlnx,pcw-mio-1-slew = "slow";
                         xlnx,pcw-trace-grp-32bit-io = "<Select>";
                         xlnx,pcw-act-ttc1-clk2-peripheral-freqmhz = <0x69f6bc3>;
-                        xlnx,pcw-spi-peripheral-valid = <0x1>;
+                        xlnx,pcw-spi-peripheral-valid = <0x0>;
                         xlnx,pcw-mio-15-direction = "inout";
                         xlnx,pcw-en-ptp-enet0 = <0x0>;
                         xlnx,pcw-act-enet1-peripheral-freqmhz = <0xa>;
@@ -1261,7 +1259,7 @@
                         xlnx,pcw-mio-49-pullup = "enabled";
                         xlnx,pcw-mio-50-pullup = "enabled";
                         xlnx,pcw-p2f-cti-intr = <0x0>;
-                        xlnx,pcw-mio-tree-signals = "gpio[0]#qspi0_ss_b#qspi0_io[0]#qspi0_io[1]#qspi0_io[2]#qspi0_io[3]/HOLD_B#qspi0_sclk#gpio[7]#gpio[8]#gpio[9]#mosi#miso#sclk#ss[0]#gpio[14]#gpio[15]#tx_clk#txd[0]#txd[1]#txd[2]#txd[3]#tx_ctl#rx_clk#rxd[0]#rxd[1]#rxd[2]#rxd[3]#rx_ctl#gpio[28]#gpio[29]#gpio[30]#gpio[31]#gpio[32]#gpio[33]#gpio[34]#gpio[35]#gpio[36]#gpio[37]#gpio[38]#gpio[39]#clk#cmd#data[0]#data[1]#data[2]#data[3]#gpio[46]#gpio[47]#tx#rx#gpio[50]#gpio[51]#gpio[52]#gpio[53]";
+                        xlnx,pcw-mio-tree-signals = "gpio[0]#qspi0_ss_b#qspi0_io[0]#qspi0_io[1]#qspi0_io[2]#qspi0_io[3]/HOLD_B#qspi0_sclk#gpio[7]#gpio[8]#gpio[9]#scl#sda#gpio[12]#gpio[13]#gpio[14]#gpio[15]#tx_clk#txd[0]#txd[1]#txd[2]#txd[3]#tx_ctl#rx_clk#rxd[0]#rxd[1]#rxd[2]#rxd[3]#rx_ctl#gpio[28]#gpio[29]#gpio[30]#gpio[31]#gpio[32]#gpio[33]#gpio[34]#gpio[35]#gpio[36]#gpio[37]#gpio[38]#gpio[39]#clk#cmd#data[0]#data[1]#data[2]#data[3]#gpio[46]#gpio[47]#tx#rx#gpio[50]#gpio[51]#gpio[52]#gpio[53]";
                         xlnx,pcw-nor-cs0-t-wc = <0xb>;
                         xlnx,pcw-p2f-smc-intr = <0x0>;
                         xlnx,pcw-qspi-grp-ss1-enable = <0x0>;
@@ -1376,7 +1374,7 @@
                         xlnx,pcw-uiparam-ddr-train-read-gate = <0x1>;
                         xlnx,gp1-en-modifiable-txn = <0x1>;
                         xlnx,name = "processing_system7_0";
-                        xlnx,pcw-act-spi-peripheral-freqmhz = <0x7735931>;
+                        xlnx,pcw-act-spi-peripheral-freqmhz = <0xa>;
                         xlnx,pcw-mio-11-slew = "slow";
                         xlnx,pcw-ttc1-clk1-peripheral-freqmhz = <0x7f28155>;
                         xlnx,pcw-en-emio-modem-uart0 = <0x0>;
@@ -1403,7 +1401,7 @@
                         xlnx,pcw-mio-0-direction = "inout";
                         xlnx,pcw-uiparam-ddr-dqs-1-package-length = <0x643b2e0>;
                         xlnx,pcw-uiparam-ddr-enable = <0x1>;
-                        xlnx,pcw-spi1-grp-ss0-enable = <0x1>;
+                        xlnx,pcw-spi1-grp-ss0-enable = <0x0>;
                         xlnx,pcw-usb-reset-polarity = "Active , Low";
                         xlnx,pcw-fclk-clk2-buf;
                         xlnx,pcw-p2f-uart0-intr = <0x0>;
@@ -1438,7 +1436,7 @@
                         xlnx,pcw-uiparam-ddr-board-delay3 = <0x3d090>;
                         xlnx,pcw-en-clktrig0-port = <0x0>;
                         xlnx,pcw-dm-width = <0x4>;
-                        xlnx,pcw-i2c0-i2c0-io = "<Select>";
+                        xlnx,pcw-i2c0-i2c0-io = "MIO , 10 , .. , 11";
                         xlnx,pcw-mio-33-direction = "inout";
                         xlnx,pcw-mio-11-iotype = "LVCMOS , 2.5V";
                         xlnx,pcw-mio-3-pullup = "disabled";
@@ -1491,12 +1489,12 @@
                         xlnx,pcw-m-axi-gp1-thread-id-width = <0xc>;
                         xlnx,pcw-mio-31-pullup = "enabled";
                         xlnx,pcw-usb-reset-enable = <0x0>;
-                        xlnx,pcw-mio-tree-peripherals = "GPIO#Quad , SPI , Flash#Quad , SPI , Flash#Quad , SPI , Flash#Quad , SPI , Flash#Quad , SPI , Flash#Quad , SPI , Flash#GPIO#GPIO#GPIO#SPI , 1#SPI , 1#SPI , 1#SPI , 1#GPIO#GPIO#Enet , 0#Enet , 0#Enet , 0#Enet , 0#Enet , 0#Enet , 0#Enet , 0#Enet , 0#Enet , 0#Enet , 0#Enet , 0#Enet , 0#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#SD , 0#SD , 0#SD , 0#SD , 0#SD , 0#SD , 0#GPIO#GPIO#UART , 1#UART , 1#GPIO#GPIO#GPIO#GPIO";
+                        xlnx,pcw-mio-tree-peripherals = "GPIO#Quad , SPI , Flash#Quad , SPI , Flash#Quad , SPI , Flash#Quad , SPI , Flash#Quad , SPI , Flash#Quad , SPI , Flash#GPIO#GPIO#GPIO#I2C , 0#I2C , 0#GPIO#GPIO#GPIO#GPIO#Enet , 0#Enet , 0#Enet , 0#Enet , 0#Enet , 0#Enet , 0#Enet , 0#Enet , 0#Enet , 0#Enet , 0#Enet , 0#Enet , 0#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#SD , 0#SD , 0#SD , 0#SD , 0#SD , 0#SD , 0#GPIO#GPIO#UART , 1#UART , 1#GPIO#GPIO#GPIO#GPIO";
                         xlnx,s-axi-hp0-id-width = <0x6>;
                         xlnx,include-trace-buffer = <0x0>;
                         xlnx,pcw-use-cr-fabric = <0x1>;
                         xlnx,pcw-enet0-peripheral-clksrc = "IO , PLL";
-                        xlnx,package-name = "fbg484";
+                        xlnx,package-name = "clg484";
                         xlnx,m-axi-gp1-enable-static-remap = <0x0>;
                         xlnx,pcw-en-clk2-port = <0x0>;
                         xlnx,pcw-p2f-dmac5-intr = <0x0>;
@@ -1526,7 +1524,7 @@
                         xlnx,pcw-sd0-grp-wp-enable = <0x0>;
                         xlnx,include-acp-trans-check = <0x0>;
                         xlnx,pcw-sdio1-highaddr = <0xe0101fff>;
-                        xlnx,pcw-i2c-peripheral-freqmhz = <0x19>;
+                        xlnx,pcw-i2c-peripheral-freqmhz = <0x69f6bc3>;
                         xlnx,pcw-uart0-peripheral-enable = <0x0>;
                         xlnx,pcw-p2f-enet0-intr = <0x0>;
                         xlnx,pcw-spi0-grp-ss1-io = "<Select>";
@@ -1707,7 +1705,7 @@
                         xlnx,pcw-nor-sram-cs1-t-tr = <0x1>;
                         xlnx,pcw-nor-nor-io = "<Select>";
                         xlnx,pcw-s-axi-gp0-freqmhz = <0xa>;
-                        xlnx,pcw-spi-peripheral-divisor0 = <0x8>;
+                        xlnx,pcw-spi-peripheral-divisor0 = <0x1>;
                         xlnx,pcw-trace-buffer-clock-delay = <0xc>;
                         xlnx,pcw-uiparam-ddr-clock-1-package-length = <0x57f3bf4>;
                         xlnx,pcw-mio-5-iotype = "LVCMOS , 2.5V";
@@ -1716,7 +1714,7 @@
                         xlnx,pcw-s-axi-acp-awuser-val = <0x1f>;
                         xlnx,pcw-use-expanded-ps-slcr-registers = <0x0>;
                         xlnx,pcw-uiparam-ddr-cwl = <0x6>;
-                        xlnx,pcw-spi1-peripheral-enable = <0x1>;
+                        xlnx,pcw-spi1-peripheral-enable = <0x0>;
                         xlnx,pcw-nor-sram-cs1-t-wc = <0xb>;
                         xlnx,pcw-tpiu-peripheral-freqmhz = <0xc8>;
                         xlnx,pcw-pjtag-pjtag-io = "<Select>";
@@ -1770,7 +1768,7 @@
                         xlnx,pcw-mio-20-pullup = "enabled";
                         xlnx,pcw-enet1-enet1-io = "<Select>";
                         xlnx,pcw-qspi-grp-ss1-io = "<Select>";
-                        xlnx,pcw-en-i2c0 = <0x0>;
+                        xlnx,pcw-en-i2c0 = <0x1>;
                         xlnx,pcw-dci-peripheral-divisor0 = <0xf>;
                         xlnx,pcw-en-i2c1 = <0x0>;
                         xlnx,pcw-dci-peripheral-divisor1 = <0x7>;
@@ -1806,7 +1804,7 @@
                         reg = <0xf8891000 0x1000 0xf8893000 0x1000>;
                         xlnx,pmu1-s-axi-baseaddr = <0xf8893000>;
                         xlnx,name = "ps7_pmu_0";
-                        phandle = <0x19>;
+                        phandle = <0x1a>;
                 };
 
                 ps7_qspi_linear_0: ps7_qspi_linear@fc000000 {
@@ -1817,7 +1815,7 @@
                         xlnx,ip-name = "ps7_qspi_linear";
                         reg = <0xfc000000 0x1000000>;
                         xlnx,name = "ps7_qspi_linear_0";
-                        phandle = <0x1b>;
+                        phandle = <0x1c>;
                 };
 
                 ps7_ddr_0: ps7_ddr@100000 {
@@ -1847,7 +1845,7 @@
                         xlnx,ip-name = "ps7_ocmc";
                         reg = <0xf800c000 0x1000>;
                         xlnx,name = "ps7_ocmc_0";
-                        phandle = <0x18>;
+                        phandle = <0x19>;
                 };
 
                 ps7_gpv_0: ps7_gpv@f8900000 {
@@ -1869,7 +1867,7 @@
                         xlnx,ip-name = "ps7_scuc";
                         reg = <0xf8f00000 0xfd>;
                         xlnx,name = "ps7_scuc_0";
-                        phandle = <0x1c>;
+                        phandle = <0x1d>;
                 };
 
                 ps7_iop_bus_config_0: ps7_iop_bus_config@e0200000 {
@@ -1880,7 +1878,7 @@
                         xlnx,ip-name = "ps7_iop_bus_config";
                         reg = <0xe0200000 0x1000>;
                         xlnx,name = "ps7_iop_bus_config_0";
-                        phandle = <0x16>;
+                        phandle = <0x17>;
                 };
 
                 ps7_ram_0: ps7_ram@0 {
@@ -2176,6 +2174,7 @@
                 spi0 = "/axi/spi@e000d000";
                 serial1 = "/amba_pl/axi_uart16550@43c10000";
                 serial2 = "/axi/coresight@f8800000";
+                i2c0 = "/axi/i2c@e0004000";
                 ethernet0 = "/axi/ethernet@e000b000";
         };
 

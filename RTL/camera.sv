@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`define DEBUG
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -48,7 +49,8 @@ module camera(
       ,output logic [7:0]S_AXIS_S2MM_0_tkeep
       ,output logic S_AXIS_S2MM_0_tlast
       ,input  logic S_AXIS_S2MM_0_tready
-      ,output logic S_AXIS_S2MM_0_tvalid               
+      ,output logic S_AXIS_S2MM_0_tvalid  
+      ,output logic [31:0] dataXferedCnt             
 );
 
 logic [1:0] cameraState;
@@ -87,6 +89,17 @@ always @ (posedge sys_clk, posedge sys_rst) begin
        end
 end 
 
+logic new_capture_d, capture;
+always @ (posedge sys_clk, posedge sys_rst) begin
+       if (sys_rst) begin
+          new_capture_d <= '0;
+       end else begin
+          new_capture_d <= new_capture;
+       end 
+end 
+
+assign capture = ~new_capture_d & new_capture;
+
 IDELAYCTRL icontrol (              			
 	.REFCLK			(ref_clk),
 	.RST			(sys_rst),
@@ -104,7 +117,7 @@ HawkCameraCtrl HawkCamera
        ,.sys_clk             (sys_clk)
        ,.delay_ready         (delay_ready)
        ,.sys_rst             (sys_rst)
-       ,.capture             (new_capture)
+       ,.capture             (capture)
        ,.serde_locked        (hawk_serde_locked)
        ,.testMode            (testMode)
        ,.new_frame           (hawk_new_frame)
@@ -139,7 +152,7 @@ OwlCameraCtrl OwlCamera
        ,.sys_clk              (sys_clk)
        ,.delay_ready          (delay_ready)
        ,.sys_rst              (sys_rst)
-       ,.capture              (new_capture)
+       ,.capture              (capture)
        ,.serde_locked         (owl_serde_locked)
        ,.testMode             (testMode)
        ,.new_frame            (owl_new_frame)
@@ -163,7 +176,22 @@ OwlCameraCtrl OwlCamera
   ,.S_AXIS_S2MM_0_tlast  (S_AXIS_S2MM_0_tlast)
   ,.S_AXIS_S2MM_0_tready (S_AXIS_S2MM_0_tready)
   ,.S_AXIS_S2MM_0_tvalid (S_AXIS_S2MM_0_tvalid)   
+  ,.dataXferedCnt        (dataXferedCnt)
  );
    
+
+`ifdef DEBUG
+ila_0 ila_camera (
+ .clk    (sys_clk)
+,.probe0 (cameraSelRegister)
+,.probe1 (testMode)
+,.probe2 (dataXferedCnt)
+,.probe3 (S_AXIS_S2MM_0_tready)
+,.probe4 (S_AXIS_S2MM_0_tvalid)
+,.probe5 (frame_rst)
+,.probe6 (capture_end)
+);
+
+`endif 
 
 endmodule

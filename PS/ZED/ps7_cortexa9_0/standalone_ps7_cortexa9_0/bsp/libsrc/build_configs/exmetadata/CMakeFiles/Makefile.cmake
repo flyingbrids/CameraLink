@@ -125,12 +125,12 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/dmaps_example.dir/DependInfo.cmake"
   "CMakeFiles/emacps_example.dir/DependInfo.cmake"
   "CMakeFiles/gpiops_example.dir/DependInfo.cmake"
+  "CMakeFiles/iicps_example.dir/DependInfo.cmake"
   "CMakeFiles/scugic_example.dir/DependInfo.cmake"
   "CMakeFiles/qspips_example.dir/DependInfo.cmake"
   "CMakeFiles/scutimer_example.dir/DependInfo.cmake"
   "CMakeFiles/scuwdt_example.dir/DependInfo.cmake"
   "CMakeFiles/sdps_example.dir/DependInfo.cmake"
-  "CMakeFiles/spips_example.dir/DependInfo.cmake"
   "CMakeFiles/uartps_example.dir/DependInfo.cmake"
   "CMakeFiles/xadcps_example.dir/DependInfo.cmake"
   )

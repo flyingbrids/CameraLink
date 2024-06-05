@@ -211,6 +211,19 @@ gpiops_example/fast:
 .PHONY : gpiops_example/fast
 
 #=============================================================================
+# Target rules for targets named iicps_example
+
+# Build rule for target.
+iicps_example: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 iicps_example
+.PHONY : iicps_example
+
+# fast build rule for target.
+iicps_example/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/iicps_example.dir/build.make CMakeFiles/iicps_example.dir/build
+.PHONY : iicps_example/fast
+
+#=============================================================================
 # Target rules for targets named scugic_example
 
 # Build rule for target.
@@ -276,19 +289,6 @@ sdps_example/fast:
 .PHONY : sdps_example/fast
 
 #=============================================================================
-# Target rules for targets named spips_example
-
-# Build rule for target.
-spips_example: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 spips_example
-.PHONY : spips_example
-
-# fast build rule for target.
-spips_example/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/spips_example.dir/build.make CMakeFiles/spips_example.dir/build
-.PHONY : spips_example/fast
-
-#=============================================================================
 # Target rules for targets named uartps_example
 
 # Build rule for target.
@@ -328,12 +328,12 @@ help:
 	@echo "... dmaps_example"
 	@echo "... emacps_example"
 	@echo "... gpiops_example"
+	@echo "... iicps_example"
 	@echo "... qspips_example"
 	@echo "... scugic_example"
 	@echo "... scutimer_example"
 	@echo "... scuwdt_example"
 	@echo "... sdps_example"
-	@echo "... spips_example"
 	@echo "... uartns550_example"
 	@echo "... uartps_example"
 	@echo "... xadcps_example"

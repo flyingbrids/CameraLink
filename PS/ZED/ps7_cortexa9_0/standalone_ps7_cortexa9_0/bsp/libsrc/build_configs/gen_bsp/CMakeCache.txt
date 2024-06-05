@@ -277,12 +277,6 @@ TOOLCHAIN_DEP_FLAGS:STRING= -MMD -MP
 //Extra CFLAGS
 TOOLCHAIN_EXTRA_C_FLAGS:STRING= -g -Wall -Wextra -fno-tree-loop-distribute-patterns
 
-//Enables support for AMD family devices
-XILFLASH_enable_amd:BOOL=OFF
-
-//Enables support for Intel family devices
-XILFLASH_enable_intel:BOOL=ON
-
 //Enable Interval Timer
 XILTIMER_en_interval_timer:BOOL=OFF
 
@@ -363,6 +357,15 @@ gpiops_IS_TOP_LEVEL:STATIC=OFF
 
 //Value Computed by CMake
 gpiops_SOURCE_DIR:STATIC=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/gpiops/src
+
+//Value Computed by CMake
+iicps_BINARY_DIR:STATIC=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/build_configs/gen_bsp/libsrc/iicps/src
+
+//Value Computed by CMake
+iicps_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+iicps_SOURCE_DIR:STATIC=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/iicps/src
 
 //Value Computed by CMake
 libxil_BINARY_DIR:STATIC=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/build_configs/gen_bsp/libsrc
@@ -673,15 +676,6 @@ sdps_SOURCE_DIR:STATIC=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps
 //Enable fixed link for GEM SGMII at 1Gbps
 sgmii_fixed_link:STRING=0
 
-//Value Computed by CMake
-spips_BINARY_DIR:STATIC=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/build_configs/gen_bsp/libsrc/spips/src
-
-//Value Computed by CMake
-spips_IS_TOP_LEVEL:STATIC=OFF
-
-//Value Computed by CMake
-spips_SOURCE_DIR:STATIC=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/spips/src
-
 //stdin peripheral
 standalone_stdin:STRING=ps7_uart_1
 
@@ -714,15 +708,6 @@ xadcps_IS_TOP_LEVEL:STATIC=OFF
 
 //Value Computed by CMake
 xadcps_SOURCE_DIR:STATIC=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/xadcps/src
-
-//Value Computed by CMake
-xilflash_BINARY_DIR:STATIC=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/build_configs/gen_bsp/libsrc/xilflash/src
-
-//Value Computed by CMake
-xilflash_IS_TOP_LEVEL:STATIC=OFF
-
-//Value Computed by CMake
-xilflash_SOURCE_DIR:STATIC=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/xilflash/src
 
 //Value Computed by CMake
 xilstandalone_BINARY_DIR:STATIC=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/build_configs/gen_bsp/libsrc/standalone/src
@@ -854,7 +839,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=35
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=33
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP

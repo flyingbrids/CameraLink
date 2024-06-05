@@ -44,12 +44,6 @@ TOOLCHAIN_DEP_FLAGS:STRING= -MMD -MP
 // Extra CFLAGS
 TOOLCHAIN_EXTRA_C_FLAGS:STRING= -g -Wall -Wextra -fno-tree-loop-distribute-patterns
 
-// Enables support for AMD family devices
-XILFLASH_enable_amd:BOOL=OFF
-
-// Enables support for Intel family devices
-XILFLASH_enable_intel:BOOL=ON
-
 // Enable Interval Timer
 XILTIMER_en_interval_timer:BOOL=OFF
 

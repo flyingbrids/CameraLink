@@ -73,12 +73,12 @@ all: CMakeFiles/devcfg_example.dir/all
 all: CMakeFiles/dmaps_example.dir/all
 all: CMakeFiles/emacps_example.dir/all
 all: CMakeFiles/gpiops_example.dir/all
+all: CMakeFiles/iicps_example.dir/all
 all: CMakeFiles/scugic_example.dir/all
 all: CMakeFiles/qspips_example.dir/all
 all: CMakeFiles/scutimer_example.dir/all
 all: CMakeFiles/scuwdt_example.dir/all
 all: CMakeFiles/sdps_example.dir/all
-all: CMakeFiles/spips_example.dir/all
 all: CMakeFiles/uartps_example.dir/all
 all: CMakeFiles/xadcps_example.dir/all
 .PHONY : all
@@ -95,12 +95,12 @@ clean: CMakeFiles/devcfg_example.dir/clean
 clean: CMakeFiles/dmaps_example.dir/clean
 clean: CMakeFiles/emacps_example.dir/clean
 clean: CMakeFiles/gpiops_example.dir/clean
+clean: CMakeFiles/iicps_example.dir/clean
 clean: CMakeFiles/scugic_example.dir/clean
 clean: CMakeFiles/qspips_example.dir/clean
 clean: CMakeFiles/scutimer_example.dir/clean
 clean: CMakeFiles/scuwdt_example.dir/clean
 clean: CMakeFiles/sdps_example.dir/clean
-clean: CMakeFiles/spips_example.dir/clean
 clean: CMakeFiles/uartps_example.dir/clean
 clean: CMakeFiles/xadcps_example.dir/clean
 .PHONY : clean
@@ -288,6 +288,32 @@ CMakeFiles/gpiops_example.dir/clean:
 .PHONY : CMakeFiles/gpiops_example.dir/clean
 
 #=============================================================================
+# Target rules for target CMakeFiles/iicps_example.dir
+
+# All Build rule for target.
+CMakeFiles/iicps_example.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/iicps_example.dir/build.make CMakeFiles/iicps_example.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/iicps_example.dir/build.make CMakeFiles/iicps_example.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/build_configs/exmetadata/CMakeFiles --progress-num= "Built target iicps_example"
+.PHONY : CMakeFiles/iicps_example.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/iicps_example.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/build_configs/exmetadata/CMakeFiles 0
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/iicps_example.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/build_configs/exmetadata/CMakeFiles 0
+.PHONY : CMakeFiles/iicps_example.dir/rule
+
+# Convenience name for target.
+iicps_example: CMakeFiles/iicps_example.dir/rule
+.PHONY : iicps_example
+
+# clean rule for target.
+CMakeFiles/iicps_example.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/iicps_example.dir/build.make CMakeFiles/iicps_example.dir/clean
+.PHONY : CMakeFiles/iicps_example.dir/clean
+
+#=============================================================================
 # Target rules for target CMakeFiles/scugic_example.dir
 
 # All Build rule for target.
@@ -416,32 +442,6 @@ sdps_example: CMakeFiles/sdps_example.dir/rule
 CMakeFiles/sdps_example.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/sdps_example.dir/build.make CMakeFiles/sdps_example.dir/clean
 .PHONY : CMakeFiles/sdps_example.dir/clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/spips_example.dir
-
-# All Build rule for target.
-CMakeFiles/spips_example.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/spips_example.dir/build.make CMakeFiles/spips_example.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/spips_example.dir/build.make CMakeFiles/spips_example.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/build_configs/exmetadata/CMakeFiles --progress-num= "Built target spips_example"
-.PHONY : CMakeFiles/spips_example.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/spips_example.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/build_configs/exmetadata/CMakeFiles 0
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/spips_example.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/build_configs/exmetadata/CMakeFiles 0
-.PHONY : CMakeFiles/spips_example.dir/rule
-
-# Convenience name for target.
-spips_example: CMakeFiles/spips_example.dir/rule
-.PHONY : spips_example
-
-# clean rule for target.
-CMakeFiles/spips_example.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/spips_example.dir/build.make CMakeFiles/spips_example.dir/clean
-.PHONY : CMakeFiles/spips_example.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/uartps_example.dir

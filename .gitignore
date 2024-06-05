@@ -17,10 +17,16 @@ IP/*/*/*.v
 IP/*/*/*.vhd
 IP/*/*/*.vhdl
 IP/*/*/*.txt
+IP/*/*/*/*.xdc
+IP/*/*/*/*.xml
+IP/*/*/*/*.vh
+IP/*/*/*/*.v
+IP/*/*/*/*.vhd
+IP/*/*/*/*.vhdl
+IP/*/*/*/*.txt
 
 # Ignore build output directory
 build/
-
 
 # Ignore object files and dependent files
 *.o

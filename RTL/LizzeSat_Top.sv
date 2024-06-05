@@ -212,10 +212,10 @@ OBUFDS TX_LVDS
 
 `ifdef ZED
 heartBeatPulse #(.FREQ(124000000)) 
-sys_tick(.clk(sys_clk), .rst(sys_rst), .tick(LD0));
+sys_tick(.clk(sys_clk), .rst(sys_rst), .tick(LD6));
 
 heartBeatPulse #(.FREQ(200000000)) 
-sys_tick1(.clk(ref_clk), .rst(sys_rst), .tick(LD1));
+sys_tick1(.clk(ref_clk), .rst(sys_rst), .tick(LD7));
 `endif 
 
 // AXI4-Lite Register bank
@@ -225,8 +225,8 @@ logic [15:0] HawkImageHeight;
 logic [15:0] OwlImageWidth;
 logic [15:0] OwlImageHeight;
 logic [31:0] timeOut;
-
-axi_register axi_register_bank(
+logic [31:0] DMAdataXferedCnt;
+axi_register_interface axi_register_bank(
 	    .S_AXI_ACLK    (sys_clk),
 		.S_AXI_ARESETN (sys_rst_n),
 		// Register data
@@ -240,8 +240,9 @@ axi_register axi_register_bank(
         .serde_locked      (serde_locked),
         .camera_in_progress(camera_in_progress),
         .timeOut           (timeOut),
-        .HwVersion         ({24'h0F5AA5,1'b0,SW6,SW5,SW4,SW3,SW2,SW1,SW0}),
-        .ledTest           ({LD7,LD6,LD5,LD4,LD3,LD2}),		
+        .HwVersion         ({24'h1,1'b0,SW6,SW5,SW4,SW3,SW2,SW1,SW0}),
+        .ledTest           ({LD5,LD4,LD3,LD2,LD1,LD0}),		
+        .DMAdataXferedCnt  (DMAdataXferedCnt),  
 		// AXI4Lite 
 		.S_AXI_AWADDR  (AXI_0_awaddr),
 		.S_AXI_AWPROT  (AXI_0_awprot),
@@ -295,7 +296,8 @@ camera camera_receiver(
       ,.S_AXIS_S2MM_0_tkeep (S_AXIS_S2MM_0_tkeep)
       ,.S_AXIS_S2MM_0_tlast (S_AXIS_S2MM_0_tlast)
       ,.S_AXIS_S2MM_0_tready(S_AXIS_S2MM_0_tready)
-      ,.S_AXIS_S2MM_0_tvalid(S_AXIS_S2MM_0_tvalid)               
+      ,.S_AXIS_S2MM_0_tvalid(S_AXIS_S2MM_0_tvalid) 
+      ,.dataXferedCnt       (DMAdataXferedCnt)              
 );
     
 endmodule

@@ -28,6 +28,7 @@
 		spi0 = &qspi;
 		serial1 = &axi_uart16550_0;
 		serial2 = &coresight;
+		i2c0 = &i2c0;
 		ethernet0 = &gem0;
 	};
 	cpus_a9: cpus-a9@0 {
@@ -52,6 +53,7 @@
 			      <0xf8f00200 &global_timer 0xf8f00200 0x100>, 
 			      <0xe000a000 &gpio0 0xe000a000 0x1000>, 
 			      <0xf8900000 &ps7_gpv_0 0xf8900000 0x100000>, 
+			      <0xe0004000 &i2c0 0xe0004000 0x1000>, 
 			      <0xf8f01000 &intc 0xf8f01000 0x1000>, 
 			      <0xe0200000 &ps7_iop_bus_config_0 0xe0200000 0x1000>, 
 			      <0xf8f02000 &L2 0xf8f02000 0x1000>, 
@@ -64,7 +66,6 @@
 			      <0xf8f00620 &scuwdt 0xf8f00620 0xe0>, 
 			      <0xe0100000 &sdhci0 0xe0100000 0x1000>, 
 			      <0xf8000000 &slcr 0xf8000000 0x1000>, 
-			      <0xe0007000 &spi1 0xe0007000 0x1000>, 
 			      <0xe0001000 &uart1 0xe0001000 0x1000>, 
 			      <0xf8007100 &adc 0xf8007100 0x21>;
 		#ranges-address-cells = <0x1>;

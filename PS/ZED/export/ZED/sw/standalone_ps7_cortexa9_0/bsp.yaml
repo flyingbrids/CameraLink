@@ -147,6 +147,26 @@ drv_info:
       xgpiops_intr_example.c: []
       xgpiops_polled_example.c: []
   ps7_gpv_0: None
+  ps7_i2c_0:
+    driver: iicps
+    ip_name: ps7_i2c
+    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\iicps_v3_18
+    examples:
+      xiicps_eeprom_intr_example.c: []
+      xiicps_eeprom_polled_example.c: []
+      xiicps_intr_master_example.c: []
+      xiicps_intr_multi_master_example.c: []
+      xiicps_intr_slave_example.c: []
+      xiicps_polled_master_example.c: []
+      xiicps_polled_multi_master_example.c: []
+      xiicps_polled_slave_example.c: []
+      xiicps_repeated_start_example.c: []
+      xiicps_selftest_example.c: []
+      xiicps_slave_monitor_example.c: []
+      xiicps_smbus_intr_master_example.c: []
+      xiicps_smbus_intr_slave_example.c: []
+      xiicps_smbus_polled_master_example.c: []
+      xiicps_smbus_polled_slave_example.c: []
   ps7_intc_dist_0:
     driver: scugic
     ip_name: ps7_intc_dist
@@ -190,18 +210,6 @@ drv_info:
     examples:
       xsdps_raw_example.c: []
   ps7_slcr_0: None
-  ps7_spi_1:
-    driver: spips
-    ip_name: ps7_spi
-    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\spips_v3_9
-    examples:
-      xspips_eeprom_intr_example.c: []
-      xspips_eeprom_polled_example.c: []
-      xspips_flash_intr_example.c: []
-      xspips_flash_polled_example.c: []
-      xspips_selftest_example.c: []
-      xspips_slave_polled_example.c: []
-      xpips_tpm_polled_example.c: []
   ps7_uart_1:
     driver: uartps
     ip_name: ps7_uart
@@ -224,13 +232,6 @@ lib_info:
     path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\lib\sw_services\xiltimer_v1_3
   lwip213:
     path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\ThirdParty\sw_services\lwip213_v1_1
-  xilflash:
-    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\lib\sw_services\xilflash_v4_10
-    examples:
-      xilflash_devicecontrol_example.c: []
-      xilflash_platform_flash_example.c: []
-      xilflash_protection_example.c: []
-      xilflash_readwrite_example.c: []
 lib_config:
   xiltimer:
     XILTIMER_en_interval_timer:
@@ -942,24 +943,3 @@ lib_config:
       default: '255'
       options: []
       description: UDP TTL value
-  xilflash:
-    XILFLASH_enable_amd:
-      name: XILFLASH_enable_amd
-      permission: read_write
-      type: boolean
-      value: 'false'
-      default: 'false'
-      options:
-      - 'true'
-      - 'false'
-      description: Enables support for AMD family devices
-    XILFLASH_enable_intel:
-      name: XILFLASH_enable_intel
-      permission: read_write
-      type: boolean
-      value: 'true'
-      default: 'true'
-      options:
-      - 'true'
-      - 'false'
-      description: Enables support for Intel family devices
