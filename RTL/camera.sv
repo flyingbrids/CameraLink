@@ -1,5 +1,5 @@
 `timescale 1ns / 1ps
-`define DEBUG
+//`define DEBUG
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -21,16 +21,14 @@
 //////////////////////////////////////////////////////////////////////////////////
 module camera(
        // camera link
-       input  logic hawk_clk_n
-      ,input  logic hawk_clk_p
-      ,input  logic owl_clk_1_n
-      ,input  logic owl_clk_1_p  
-      ,input  logic owl_clk_2_n
-      ,input  logic owl_clk_2_p
-      ,input  logic [3:0] data_hawk_p
-      ,input  logic [3:0] data_hawk_n
-      ,input  logic [7:0] data_owl_p
-      ,input  logic [7:0] data_owl_n
+       input  logic xclk_p
+      ,input  logic xclk_n
+      ,input  logic [3:0] x_p
+      ,input  logic [3:0] x_n
+      ,input  logic yclk_p
+      ,input  logic yclk_n
+      ,input  logic [3:0] y_p
+      ,input  logic [3:0] y_n
       // system 
       ,input  logic ref_clk
       ,input  logic sys_clk
@@ -44,6 +42,7 @@ module camera(
       ,input  logic [15:0] owl_image_width
       ,output logic serde_locked
       ,output logic camera_in_progress
+      ,input  logic [31:0] timeOut
       // DMA
       ,output logic [63:0]S_AXIS_S2MM_0_tdata
       ,output logic [7:0]S_AXIS_S2MM_0_tkeep
@@ -54,18 +53,21 @@ module camera(
 );
 
 logic [1:0] cameraState;
-logic capture_end, cameraSelRegister, hawk_serde_locked, owl_serde_locked, frame_rst;
+logic capture_end, cameraSelRegister, frame_rst;
 
 assign camera_in_progress = (cameraState == '0)? 1'b0 : 1'b1;
 
+logic [31:0] timeOutCnt;
 always @ (posedge sys_clk) begin
       if (~camera_in_progress) begin
-         cameraSelRegister <= cameraSel;      
+         cameraSelRegister <= cameraSel;    
+         timeOutCnt <= '0;  
+      end else begin
+         timeOutCnt <= timeOutCnt + 1'b1;
       end 
 end 
 
 assign capture_end  = cameraSelRegister? owl_capture_end : hawk_capture_end;
-assign serde_locked = cameraSelRegister? owl_serde_locked : hawk_serde_locked;
 assign frame_rst    = cameraSelRegister? owl_new_frame   : hawk_new_frame; 
 
 logic hawk_new_frame;
@@ -83,7 +85,7 @@ always @ (posedge sys_clk, posedge sys_rst) begin
           case (cameraState) 
           2'b00:  if (frame_rst) cameraState <= 2'b01;
           2'b01:  if (capture_end) cameraState <= 2'b10;
-          2'b10:  if (S_AXIS_S2MM_0_tlast) cameraState <= 2'b00;
+          2'b10:  if (S_AXIS_S2MM_0_tlast | (timeOutCnt == timeOut)) cameraState <= 2'b00;
           default: cameraState <= 2'b00;  
           endcase 
        end
@@ -100,67 +102,74 @@ end
 
 assign capture = ~new_capture_d & new_capture;
 
+logic delay_ready;
+
 IDELAYCTRL icontrol (              			
 	.REFCLK			(ref_clk),
 	.RST			(sys_rst),
 	.RDY			(delay_ready)
 );	
 
+logic new_frame_cl,frame_valid_cl,pixel_vld_cl;
+logic [47:0] pixel_cl;
+
+ cameralink_medium_phy camera_link(
+ .sys_rst      (sys_rst),					
+ .sys_clk      (sys_clk),	
+ .delay_ready  (delay_ready),			
+ .clkin1_p     (xclk_p),  
+ .clkin1_n     (xclk_n),	
+ .datain1_p    (x_p), 
+ .datain1_n    (x_n),
+ .clkin2_p     (yclk_p),   
+ .clkin2_n     (yclk_n),	
+ .datain2_p    (y_p), 
+ .datain2_n    (y_n),
+ .pixel_data_o (pixel_cl),   // 4 pixel with 12 bit each px		
+ .pixel_vld    (pixel_vld_cl),
+ .new_frame    (new_frame_cl),
+ .frame_valid  (frame_valid_cl),
+ .locked       (serde_locked),
+ .camera_in_progress (camera_in_progress),
+ .cameraSel    (cameraSelRegister),
+ .lineWidth    (cameraSelRegister? owl_image_width : hawk_image_width)
+ ); 
+
 HawkCameraCtrl HawkCamera
  (
-        .clkin_p             (hawk_clk_p)
-       ,.clkin_n	         (hawk_clk_n)
-       ,.datain_p            (data_hawk_p)
-       ,.datain_n            (data_hawk_n)
+        .frame_valid_cl      (frame_valid_cl & ~cameraSelRegister)
+       ,.new_frame_cl        (new_frame_cl   & ~cameraSelRegister)
+       ,.pixel_vld_cl        (pixel_vld_cl   & ~cameraSelRegister)
+       ,.pixel_cl            (pixel_cl[23:0]) 
        ,.imageWidth          (hawk_image_width)
        ,.imageHeight         (hawk_image_height)
        ,.sys_clk             (sys_clk)
-       ,.delay_ready         (delay_ready)
        ,.sys_rst             (sys_rst)
        ,.capture             (capture)
-       ,.serde_locked        (hawk_serde_locked)
        ,.testMode            (testMode)
        ,.new_frame           (hawk_new_frame)
        ,.pixel               (hawk_pixel)
        ,.data_vld            (hawk_pixel_vld)
        ,.capture_end         (hawk_capture_end)
-       ,.camera_in_progress  (camera_in_progress)
-       ,.cameraSel           (~cameraSelRegister)
  );
- 
-logic [3:0] datain1_p;
-logic [3:0] datain1_n;
-logic [3:0] datain2_p;
-logic [3:0] datain2_n;
-assign datain1_p = data_owl_p[3:0]; 
-assign datain1_n = data_owl_n[3:0];  
-assign datain2_p = data_owl_p[7:4]; 
-assign datain2_n = data_owl_n[7:4];
 
 OwlCameraCtrl OwlCamera
  (
-        .clkin1_p             (owl_clk_1_p)
-       ,.clkin1_n	          (owl_clk_1_n)
-       ,.datain1_p            (datain1_p)
-       ,.datain1_n            (datain1_n)
-       ,.clkin2_p             (owl_clk_2_p)
-       ,.clkin2_n	          (owl_clk_2_n)
-       ,.datain2_p            (datain2_p )
-       ,.datain2_n            (datain2_n )       
+        .frame_valid_cl       (frame_valid_cl & cameraSelRegister)
+       ,.new_frame_cl         (new_frame_cl   & cameraSelRegister)
+       ,.pixel_vld_cl         (pixel_vld_cl   & cameraSelRegister)
+       ,.pixel_cl             (pixel_cl)       
        ,.imageWidth           (owl_image_width)
        ,.imageHeight          (owl_image_height)
        ,.sys_clk              (sys_clk)
-       ,.delay_ready          (delay_ready)
        ,.sys_rst              (sys_rst)
        ,.capture              (capture)
-       ,.serde_locked         (owl_serde_locked)
        ,.testMode             (testMode)
        ,.new_frame            (owl_new_frame)
        ,.pixel                (owl_pixel)
        ,.data_vld             (owl_pixel_vld)
        ,.capture_end          (owl_capture_end)
-       ,.camera_in_progress  (camera_in_progress)
-       ,.cameraSel           (cameraSelRegister)
+
  );
  
  DMAWrite DMAWrite_inst(

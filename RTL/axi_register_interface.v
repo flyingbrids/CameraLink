@@ -22,10 +22,16 @@
         output reg [15:0] OwlImageHeight,    
         output reg [31:0] timeOut,    
         output reg [5:0]  ledTest,  
+        output reg xband_new_frame,        
+        output reg [31:0] xband_rec_bytes,
         
         input wire  serde_locked,camera_in_progress, 
         input wire [31:0] HwVersion, 
+        input wire [31:0] xband_rec_dataCnt,
         input wire [31:0] DMAdataXferedCnt,
+        input wire MM2S_overflow,
+        input wire S2MM_overflow,
+        
 		// User ports ends
 		// Do not modify the ports beyond this line
 
@@ -688,9 +694,9 @@
 	        5'h19   : reg_data_out <= slv_reg25;
 	        5'h1A   : reg_data_out <= slv_reg26;
 	        5'h1B   : reg_data_out <= slv_reg27;
-	        5'h1C   : reg_data_out <= slv_reg28;
+	        5'h1C   : reg_data_out <= xband_rec_dataCnt;
 	        5'h1D   : reg_data_out <= DMAdataXferedCnt;
-	        5'h1E   : reg_data_out <= {30'd0,serde_locked,camera_in_progress};
+	        5'h1E   : reg_data_out <= {28'd0,S2MM_overflow,MM2S_overflow,serde_locked,camera_in_progress};
 	        5'h1F   : reg_data_out <= HwVersion;
 	        default : reg_data_out <= 0;
 	      endcase
@@ -719,14 +725,16 @@
      always @ (S_AXI_ACLK) begin        
          capture    <= slv_reg0[0]; 
          testMode   <= slv_reg0[1];
-         cameraSel  <= slv_reg0[2];
+         cameraSel  <= slv_reg0[2];         
          cameralinkRst <= slv_reg0[3];
+         xband_new_frame <= slv_reg0[4];
          HawkImageWidth <= slv_reg1[15:0];
          HawkImageHeight<= slv_reg1[31:16];
          OwlImageWidth <= slv_reg2[15:0];
          OwlImageHeight <= slv_reg2[31:16];   
          timeOut <= slv_reg3; 
          ledTest <= slv_reg4[5:0];
+         xband_rec_bytes <= slv_reg5[31:0];
      end   
 	// User logic ends
 

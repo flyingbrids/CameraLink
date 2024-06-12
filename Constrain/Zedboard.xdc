@@ -21,8 +21,8 @@
 # ----------------------------------------------------------------------------
 # JA Pmod - Bank 13
 # ----------------------------------------------------------------------------
-#set_property PACKAGE_PIN Y11  [get_ports {JA1}];  # "JA1"
-#set_property PACKAGE_PIN AA11 [get_ports {JA2}];  # "JA2"
+set_property PACKAGE_PIN Y11  [get_ports {iic_rtl_0_scl_io}];  # "JA1"
+set_property PACKAGE_PIN AA11 [get_ports {iic_rtl_0_sda_io}];  # "JA2"
 #set_property PACKAGE_PIN Y10  [get_ports {JA3}];  # "JA3"
 #set_property PACKAGE_PIN AA9  [get_ports {JA4}];  # "JA4"
 #set_property PACKAGE_PIN AB11 [get_ports {JA7}];  # "JA7"
@@ -202,46 +202,49 @@ set_property PACKAGE_PIN H17 [get_ports SW6]
 ## ----------------------------------------------------------------------------
 ## FMC Expansion Connector - Bank 34
 ## ----------------------------------------------------------------------------
-set_property PACKAGE_PIN L18 [get_ports hawk_clk_p]
-set_property PACKAGE_PIN L19 [get_ports hawk_clk_n]
-set_property PACKAGE_PIN M19 [get_ports owl_clk_1_p]
-set_property PACKAGE_PIN M20 [get_ports owl_clk_1_n]
-set_property PACKAGE_PIN N19 [get_ports owl_clk_2_p]
-set_property PACKAGE_PIN N20 [get_ports owl_clk_2_n]
-set_property PACKAGE_PIN P17 [get_ports {data_hawk_p[3]}]
-set_property PACKAGE_PIN P18 [get_ports {data_hawk_n[3]}]
-set_property PACKAGE_PIN N22 [get_ports {data_hawk_p[2]}]
-set_property PACKAGE_PIN P22 [get_ports {data_hawk_n[2]}]
-set_property PACKAGE_PIN M21 [get_ports {data_hawk_p[1]}]
-set_property PACKAGE_PIN M22 [get_ports {data_hawk_n[1]}]
-set_property PACKAGE_PIN J18 [get_ports {data_hawk_p[0]}]
-set_property PACKAGE_PIN K18 [get_ports {data_hawk_n[0]}]
-set_property PACKAGE_PIN L21 [get_ports {data_owl_p[7]}]
-set_property PACKAGE_PIN L22 [get_ports {data_owl_n[7]}]
-set_property PACKAGE_PIN T16 [get_ports {data_owl_p[6]}]
-set_property PACKAGE_PIN T17 [get_ports {data_owl_n[6]}]
-set_property PACKAGE_PIN J21 [get_ports {data_owl_p[5]}]
-set_property PACKAGE_PIN J22 [get_ports {data_owl_n[5]}]
-set_property PACKAGE_PIN R20 [get_ports {data_owl_p[4]}]
-set_property PACKAGE_PIN R21 [get_ports {data_owl_n[4]}]
-set_property PACKAGE_PIN R19 [get_ports {data_owl_p[3]}]
-set_property PACKAGE_PIN T19 [get_ports {data_owl_n[3]}]
-set_property PACKAGE_PIN N17 [get_ports {data_owl_p[2]}]
-set_property PACKAGE_PIN N18 [get_ports {data_owl_n[2]}]
-set_property PACKAGE_PIN P20 [get_ports {data_owl_p[1]}]
-set_property PACKAGE_PIN P21 [get_ports {data_owl_n[1]}]
-set_property PACKAGE_PIN L17 [get_ports {data_owl_p[0]}]
-set_property PACKAGE_PIN M17 [get_ports {data_owl_n[0]}]
-set_property PACKAGE_PIN K19 [get_ports SerTFG_p]
-set_property PACKAGE_PIN K20 [get_ports SerTFG_n]
-set_property PACKAGE_PIN J16 [get_ports SerTC_p]
-set_property PACKAGE_PIN J17 [get_ports SerTC_n]
+## ----------------------------------------------------------------------------
+## FMC Expansion Connector - Bank 34
+## ---------------------------------------------------------------------------- 
+#set_property PACKAGE_PIN L19 [get_ports {FMC_CLK0_N}];  # "FMC-CLK0_N"
+#set_property PACKAGE_PIN L18 [get_ports {FMC_CLK0_P}];  # "FMC-CLK0_P"
+set_property PACKAGE_PIN M20 [get_ports {xclk_n}];  # "FMC-LA00_CC_N"
+set_property PACKAGE_PIN M19 [get_ports {xclk_p}];  # "FMC-LA00_CC_P"
+set_property PACKAGE_PIN N20 [get_ports {yclk_n}];  # "FMC-LA01_CC_N"
+set_property PACKAGE_PIN N19 [get_ports {yclk_p}];  # "FMC-LA01_CC_P" - corrected 6/6/16 GE
+set_property PACKAGE_PIN P18 [get_ports {x_n[0]}];  # "FMC-LA02_N"
+set_property PACKAGE_PIN P17 [get_ports {x_p[0]}];  # "FMC-LA02_P"
+set_property PACKAGE_PIN P22 [get_ports {x_n[1]}];  # "FMC-LA03_N"
+set_property PACKAGE_PIN N22 [get_ports {x_p[1]}];  # "FMC-LA03_P"
+set_property PACKAGE_PIN M22 [get_ports {x_n[2]}];  # "FMC-LA04_N"
+set_property PACKAGE_PIN M21 [get_ports {x_p[2]}];  # "FMC-LA04_P"
+set_property PACKAGE_PIN K18 [get_ports {x_n[3]}];  # "FMC-LA05_N"
+set_property PACKAGE_PIN J18 [get_ports {x_p[3]}];  # "FMC-LA05_P"
+set_property PACKAGE_PIN L22 [get_ports {y_n[0]}];  # "FMC-LA06_N"
+set_property PACKAGE_PIN L21 [get_ports {y_p[0]}];  # "FMC-LA06_P"
+set_property PACKAGE_PIN T17 [get_ports {y_n[1]}];  # "FMC-LA07_N"
+set_property PACKAGE_PIN T16 [get_ports {y_p[1]}];  # "FMC-LA07_P"
+set_property PACKAGE_PIN J22 [get_ports {y_n[2]}];  # "FMC-LA08_N"
+set_property PACKAGE_PIN J21 [get_ports {y_p[2]}];  # "FMC-LA08_P"
+set_property PACKAGE_PIN R21 [get_ports {y_n[3]}];  # "FMC-LA09_N"
+set_property PACKAGE_PIN R20 [get_ports {y_p[3]}];  # "FMC-LA09_P"
+#set_property PACKAGE_PIN T19 [get_ports {FMC_LA10_N}];  # "FMC-LA10_N"
+#set_property PACKAGE_PIN R19 [get_ports {FMC_LA10_P}];  # "FMC-LA10_P"
+#set_property PACKAGE_PIN N18 [get_ports {FMC_LA11_N}];  # "FMC-LA11_N"
+#set_property PACKAGE_PIN N17 [get_ports {FMC_LA11_P}];  # "FMC-LA11_P"
+#set_property PACKAGE_PIN P21 [get_ports {FMC_LA12_N}];  # "FMC-LA12_N"
+#set_property PACKAGE_PIN P20 [get_ports {FMC_LA12_P}];  # "FMC-LA12_P"
+#set_property PACKAGE_PIN M17 [get_ports {FMC_LA13_N}];  # "FMC-LA13_N"
+#set_property PACKAGE_PIN L17 [get_ports {FMC_LA13_P}];  # "FMC-LA13_P"
+set_property PACKAGE_PIN K20 [get_ports {SerTFG_n}];  # "FMC-LA14_N"
+set_property PACKAGE_PIN K19 [get_ports {SerTFG_p}];  # "FMC-LA14_P"
+set_property PACKAGE_PIN J17 [get_ports {SerTC_n}];  # "FMC-LA15_N"
+set_property PACKAGE_PIN J16 [get_ports {SerTC_p}];  # "FMC-LA15_P"
 #set_property PACKAGE_PIN K21 [get_ports {FMC_LA16_N}];  # "FMC-LA16_N"
 #set_property PACKAGE_PIN J20 [get_ports {FMC_LA16_P}];  # "FMC-LA16_P"
 
 ## ----------------------------------------------------------------------------
 ## FMC Expansion Connector - Bank 35
-## ----------------------------------------------------------------------------
+## ---------------------------------------------------------------------------- 
 #set_property PACKAGE_PIN C19 [get_ports {FMC_CLK1_N}];  # "FMC-CLK1_N"
 #set_property PACKAGE_PIN D18 [get_ports {FMC_CLK1_P}];  # "FMC-CLK1_P"
 #set_property PACKAGE_PIN B20 [get_ports {FMC_LA17_CC_N}];  # "FMC-LA17_CC_N"
@@ -279,6 +282,7 @@ set_property PACKAGE_PIN J17 [get_ports SerTC_n]
 #set_property PACKAGE_PIN B22 [get_ports {FMC_LA33_N}];  # "FMC-LA33_N"
 #set_property PACKAGE_PIN B21 [get_ports {FMC_LA33_P}];  # "FMC-LA33_P"
 
+
 # ----------------------------------------------------------------------------
 # IOSTANDARD Constraints
 #
@@ -308,14 +312,12 @@ set_property IOSTANDARD LVCMOS25 [get_ports -of_objects [get_iobanks 35]]
 #set_property IOSTANDARD LVDS_25 [get_ports -of_objects [get_iobanks 35]];
 
 # Note that the bank voltage for IO Bank 13 is fixed to 3.3V on ZedBoard.
-#set_property IOSTANDARD LVCMOS33 [get_ports -of_objects [get_iobanks 13]];
+set_property IOSTANDARD LVCMOS33 [get_ports -of_objects [get_iobanks 13]];
 
 # ----------------------------------------------------------------------------
-create_clock -period 13.468 -name clk_hawk [get_ports hawk_clk_p]
-create_clock -period 14.286 -name clk_owl_1 [get_ports owl_clk_1_p]
-create_clock -period 14.286 -name clk_owl_2 [get_ports owl_clk_2_p]
-set_clock_groups -asynchronous -group [get_clocks clk_hawk] -group *
-set_clock_groups -asynchronous -group [get_clocks clk_owl_1] -group *
-set_clock_groups -asynchronous -group [get_clocks clk_owl_2] -group *
+create_clock -period 14.286 -name clk_x [get_ports xclk_p]
+create_clock -period 14.286 -name clk_y [get_ports yclk_p]
+set_clock_groups -asynchronous -group [get_clocks clk_x] -group *
+set_clock_groups -asynchronous -group [get_clocks clk_y] -group *
 
 set_clock_groups -asynchronous -group [get_clocks clk_fpga_0] -group *

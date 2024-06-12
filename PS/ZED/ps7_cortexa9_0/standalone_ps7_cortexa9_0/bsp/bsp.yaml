@@ -12,10 +12,11 @@ os_config:
       permission: read_write
       type: string
       value: ps7_uart_1
-      default: ps7_uart_1
+      default: ps7_uart_0
       options:
       - None
       - axi_uart16550_0
+      - ps7_uart_0
       - ps7_uart_1
       - ps7_coresight_comp_0
       description: stdin peripheral
@@ -24,10 +25,11 @@ os_config:
       permission: read_write
       type: string
       value: ps7_uart_1
-      default: ps7_uart_1
+      default: ps7_uart_0
       options:
       - None
       - axi_uart16550_0
+      - ps7_uart_0
       - ps7_uart_1
       - ps7_coresight_comp_0
       description: stdout peripheral
@@ -86,25 +88,18 @@ drv_info:
     driver: axidma
     ip_name: axi_dma
     path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\axidma_v9_17
-    examples:
-      xaxidma_example_simple_poll.c: []
-      xaxidma_example_selftest.c: []
   axi_dma_1:
     driver: axidma
     ip_name: axi_dma
     path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\axidma_v9_17
-    examples:
-      xaxidma_example_simple_poll.c: []
-      xaxidma_example_selftest.c: []
+  axi_iic_0:
+    driver: iic
+    ip_name: axi_iic
+    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\iic_v3_10
   axi_uart16550_0:
     driver: uartns550
     ip_name: axi_uart16550
     path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\uartns550_v3_9
-    examples:
-      xuartns550_hello_world_example.c: []
-      xuartns550_low_level_example.c: []
-      xuartns550_polled_example.c: []
-      xuartns550_selftest_example.c: []
   ps7_afi_0: None
   ps7_afi_1: None
   ps7_afi_2: None
@@ -118,55 +113,21 @@ drv_info:
     driver: devcfg
     ip_name: ps7_dev_cfg
     path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\devcfg_v3_8
-    examples:
-      xdevcfg_interrupt_example.c: []
-      xdevcfg_polled_example.c: []
-      xdevcfg_reg_readback_example.c: []
-      xdevcfg_selftest_example.c: []
   ps7_dma_ns: None
   ps7_dma_s:
     driver: dmaps
     ip_name: ps7_dma
     path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\dmaps_v2_9
-    examples:
-      xdmaps_example_w_intr.c: []
   ps7_ethernet_0:
     driver: emacps
     ip_name: ps7_ethernet
     path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\emacps_v3_19
-    examples:
-      xemacps_example_intr_dma.c:
-      - xemacps_example_util.c
-      - xemacps_example.h
   ps7_globaltimer_0: None
   ps7_gpio_0:
     driver: gpiops
     ip_name: ps7_gpio
     path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\gpiops_v3_12
-    examples:
-      xgpiops_intr_example.c: []
-      xgpiops_polled_example.c: []
   ps7_gpv_0: None
-  ps7_i2c_0:
-    driver: iicps
-    ip_name: ps7_i2c
-    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\iicps_v3_18
-    examples:
-      xiicps_eeprom_intr_example.c: []
-      xiicps_eeprom_polled_example.c: []
-      xiicps_intr_master_example.c: []
-      xiicps_intr_multi_master_example.c: []
-      xiicps_intr_slave_example.c: []
-      xiicps_polled_master_example.c: []
-      xiicps_polled_multi_master_example.c: []
-      xiicps_polled_slave_example.c: []
-      xiicps_repeated_start_example.c: []
-      xiicps_selftest_example.c: []
-      xiicps_slave_monitor_example.c: []
-      xiicps_smbus_intr_master_example.c: []
-      xiicps_smbus_intr_slave_example.c: []
-      xiicps_smbus_polled_master_example.c: []
-      xiicps_smbus_polled_slave_example.c: []
   ps7_intc_dist_0:
     driver: scugic
     ip_name: ps7_intc_dist
@@ -179,54 +140,37 @@ drv_info:
     driver: qspips
     ip_name: ps7_qspi
     path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\qspips_v3_11
-    examples:
-      xqspips_flash_intr_example.c: []
-      xqspips_flash_polled_example.c: []
-      xqspips_dual_flash_lqspi_example.c: []
-      xqspips_dual_flash_stack_lqspi_example.c: []
-      xqspips_flash_lqspi_example.c: []
-      xqspips_g128_flash_example.c: []
-      xqspips_selftest_example.c: []
   ps7_qspi_linear_0: None
   ps7_scuc_0: None
   ps7_scutimer_0:
     driver: scutimer
     ip_name: ps7_scutimer
     path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\scutimer_v2_5
-    examples:
-      xscutimer_polled_example.c: []
-      xscutimer_intr_example.c: []
   ps7_scuwdt_0:
     driver: scuwdt
     ip_name: ps7_scuwdt
     path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\scuwdt_v2_5
-    examples:
-      xscuwdt_intr_example.c: []
-      xscuwdt_polled_example.c: []
   ps7_sd_0:
     driver: sdps
     ip_name: ps7_sdio
     path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\sdps_v4_2
-    examples:
-      xsdps_raw_example.c: []
   ps7_slcr_0: None
+  ps7_spi_1:
+    driver: spips
+    ip_name: ps7_spi
+    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\spips_v3_9
+  ps7_uart_0:
+    driver: uartps
+    ip_name: ps7_uart
+    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\uartps_v3_13
   ps7_uart_1:
     driver: uartps
     ip_name: ps7_uart
     path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\uartps_v3_13
-    examples:
-      xuartps_hello_world_example.c: []
-      xuartps_intr_example.c: []
-      xuartps_low_echo_example.c: []
-      xuartps_polled_example.c: []
-      xuartps_selftest_example.c: []
   ps7_xadc_0:
     driver: xadcps
     ip_name: ps7_xadc
     path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\xadcps_v2_7
-    examples:
-      xadcps_intr_example.c: []
-      xadcps_polled_printf_example.c: []
 lib_info:
   xiltimer:
     path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\lib\sw_services\xiltimer_v1_3
@@ -845,7 +789,7 @@ lib_config:
       name: lwip213_temac_phy_link_speed
       permission: read_write
       type: string
-      value: CONFIG_LINKSPEED_AUTODETECT
+      value: CONFIG_LINKSPEED1000
       default: CONFIG_LINKSPEED_AUTODETECT
       options:
       - CONFIG_LINKSPEED10

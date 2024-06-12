@@ -19,35 +19,27 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 module HawkCameraCtrl(
-        input  logic  clkin_p
-       ,input  logic  clkin_n	
-       ,input  logic [3:0] datain_p 
-       ,input  logic [3:0] datain_n
+        input  logic        frame_valid_cl
+       ,input  logic        new_frame_cl
+       ,input  logic        pixel_vld_cl
+       ,input  logic [23:0] pixel_cl 
        ,input  logic [15:0] imageWidth
        ,input  logic [15:0] imageHeight
        ,input  logic sys_clk
-       ,input  logic delay_ready
        ,input  logic sys_rst
        ,input  logic capture // pulse
        ,input  logic testMode
-       ,output logic serde_locked
        ,output logic new_frame
        ,output logic [23:0] pixel
        ,output logic data_vld
        ,output logic capture_end
-       ,input  logic camera_in_progress
-       ,input  logic cameraSel 
-    );
+);
 
-logic [23:0] pixel_cl;
-logic pixel_vld_cl;
+
 logic [23:0] pixel_test;
 logic pixel_vld_test;
 logic pixel_vld;
-
-logic new_frame_cl, frame_valid_cl;
 logic frame_valid;
-
  logic test_mode_lat;  
  logic test_mode_start;
  logic test_mode_end;
@@ -56,24 +48,6 @@ assign new_frame   = new_frame_cl | test_mode_start;
 assign frame_valid = frame_valid_cl | test_mode_lat;
 assign pixel       = test_mode_lat? pixel_test :  pixel_cl;
 assign pixel_vld   = test_mode_lat? pixel_vld_test : pixel_vld_cl;
-
-cameralink_base_phy Hawk_Serdes(
-      .sys_rst	(sys_rst)				
-     ,.sys_clk  (sys_clk)
-     ,.delay_ready  (delay_ready)				
-     ,.clkin_p  (clkin_p)     
-     ,.clkin_n	(clkin_n)
-     ,.datain_p (datain_p)
-     ,.datain_n (datain_n)
-     ,.pixel_data_o (pixel_cl)  		
-     ,.pixel_vld    (pixel_vld_cl)   
-     ,.new_frame    (new_frame_cl)  // pulse
-     ,.frame_valid  (frame_valid_cl)
-     ,.locked       (serde_locked)
-     ,.camera_in_progress (camera_in_progress)
-     ,.cameraSel    (cameraSel)
-     ,.lineWidth    (imageWidth)
-);     
 
 logic [15:0] lineCnt;
 logic [15:0] colCnt;
@@ -146,8 +120,8 @@ logic [15:0] lineCnt_test;
 logic [15:0] colCnt_test;
 logic [7:0]  lineBreakCnt;
 
-assign pixel_test[12:0] = lineCnt_test[12:0] + colCnt_test[12:0];
-assign pixel_test[23:13]= lineCnt_test[12:0] + colCnt_test[12:0] + 1'b1;
+assign pixel_test[11:0] = lineCnt_test[11:0] + colCnt_test[11:0];
+assign pixel_test[23:12]= lineCnt_test[11:0] + colCnt_test[11:0] + 1'b1;
 
 always @ (posedge sys_clk, posedge sys_rst) begin
      if (sys_rst) begin

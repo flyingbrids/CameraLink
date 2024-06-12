@@ -294,8 +294,8 @@ proc_extra_compiler_flags:STRING= -g -Wall -Wextra -fno-tree-loop-distribute-pat
 sgmii_fixed_link:STRING=0
 
 // stdin peripheral
-standalone_stdin:STRING=ps7_uart_1
+standalone_stdin:STRING=ps7_uart_0
 
 // stdout peripheral
-standalone_stdout:STRING=ps7_uart_1
+standalone_stdout:STRING=ps7_uart_0
 

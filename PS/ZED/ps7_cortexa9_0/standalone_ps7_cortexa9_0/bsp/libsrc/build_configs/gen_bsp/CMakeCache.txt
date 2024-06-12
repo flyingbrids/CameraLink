@@ -359,13 +359,13 @@ gpiops_IS_TOP_LEVEL:STATIC=OFF
 gpiops_SOURCE_DIR:STATIC=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/gpiops/src
 
 //Value Computed by CMake
-iicps_BINARY_DIR:STATIC=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/build_configs/gen_bsp/libsrc/iicps/src
+iic_BINARY_DIR:STATIC=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/build_configs/gen_bsp/libsrc/iic/src
 
 //Value Computed by CMake
-iicps_IS_TOP_LEVEL:STATIC=OFF
+iic_IS_TOP_LEVEL:STATIC=OFF
 
 //Value Computed by CMake
-iicps_SOURCE_DIR:STATIC=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/iicps/src
+iic_SOURCE_DIR:STATIC=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/iic/src
 
 //Value Computed by CMake
 libxil_BINARY_DIR:STATIC=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/build_configs/gen_bsp/libsrc
@@ -582,7 +582,7 @@ lwip213_tcpip_mbox_size:STRING=200
 lwip213_temac_emac_number:STRING=0
 
 //link speed as negotiated by the PHY
-lwip213_temac_phy_link_speed:STRING=CONFIG_LINKSPEED_AUTODETECT
+lwip213_temac_phy_link_speed:STRING=CONFIG_LINKSPEED1000
 
 //Offload TCP and IP Receive checksum calculation (hardware support
 // required)
@@ -675,6 +675,15 @@ sdps_SOURCE_DIR:STATIC=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps
 
 //Enable fixed link for GEM SGMII at 1Gbps
 sgmii_fixed_link:STRING=0
+
+//Value Computed by CMake
+spips_BINARY_DIR:STATIC=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/build_configs/gen_bsp/libsrc/spips/src
+
+//Value Computed by CMake
+spips_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+spips_SOURCE_DIR:STATIC=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/spips/src
 
 //stdin peripheral
 standalone_stdin:STRING=ps7_uart_1
@@ -839,7 +848,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=33
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=34
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP
@@ -905,7 +914,7 @@ lwip213_temac_phy_link_speed-STRINGS:INTERNAL=CONFIG_LINKSPEED10;CONFIG_LINKSPEE
 //STRINGS property for variable: sgmii_fixed_link
 sgmii_fixed_link-STRINGS:INTERNAL=0;1
 //STRINGS property for variable: standalone_stdin
-standalone_stdin-STRINGS:INTERNAL=None;axi_uart16550_0;ps7_uart_1;ps7_coresight_comp_0
+standalone_stdin-STRINGS:INTERNAL=None;axi_uart16550_0;ps7_uart_0;ps7_uart_1;ps7_coresight_comp_0
 //STRINGS property for variable: standalone_stdout
-standalone_stdout-STRINGS:INTERNAL=None;axi_uart16550_0;ps7_uart_1;ps7_coresight_comp_0
+standalone_stdout-STRINGS:INTERNAL=None;axi_uart16550_0;ps7_uart_0;ps7_uart_1;ps7_coresight_comp_0
 

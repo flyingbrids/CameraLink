@@ -126,6 +126,7 @@ wire [23:0] pixel_data_o_1;
 wire [23:0] pixel_data_o_2;
 reg pixel_wr_1, pixel_wr_2;
 wire empty_1,empty_2;
+wire empty_1_sync,empty_2_sync;
 reg [1:0] frame_valid_d;
 wire rd_en;
 reg line_rd;
@@ -137,7 +138,7 @@ reg [1:0] frame_valid_state;
 wire fifo_rst;
 reg Fvalid;
 
-assign rd_en = (~empty_1) & (~empty_2) & line_rd;
+assign rd_en = (~empty_1) & (~empty_2 | ~cameraSel) & line_rd;
 assign fifo_rst = (frame_valid_state == 2'd2)? 1'b0: 1'b1;
 
 always @ (posedge rxclk_div) begin
@@ -147,22 +148,22 @@ always @ (posedge rxclk_div) begin
      pixel_data_in_2 <= {portE[7:4], portF, portE[3:0], portD};     
      
      if (rx_mmcm_lckdpsbs & (frame_valid_state == 2'd2)) begin
-         if (FVAL1 & FVAL2)
+         if (FVAL1 & (FVAL2 | ~cameraSel_sync))
             Fvalid <= 1'b1;
-         else if (empty_1 & empty_2)
+         else if (empty_1_sync & (empty_2_sync | ~cameraSel_sync))
             Fvalid <= 1'b0; 
      end else begin
         Fvalid <= 1'b0;
      end 
      
      if (rx_mmcm_lckdpsbs) begin
-        if ((frame_valid_state == 0) & FVAL1 & FVAL2) 
+        if ((frame_valid_state == 0) & FVAL1 & (FVAL2 | ~cameraSel_sync) ) 
             frame_valid_state <= 2'd1;  
-        else if ((frame_valid_state == 1) & ~FVAL1 & ~FVAL2 & dmaIdle & cameraSel_sync)
+        else if ((frame_valid_state == 1) & ~FVAL1 & (~FVAL2 | ~cameraSel_sync) & dmaIdle)
             frame_valid_state <= 2'd2;  
         else if ((frame_valid_state == 2) & dmaBusy2Idle)  
             frame_valid_state <= 2'd3;
-        else if ((frame_valid_state == 3) & ~FVAL1 & ~FVAL2 & dmaIdle & cameraSel_sync)  
+        else if ((frame_valid_state == 3) & ~FVAL1 & (~FVAL2 | ~cameraSel_sync) & dmaIdle)  
             frame_valid_state <= 2'd2;
      end else 
         frame_valid_state <= 0;
@@ -216,8 +217,8 @@ always @ (posedge sys_clk, posedge sys_rst) begin
              line_rd <= 1'b1;
              rd_cnt  <= 16'd0;         
           end else if (line_rd) begin
-             rd_cnt  <= rd_cnt + 16'd2;
-             line_rd <=  (rd_cnt < lineWidth-2)? 1'b1 : 1'b0; 
+             rd_cnt  <= cameraSel? rd_cnt + 16'd4 : rd_cnt + 16'd2;
+             line_rd <= cameraSel? (rd_cnt < lineWidth-4) : (rd_cnt < lineWidth-2); 
           end 
       end 
 end 
@@ -261,4 +262,21 @@ CDC_sync SEL_CDC (
  ,.sig_sync(cameraSel_sync)
  ,.pulse_sync()
 );
+
+CDC_sync empty1_CDC (
+  .sig_in  (empty_1)
+ ,.clk_b   (rxclk_div)
+ ,.rst_b   (~rx_mmcm_lckdpsbs)
+ ,.sig_sync(empty_1_sync)
+ ,.pulse_sync()
+);
+
+CDC_sync empty2_CDC (
+  .sig_in  (empty_2)
+ ,.clk_b   (rxclk_div)
+ ,.rst_b   (~rx_mmcm_lckdpsbs)
+ ,.sig_sync(empty_2_sync)
+ ,.pulse_sync()
+);
+
 endmodule

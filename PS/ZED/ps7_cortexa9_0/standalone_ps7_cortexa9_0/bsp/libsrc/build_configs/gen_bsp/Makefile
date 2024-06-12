@@ -256,17 +256,17 @@ gpiops/fast:
 .PHONY : gpiops/fast
 
 #=============================================================================
-# Target rules for targets named iicps
+# Target rules for targets named iic
 
 # Build rule for target.
-iicps: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 iicps
-.PHONY : iicps
+iic: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 iic
+.PHONY : iic
 
 # fast build rule for target.
-iicps/fast:
-	$(MAKE) $(MAKESILENT) -f libsrc/iicps/src/CMakeFiles/iicps.dir/build.make libsrc/iicps/src/CMakeFiles/iicps.dir/build
-.PHONY : iicps/fast
+iic/fast:
+	$(MAKE) $(MAKESILENT) -f libsrc/iic/src/CMakeFiles/iic.dir/build.make libsrc/iic/src/CMakeFiles/iic.dir/build
+.PHONY : iic/fast
 
 #=============================================================================
 # Target rules for targets named qspips
@@ -332,6 +332,19 @@ sdps: cmake_check_build_system
 sdps/fast:
 	$(MAKE) $(MAKESILENT) -f libsrc/sdps/src/CMakeFiles/sdps.dir/build.make libsrc/sdps/src/CMakeFiles/sdps.dir/build
 .PHONY : sdps/fast
+
+#=============================================================================
+# Target rules for targets named spips
+
+# Build rule for target.
+spips: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 spips
+.PHONY : spips
+
+# fast build rule for target.
+spips/fast:
+	$(MAKE) $(MAKESILENT) -f libsrc/spips/src/CMakeFiles/spips.dir/build.make libsrc/spips/src/CMakeFiles/spips.dir/build
+.PHONY : spips/fast
 
 #=============================================================================
 # Target rules for targets named uartns550
@@ -430,13 +443,14 @@ help:
 	@echo "... dmaps"
 	@echo "... emacps"
 	@echo "... gpiops"
-	@echo "... iicps"
+	@echo "... iic"
 	@echo "... lwip213"
 	@echo "... qspips"
 	@echo "... scugic"
 	@echo "... scutimer"
 	@echo "... scuwdt"
 	@echo "... sdps"
+	@echo "... spips"
 	@echo "... uartns550"
 	@echo "... uartps"
 	@echo "... xadcps"

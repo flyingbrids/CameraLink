@@ -4,6 +4,9 @@ axi_dma_0:
 axi_dma_1:
 - axi_dma
 - axidma
+axi_iic_0:
+- axi_iic
+- iic
 axi_uart16550_0:
 - axi_uart16550
 - uartns550
@@ -46,9 +49,6 @@ ps7_gpio_0:
 ps7_gpv_0:
 - ps7_gpv
 - None
-ps7_i2c_0:
-- ps7_i2c
-- iicps
 ps7_intc_dist_0:
 - ps7_intc_dist
 - scugic
@@ -85,6 +85,12 @@ ps7_sd_0:
 ps7_slcr_0:
 - ps7_slcr
 - None
+ps7_spi_1:
+- ps7_spi
+- spips
+ps7_uart_0:
+- ps7_uart
+- uartps
 ps7_uart_1:
 - ps7_uart
 - uartps

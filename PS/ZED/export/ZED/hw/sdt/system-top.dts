@@ -24,11 +24,12 @@
 		stdout-path = "serial0:115200n8";
 	};
 	aliases {
-		serial0 = &uart1;
+		serial0 = &uart0;
 		spi0 = &qspi;
-		serial1 = &axi_uart16550_0;
-		serial2 = &coresight;
-		i2c0 = &i2c0;
+		serial1 = &uart1;
+		serial2 = &axi_uart16550_0;
+		i2c0 = &axi_iic_0;
+		serial3 = &coresight;
 		ethernet0 = &gem0;
 	};
 	cpus_a9: cpus-a9@0 {
@@ -39,6 +40,7 @@
 			      <0xffff0000 &ps7_ram_1_memory 0xffff0000 0xfe00>, 
 			      <0x40400000 &axi_dma_0 0x40400000 0x10000>, 
 			      <0x40410000 &axi_dma_1 0x40410000 0x10000>, 
+			      <0x41600000 &axi_iic_0 0x41600000 0x10000>, 
 			      <0x43c10000 &axi_uart16550_0 0x43c10000 0x10000>, 
 			      <0xf8008000 &ps7_afi_0 0xf8008000 0x1000>, 
 			      <0xf8009000 &ps7_afi_1 0xf8009000 0x1000>, 
@@ -53,7 +55,6 @@
 			      <0xf8f00200 &global_timer 0xf8f00200 0x100>, 
 			      <0xe000a000 &gpio0 0xe000a000 0x1000>, 
 			      <0xf8900000 &ps7_gpv_0 0xf8900000 0x100000>, 
-			      <0xe0004000 &i2c0 0xe0004000 0x1000>, 
 			      <0xf8f01000 &intc 0xf8f01000 0x1000>, 
 			      <0xe0200000 &ps7_iop_bus_config_0 0xe0200000 0x1000>, 
 			      <0xf8f02000 &L2 0xf8f02000 0x1000>, 
@@ -66,6 +67,8 @@
 			      <0xf8f00620 &scuwdt 0xf8f00620 0xe0>, 
 			      <0xe0100000 &sdhci0 0xe0100000 0x1000>, 
 			      <0xf8000000 &slcr 0xf8000000 0x1000>, 
+			      <0xe0007000 &spi1 0xe0007000 0x1000>, 
+			      <0xe0000000 &uart0 0xe0000000 0x1000>, 
 			      <0xe0001000 &uart1 0xe0001000 0x1000>, 
 			      <0xf8007100 &adc 0xf8007100 0x21>;
 		#ranges-address-cells = <0x1>;

@@ -24,6 +24,7 @@ IP/*/*/*/*.v
 IP/*/*/*/*.vhd
 IP/*/*/*/*.vhdl
 IP/*/*/*/*.txt
+PS/
 
 # Ignore build output directory
 build/

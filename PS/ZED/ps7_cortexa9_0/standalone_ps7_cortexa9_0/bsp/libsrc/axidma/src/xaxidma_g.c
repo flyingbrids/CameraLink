@@ -16,7 +16,7 @@ XAxiDma_Config XAxiDma_ConfigTable[] __attribute__ ((section (".drvcfg_sec"))) =
 		0x1, /* xlnx,num-mm2s-channels */
 		0x1, /* xlnx,num-s2mm-channels */
 		0x10, /* xlnx,mm2s-burst-size */
-		0x10, /* xlnx,s2mm-burst-size */
+		0x100, /* xlnx,s2mm-burst-size */
 		0x0, /* xlnx,micro-dma */
 		0x40, /* xlnx,addrwidth */
 		0x1a, /* xlnx,sg-length-width */
@@ -36,8 +36,8 @@ XAxiDma_Config XAxiDma_ConfigTable[] __attribute__ ((section (".drvcfg_sec"))) =
 		0x0, /* xlnx,include-sg */
 		0x1, /* xlnx,num-mm2s-channels */
 		0x1, /* xlnx,num-s2mm-channels */
-		0x10, /* xlnx,mm2s-burst-size */
-		0x10, /* xlnx,s2mm-burst-size */
+		0x40, /* xlnx,mm2s-burst-size */
+		0x40, /* xlnx,s2mm-burst-size */
 		0x0, /* xlnx,micro-dma */
 		0x40, /* xlnx,addrwidth */
 		0x1a, /* xlnx,sg-length-width */
