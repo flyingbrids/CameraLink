@@ -277,6 +277,51 @@ TOOLCHAIN_DEP_FLAGS:STRING= -MMD -MP
 //Extra CFLAGS
 TOOLCHAIN_EXTRA_C_FLAGS:STRING= -g -Wall -Wextra -fno-tree-loop-distribute-patterns
 
+//0:Disable exFAT, 1:Enable exFAT(Also Enables LFN)
+XILFFS_enable_exfat:BOOL=OFF
+
+//0:Single partition, 1:Enable multiple partition
+XILFFS_enable_multi_partition:BOOL=OFF
+
+//Enables file system with selected interface. Enter 1 for SD.
+// Enter 2 for RAM
+XILFFS_fs_interface:STRING=1
+
+//Number of volumes (logical drives, from 1 to 10) to be used.
+XILFFS_num_logical_vol:STRING=2
+
+//RAM FS size
+XILFFS_ramfs_size:STRING=3145728
+
+//RAM FS start address
+XILFFS_ramfs_start_addr:STRING=
+
+//Enables the file system in Read_Only mode if true. ZynqMP fsbl
+// will set this to true
+XILFFS_read_only:BOOL=OFF
+
+//Configures relative path feature (valid values 0 to 2).
+XILFFS_set_fs_rpath:STRING=0
+
+//Enables use of CHMOD functionality for changing attributes (valid
+// only with read_only set to false)
+XILFFS_use_chmod:BOOL=OFF
+
+//Enables the Long File Name(LFN) support if non-zero. Disabled
+// by default: 0, LFN with static working buffer: 1, Dynamic working
+// buffer: 2 (on stack) or 3 (on heap)
+XILFFS_use_lfn:STRING=0
+
+//Disable(0) or Enable(1) f_mkfs function. ZynqMP fsbl will set
+// this to false
+XILFFS_use_mkfs:BOOL=ON
+
+//Enables the string functions (valid values 0 to 2).
+XILFFS_use_strfunc:STRING=0
+
+//Enables word access for misaligned memory access platform
+XILFFS_word_access:BOOL=ON
+
 //Enable Interval Timer
 XILTIMER_en_interval_timer:BOOL=OFF
 
@@ -686,10 +731,10 @@ spips_IS_TOP_LEVEL:STATIC=OFF
 spips_SOURCE_DIR:STATIC=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/spips/src
 
 //stdin peripheral
-standalone_stdin:STRING=ps7_uart_1
+standalone_stdin:STRING=ps7_uart_0
 
 //stdout peripheral
-standalone_stdout:STRING=ps7_uart_1
+standalone_stdout:STRING=ps7_uart_0
 
 //Value Computed by CMake
 uartns550_BINARY_DIR:STATIC=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/build_configs/gen_bsp/libsrc/uartns550/src
@@ -717,6 +762,24 @@ xadcps_IS_TOP_LEVEL:STATIC=OFF
 
 //Value Computed by CMake
 xadcps_SOURCE_DIR:STATIC=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/xadcps/src
+
+//Value Computed by CMake
+xilffs_BINARY_DIR:STATIC=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/build_configs/gen_bsp/libsrc/xilffs/src
+
+//Value Computed by CMake
+xilffs_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+xilffs_SOURCE_DIR:STATIC=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/xilffs/src
+
+//Value Computed by CMake
+xilrsa_BINARY_DIR:STATIC=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/build_configs/gen_bsp/libsrc/xilrsa/src
+
+//Value Computed by CMake
+xilrsa_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+xilrsa_SOURCE_DIR:STATIC=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/xilrsa/src
 
 //Value Computed by CMake
 xilstandalone_BINARY_DIR:STATIC=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/build_configs/gen_bsp/libsrc/standalone/src
@@ -848,7 +911,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=34
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=37
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP
@@ -891,6 +954,14 @@ CMAKE_STRIP-ADVANCED:INTERNAL=1
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 //STRINGS property for variable: MAC_INSTANCES
 MAC_INSTANCES-STRINGS:INTERNAL=ps7_ethernet_0
+//STRINGS property for variable: XILFFS_fs_interface
+XILFFS_fs_interface-STRINGS:INTERNAL=1;2
+//STRINGS property for variable: XILFFS_set_fs_rpath
+XILFFS_set_fs_rpath-STRINGS:INTERNAL=0;1;2
+//STRINGS property for variable: XILFFS_use_lfn
+XILFFS_use_lfn-STRINGS:INTERNAL=0;1;2;3
+//STRINGS property for variable: XILFFS_use_strfunc
+XILFFS_use_strfunc-STRINGS:INTERNAL=0;1;2
 //STRINGS property for variable: XILTIMER_sleep_timer
 XILTIMER_sleep_timer-STRINGS:INTERNAL=Default;ps7_scutimer_0
 //STRINGS property for variable: XILTIMER_tick_timer

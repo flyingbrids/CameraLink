@@ -7,7 +7,7 @@
     "xsaPathInPlatform": "ZED\\hw\\LizzeSat_Top.xsa",
     "emulationXsa": "",
     "emulationXsaPathInPlatform": "",
-    "isCustomFSBL": true,
+    "isCustomFSBL": false,
     "fsblPath": "",
     "pmufwElf": "",
     "flow": "EMBEDDED",
@@ -30,6 +30,20 @@
         "isBootDomain": false,
         "qemuData": "C:\\Project\\CameraLink\\PS\\ZED\\resources\\standalone_ps7_cortexa9_0\\qemu",
         "qemuArgsFile": "C:\\Project\\CameraLink\\PS\\ZED\\resources\\standalone_ps7_cortexa9_0\\qemu\\qemu_args.txt",
+        "pmcQemuArgsFile": "",
+        "isBSPGenReq": false
+      },
+      {
+        "name": "zynq_fsbl",
+        "displayName": "zynq_fsbl",
+        "processor": "ps7_cortexa9_0",
+        "cpuType": "cortex-a9",
+        "cpuInstance": "ps7_cortexa9_0",
+        "os": "standalone",
+        "appTemplate": "zynq_fsbl",
+        "isBootDomain": true,
+        "qemuData": "C:\\Project\\CameraLink\\PS\\ZED\\resources\\zynq_fsbl\\qemu",
+        "qemuArgsFile": "C:\\Project\\CameraLink\\PS\\ZED\\resources\\zynq_fsbl\\qemu\\qemu_args.txt",
         "pmcQemuArgsFile": "",
         "isBSPGenReq": false
       }

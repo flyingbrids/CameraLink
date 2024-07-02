@@ -24,6 +24,7 @@
         output reg [5:0]  ledTest,  
         output reg xband_new_frame,        
         output reg [31:0] xband_rec_bytes,
+        output reg [1:0]  loopback,
         
         input wire  serde_locked,camera_in_progress, 
         input wire [31:0] HwVersion, 
@@ -728,6 +729,7 @@
          cameraSel  <= slv_reg0[2];         
          cameralinkRst <= slv_reg0[3];
          xband_new_frame <= slv_reg0[4];
+         loopback        <= slv_reg0[6:5];
          HawkImageWidth <= slv_reg1[15:0];
          HawkImageHeight<= slv_reg1[31:16];
          OwlImageWidth <= slv_reg2[15:0];

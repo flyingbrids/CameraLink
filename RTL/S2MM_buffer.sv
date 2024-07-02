@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`define DEBUG
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -39,11 +40,11 @@ module S2MM_buffer(
 	
 
 `ifdef DEBUG
-//ila_11 S2MMFIFO_IF (
-//   .clk (rx_clk),
-//   .probe0 (rxdata),
-//   .probe1 (rxdataVld)   
-//);   
+ila_11 S2MMFIFO_IF (
+   .clk (rx_clk),
+   .probe0 (rxdata),
+   .probe1 (rxdataVld)   
+);   
 
 ila_10 S2MM_IF (
    .clk (sys_clk),

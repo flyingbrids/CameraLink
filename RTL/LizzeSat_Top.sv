@@ -265,6 +265,7 @@ logic [31:0] DMAdataXferedCnt;
 logic xband_new_frame, MM2S_overflow, S2MM_overflow;
 logic [31:0] xband_rec_bytes;
 logic [31:0] xband_rec_dataCnt;
+logic [1:0]  loopback;
 
 axi_register_interface axi_register_bank(
 	    .S_AXI_ACLK    (sys_clk),
@@ -288,6 +289,7 @@ axi_register_interface axi_register_bank(
         .S2MM_overflow     (S2MM_overflow),
         .xband_rec_bytes   (xband_rec_bytes),
         .xband_rec_dataCnt (xband_rec_dataCnt),
+        .loopback          (loopback),
 		// AXI4Lite 
 		.S_AXI_AWADDR  (AXI_0_awaddr),
 		.S_AXI_AWPROT  (AXI_0_awprot),
@@ -357,6 +359,7 @@ Xband Xband_LVDS
 	  ,.S2MM_overflow          (S2MM_overflow)
 	  ,.expBytes               (xband_rec_bytes)
 	  ,.dataCnt                (xband_rec_dataCnt)
+	  ,.loopback               (loopback)
 	  // AXIS interface
 	  ,.M_AXIS_MM2S_0_tdata    (M_AXIS_MM2S_0_tdata)
       ,.M_AXIS_MM2S_0_tkeep    (M_AXIS_MM2S_0_tkeep)

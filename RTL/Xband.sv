@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`define DEBUG
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -27,8 +28,11 @@ module Xband(
 	  ,input  logic new_frame
 	  ,output logic MM2S_overflow
 	  ,output logic S2MM_overflow
+	  ,input  logic [1:0] loopback
 	  ,input  logic [31:0] expBytes
 	  ,output logic [31:0] dataCnt 
+	  // Xband LVDS
+	  
 	  // AXIS interface
 	  ,input  logic [31:0]  M_AXIS_MM2S_0_tdata
       ,input  logic [3:0]   M_AXIS_MM2S_0_tkeep
@@ -83,10 +87,31 @@ logic txctrl;
 logic [7:0] rxdata;
 logic rxctrl;
 
-// loopback for now. Need to Connect to 8b/10b IP core
-assign rxdata = txdata;
-assign rxctrl = txctrl; 
- 
+logic [9:0] data_out_10bit;
+logic [9:0] data_in_10bit;
+logic data_out_val, data_out_kerr, data_out_rd;
+logic data_in_val,  dataout_k, dataout_kerr, dataout_val, rxdataVld;
+assign rxdataVld = dataout_val & ~dataout_k & ~dataout_kerr;
+
+`ifdef DEBUG
+ila_1 data_IF (
+   .clk (clk_10M),
+   .probe0 (txdata),
+   .probe1 (txctrl),  
+   .probe2 (data_out_10bit),
+   .probe3 (data_out_kerr),  
+   .probe4 (data_out_rd),
+   .probe5 (data_out_val),  
+   .probe6 (rxdata),
+   .probe7 (rxdataVld),
+   .probe8 (dataout_k),      
+   .probe9 (dataout_kerr),  
+   .probe10(dataout_val),
+   .probe11(loopback)   
+);
+`endif 
+
+//************************************************TX SIDE**********************************************
  //MM2S interface
 MM2S_buffer MM2S_buffer_inst (
      .tx_clk    (clk_10M)  
@@ -104,6 +129,39 @@ MM2S_buffer MM2S_buffer_inst (
    , .M_AXIS_MM2S_0_tvalid(M_AXIS_MM2S_0_tvalid)
 );
 
+enc_8b10b_n #( 
+   .nb (1)
+)
+Xband_TX 
+(
+      .clk          (clk_10M)
+    , .reset        (~xband_rst)
+    , .datain       (txdata)
+    , .datain_k     (txctrl)
+    , .datain_val   (1'b1)
+    , .dataout      (data_out_10bit)
+    , .dataout_kerr (data_out_kerr)
+    , .dataout_rd   (data_out_rd)
+    , .dataout_val  (data_out_val)
+);
+
+
+//************************************************RX SIDE**********************************************
+dec_8b10b_n #(
+    .nw (1)
+)
+Xband_RX 
+(
+    .clk           (clk_10M)
+  , .reset         (~xband_rst)
+  , .datain        (loopback[1]? data_out_10bit :data_in_10bit)
+  , .datain_val    (loopback[1]? data_out_val :data_in_val)
+  , .dataout       (rxdata)
+  , .dataout_k     (dataout_k)
+  , .dataout_kerr  (dataout_kerr)
+  , .dataout_val   (dataout_val)
+);
+
 //S2MM interface 
 S2MM_buffer S2MM_buffer_inst (
      .rx_clk        (clk_10M)  
@@ -114,8 +172,8 @@ S2MM_buffer S2MM_buffer_inst (
    , .expBytes      (expBytes)
    , .dataCnt       (dataCnt)
    , .FIFO_overflow (S2MM_overflow)
-   , .rxdata        (rxdata)
-   , .rxdataVld     (~rxctrl)
+   , .rxdata        (loopback[0]? txdata : rxdata)
+   , .rxdataVld     (loopback[0]? ~txctrl : rxdataVld)
    , .AxisData      (S_AXIS_S2MM_1_tdata)
    , .AxisDataReady (S_AXIS_S2MM_1_tkeep)
    , .AxisDataEnd   (S_AXIS_S2MM_1_tlast)
