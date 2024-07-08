@@ -101,6 +101,8 @@ int XbandLoopBackTest (int NumofBytes) {
 	Xil_DCacheFlushRange((UINTPTR)RxBufferPtr, NumofBytes);
 
     int Status;
+    SetXbandRemoteLoopback();
+    
     for (Index = 0; Index < 10; Index ++) {
 
         SetXbandRecBytes (NumofBytes);

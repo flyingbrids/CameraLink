@@ -712,13 +712,13 @@ libsrc/CMakeFiles/combined.dir/all: libsrc/qspips/src/CMakeFiles/qspips.dir/all
 libsrc/CMakeFiles/combined.dir/all: libsrc/scugic/src/CMakeFiles/scugic.dir/all
 libsrc/CMakeFiles/combined.dir/all: libsrc/gpiops/src/CMakeFiles/gpiops.dir/all
 libsrc/CMakeFiles/combined.dir/all: libsrc/iic/src/CMakeFiles/iic.dir/all
-libsrc/CMakeFiles/combined.dir/all: libsrc/scutimer/src/CMakeFiles/scutimer.dir/all
-libsrc/CMakeFiles/combined.dir/all: libsrc/sdps/src/CMakeFiles/sdps.dir/all
 libsrc/CMakeFiles/combined.dir/all: libsrc/scuwdt/src/CMakeFiles/scuwdt.dir/all
-libsrc/CMakeFiles/combined.dir/all: libsrc/xadcps/src/CMakeFiles/xadcps.dir/all
+libsrc/CMakeFiles/combined.dir/all: libsrc/sdps/src/CMakeFiles/sdps.dir/all
+libsrc/CMakeFiles/combined.dir/all: libsrc/scutimer/src/CMakeFiles/scutimer.dir/all
 libsrc/CMakeFiles/combined.dir/all: libsrc/uartps/src/CMakeFiles/uartps.dir/all
 libsrc/CMakeFiles/combined.dir/all: libsrc/uartns550/src/CMakeFiles/uartns550.dir/all
 libsrc/CMakeFiles/combined.dir/all: libsrc/spips/src/CMakeFiles/spips.dir/all
+libsrc/CMakeFiles/combined.dir/all: libsrc/xadcps/src/CMakeFiles/xadcps.dir/all
 	$(MAKE) $(MAKESILENT) -f libsrc/CMakeFiles/combined.dir/build.make libsrc/CMakeFiles/combined.dir/depend
 	$(MAKE) $(MAKESILENT) -f libsrc/CMakeFiles/combined.dir/build.make libsrc/CMakeFiles/combined.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=C:/Project/CameraLink/PS/ZED/ps7_cortexa9_0/standalone_ps7_cortexa9_0/bsp/libsrc/build_configs/gen_bsp/CMakeFiles --progress-num= "Built target combined"

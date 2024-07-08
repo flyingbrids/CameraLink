@@ -26,3 +26,5 @@
  u32 IsOwlSelected();
  void NewXbandFrame ();
  void SetXbandRecBytes (int NumofBytes);
+ void SetXbandLocalLoopback () ;
+ void SetXbandRemoteLoopback () ;

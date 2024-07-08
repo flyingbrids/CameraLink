@@ -83,12 +83,12 @@ void NewXbandFrame () {
 }
 
 void FPGARegisterInit () 
-{
+{ 
    SetOwlImageSize(1280,1024);
    SetHawkImageSize(1944,1472);
    SelectOwl();
    EnableTestMode();
-   SetCaptureTimeOut(0xffff0000);
+   SetCaptureTimeOut(0xffff0000);   
 }
 
 u32 ReadPLVersion () {
@@ -116,4 +116,12 @@ u32 ReadSwitchValue() {
          sample1 = FPGA_ReadReg(31);
     }
     return sample0;
+}
+
+void SetXbandLocalLoopback () {
+     FPGA_WriteReg(0,0x00000020);
+}
+
+void SetXbandRemoteLoopback () {
+     FPGA_WriteReg(0,0x00000040);
 }

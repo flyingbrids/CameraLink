@@ -14,9 +14,9 @@ _UNDEF_STACK_SIZE = DEFINED(_UNDEF_STACK_SIZE) ? _UNDEF_STACK_SIZE : 1024;
 
 MEMORY
 {
-	ps7_ddr_0 : ORIGIN = 0x100000, LENGTH = 0x1ff00000
-	ps7_ram_0 : ORIGIN = 0x0, LENGTH = 0x30000
 	ps7_ram_1 : ORIGIN = 0xffff0000, LENGTH = 0xfe00
+	ps7_ram_0 : ORIGIN = 0x0, LENGTH = 0x30000
+	ps7_ddr_0 : ORIGIN = 0x100000, LENGTH = 0x1ff00000
 }
 
 /* Specify the default entry point to the program */
@@ -201,7 +201,7 @@ SECTIONS
    *(.sdata.*)
    *(.gnu.linkonce.s.*)
    __sdata_end = .;
-} > ps7_ddr_0
+} > ps7_ram_0
 
 .sbss (NOLOAD) : {
    __sbss_start = .;
@@ -209,7 +209,7 @@ SECTIONS
    *(.sbss.*)
    *(.gnu.linkonce.sb.*)
    __sbss_end = .;
-} > ps7_ddr_0
+} > ps7_ram_0
 
 .tdata : {
    __tdata_start = .;
@@ -217,7 +217,7 @@ SECTIONS
    *(.tdata.*)
    *(.gnu.linkonce.td.*)
    __tdata_end = .;
-} > ps7_ddr_0
+} > ps7_ram_0
 
 .tbss : {
    __tbss_start = .;
@@ -225,7 +225,7 @@ SECTIONS
    *(.tbss.*)
    *(.gnu.linkonce.tb.*)
    __tbss_end = .;
-} > ps7_ddr_0
+} > ps7_ram_0
 
 .bss (NOLOAD) : {
    __bss_start = .;
@@ -234,7 +234,7 @@ SECTIONS
    *(.gnu.linkonce.b.*)
    *(COMMON)
    __bss_end = .;
-} > ps7_ddr_0
+} > ps7_ram_0
 
 _SDA_BASE_ = __sdata_start + ((__sbss_end - __sdata_start) / 2 );
 
@@ -250,7 +250,7 @@ _SDA2_BASE_ = __sdata2_start + ((__sbss2_end - __sdata2_start) / 2 );
    . += _HEAP_SIZE;
    _heap_end = .;
    HeapLimit = .;
-} > ps7_ddr_0
+} > ps7_ram_0
 
 .stack (NOLOAD) : {
    . = ALIGN(16);
@@ -280,7 +280,7 @@ _SDA2_BASE_ = __sdata2_start + ((__sbss2_end - __sdata2_start) / 2 );
    . += _UNDEF_STACK_SIZE;
    . = ALIGN(16);
    __undef_stack = .;
-} > ps7_ddr_0
+} > ps7_ram_0
 
 end = .;
 }
