@@ -21,10 +21,9 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-
 entity cam_top_rx is
 
-generic ( config : integer );  -- 0: BASE, 1: MEDIUM, 2: FULL
+generic ( configs : integer:=0; CLK_PERIOD : real );  -- 0: BASE, 1: MEDIUM, 2: FULL
 
 port (
 
@@ -74,17 +73,17 @@ port (
   sys_clk_f    : out std_logic;  -- parallel clock
   ser_clk_f    : out std_logic;  -- serial clock x 7
 
-  -- Parallel video data out (BASE config)
+  -- Parallel video data out (BASE configs)
   pix_a        : out std_logic_vector(7 downto 0);
   pix_b        : out std_logic_vector(7 downto 0);
   pix_c        : out std_logic_vector(7 downto 0);
 
-  -- Parallel video data out (MEDIUM config)
+  -- Parallel video data out (MEDIUM configs)
   pix_d        : out std_logic_vector(7 downto 0);
   pix_e        : out std_logic_vector(7 downto 0);
   pix_f        : out std_logic_vector(7 downto 0);
 
-  -- Parallel video data out (FULL config)
+  -- Parallel video data out (FULL configs)
   pix_g        : out std_logic_vector(7 downto 0);
   pix_h        : out std_logic_vector(7 downto 0);
   pix_i        : out std_logic_vector(7 downto 0);
@@ -101,9 +100,7 @@ port (
 
 end entity;
 
-
 architecture rtl of cam_top_rx is
-
 
 component cam_ibuf
 
@@ -115,8 +112,8 @@ port (
 
 end component;
 
-
 component cam_pll
+generic ( CLK_PERIOD : real);
 
 port (
 
@@ -136,7 +133,6 @@ port (
 
 end component;
 
-
 component cam_reset_retime
 
 port (
@@ -146,7 +142,6 @@ port (
   reset_n  : out std_logic ); -- retimed reset out (active low)
 
 end component;
-
 
 component cam_pulse_ext
 
@@ -160,7 +155,6 @@ port (
   pulse_out  : out std_logic );  -- extended pulse
 
 end component;
-
 
 component cam_full_rx
 
@@ -220,7 +214,6 @@ port (
   z_vid_hs   : out std_logic );                   -- same as LVAL
 
 end component;
-
 
 signal  pll_reset   : std_logic;
 signal  pll_locked  : std_logic;
@@ -283,7 +276,7 @@ begin
 -- Differential input buffers channel X --
 ------------------------------------------
 
-gen_base_config:  if (config = 0) generate
+gen_base_configs:  if (configs = 0) generate
 
   u00_cam_ibuf: cam_ibuf port map (di_p => xc_p, di_n => xc_n, do => xc);
   u01_cam_ibuf: cam_ibuf port map (di_p => x0_p, di_n => x0_n, do => x0);
@@ -305,62 +298,62 @@ gen_base_config:  if (config = 0) generate
   z2 <= '0';
   z3 <= '0';
 
-end generate gen_base_config;
+end generate gen_base_configs;
 
+--
+--------------------------------------------
+---- Differential input buffers channel Y --
+--------------------------------------------
+--
+--gen_medium_configs:  if (configs = 1) generate
+--
+--  u00_cam_ibuf: cam_ibuf port map (di_p => xc_p, di_n => xc_n, do => xc);
+--  u01_cam_ibuf: cam_ibuf port map (di_p => x0_p, di_n => x0_n, do => x0);
+--  u02_cam_ibuf: cam_ibuf port map (di_p => x1_p, di_n => x1_n, do => x1);
+--  u03_cam_ibuf: cam_ibuf port map (di_p => x2_p, di_n => x2_n, do => x2);
+--  u04_cam_ibuf: cam_ibuf port map (di_p => x3_p, di_n => x3_n, do => x3);
+--
+--  u05_cam_ibuf: cam_ibuf port map (di_p => yc_p, di_n => yc_n, do => yc);
+--  u06_cam_ibuf: cam_ibuf port map (di_p => y0_p, di_n => y0_n, do => y0);
+--  u07_cam_ibuf: cam_ibuf port map (di_p => y1_p, di_n => y1_n, do => y1);
+--  u08_cam_ibuf: cam_ibuf port map (di_p => y2_p, di_n => y2_n, do => y2);
+--  u09_cam_ibuf: cam_ibuf port map (di_p => y3_p, di_n => y3_n, do => y3);
+--
+--  -- N/C
+--  zc <= '0';
+--  z0 <= '0';
+--  z1 <= '0';
+--  z2 <= '0';
+--  z3 <= '0';
+--
+--end generate gen_medium_configs;
+--
+--
+--------------------------------------------
+---- Differential input buffers channel Z --
+--------------------------------------------
+--
+--gen_full_configs:  if (configs = 2) generate
+--
+--  u00_cam_ibuf: cam_ibuf port map (di_p => xc_p, di_n => xc_n, do => xc);
+--  u01_cam_ibuf: cam_ibuf port map (di_p => x0_p, di_n => x0_n, do => x0);
+--  u02_cam_ibuf: cam_ibuf port map (di_p => x1_p, di_n => x1_n, do => x1);
+--  u03_cam_ibuf: cam_ibuf port map (di_p => x2_p, di_n => x2_n, do => x2);
+--  u04_cam_ibuf: cam_ibuf port map (di_p => x3_p, di_n => x3_n, do => x3);
+--
+--  u05_cam_ibuf: cam_ibuf port map (di_p => yc_p, di_n => yc_n, do => yc);
+--  u06_cam_ibuf: cam_ibuf port map (di_p => y0_p, di_n => y0_n, do => y0);
+--  u07_cam_ibuf: cam_ibuf port map (di_p => y1_p, di_n => y1_n, do => y1);
+--  u08_cam_ibuf: cam_ibuf port map (di_p => y2_p, di_n => y2_n, do => y2);
+--  u09_cam_ibuf: cam_ibuf port map (di_p => y3_p, di_n => y3_n, do => y3);
+--
+--  u10_cam_ibuf: cam_ibuf port map (di_p => zc_p, di_n => zc_n, do => zc);
+--  u11_cam_ibuf: cam_ibuf port map (di_p => z0_p, di_n => z0_n, do => z0);
+--  u12_cam_ibuf: cam_ibuf port map (di_p => z1_p, di_n => z1_n, do => z1);
+--  u13_cam_ibuf: cam_ibuf port map (di_p => z2_p, di_n => z2_n, do => z2);
+--  u14_cam_ibuf: cam_ibuf port map (di_p => z3_p, di_n => z3_n, do => z3);
 
-------------------------------------------
--- Differential input buffers channel Y --
-------------------------------------------
-
-gen_medium_config:  if (config = 1) generate
-
-  u00_cam_ibuf: cam_ibuf port map (di_p => xc_p, di_n => xc_n, do => xc);
-  u01_cam_ibuf: cam_ibuf port map (di_p => x0_p, di_n => x0_n, do => x0);
-  u02_cam_ibuf: cam_ibuf port map (di_p => x1_p, di_n => x1_n, do => x1);
-  u03_cam_ibuf: cam_ibuf port map (di_p => x2_p, di_n => x2_n, do => x2);
-  u04_cam_ibuf: cam_ibuf port map (di_p => x3_p, di_n => x3_n, do => x3);
-
-  u05_cam_ibuf: cam_ibuf port map (di_p => yc_p, di_n => yc_n, do => yc);
-  u06_cam_ibuf: cam_ibuf port map (di_p => y0_p, di_n => y0_n, do => y0);
-  u07_cam_ibuf: cam_ibuf port map (di_p => y1_p, di_n => y1_n, do => y1);
-  u08_cam_ibuf: cam_ibuf port map (di_p => y2_p, di_n => y2_n, do => y2);
-  u09_cam_ibuf: cam_ibuf port map (di_p => y3_p, di_n => y3_n, do => y3);
-
-  -- N/C
-  zc <= '0';
-  z0 <= '0';
-  z1 <= '0';
-  z2 <= '0';
-  z3 <= '0';
-
-end generate gen_medium_config;
-
-
-------------------------------------------
--- Differential input buffers channel Z --
-------------------------------------------
-
-gen_full_config:  if (config = 2) generate
-
-  u00_cam_ibuf: cam_ibuf port map (di_p => xc_p, di_n => xc_n, do => xc);
-  u01_cam_ibuf: cam_ibuf port map (di_p => x0_p, di_n => x0_n, do => x0);
-  u02_cam_ibuf: cam_ibuf port map (di_p => x1_p, di_n => x1_n, do => x1);
-  u03_cam_ibuf: cam_ibuf port map (di_p => x2_p, di_n => x2_n, do => x2);
-  u04_cam_ibuf: cam_ibuf port map (di_p => x3_p, di_n => x3_n, do => x3);
-
-  u05_cam_ibuf: cam_ibuf port map (di_p => yc_p, di_n => yc_n, do => yc);
-  u06_cam_ibuf: cam_ibuf port map (di_p => y0_p, di_n => y0_n, do => y0);
-  u07_cam_ibuf: cam_ibuf port map (di_p => y1_p, di_n => y1_n, do => y1);
-  u08_cam_ibuf: cam_ibuf port map (di_p => y2_p, di_n => y2_n, do => y2);
-  u09_cam_ibuf: cam_ibuf port map (di_p => y3_p, di_n => y3_n, do => y3);
-
-  u10_cam_ibuf: cam_ibuf port map (di_p => zc_p, di_n => zc_n, do => zc);
-  u11_cam_ibuf: cam_ibuf port map (di_p => z0_p, di_n => z0_n, do => z0);
-  u12_cam_ibuf: cam_ibuf port map (di_p => z1_p, di_n => z1_n, do => z1);
-  u13_cam_ibuf: cam_ibuf port map (di_p => z2_p, di_n => z2_n, do => z2);
-  u14_cam_ibuf: cam_ibuf port map (di_p => z3_p, di_n => z3_n, do => z3);
-
-end generate gen_full_config;
+--end generate gen_full_configs;
 
 
 ------------------------------
@@ -380,7 +373,9 @@ pll_reset <= not rst_n;
 -------------------------------------------
 
 u0_cam_pll: cam_pll
-
+generic map (
+    CLK_PERIOD => CLK_PERIOD        
+)
 port map (
 
   -- Status and control signals
@@ -510,19 +505,19 @@ pix_lval <= x_vid_hs;
 -- assert an error flag active high.                         --
 --                                                           --
 -- These error flags must be modified depedning on whether   --
--- we're running a BASE, MEDIUM or FULL configuration        --
+-- we're running a BASE, MEDIUM or FULL configsuration        --
 ---------------------------------------------------------------
 
-gen_base_err_config:  if (config = 0) generate
+gen_base_err_configs:  if (configs = 0) generate
 
   err_en <= '0';
   err_vs <= '0';
   err_hs <= '0';
 
-end generate gen_base_err_config;
+end generate gen_base_err_configs;
 
 
-gen_medium_err_config:  if (config = 1) generate
+gen_medium_err_configs:  if (configs = 1) generate
 
   err_en <= '0' when (x_vid_en = '0' and y_vid_en = '0') or
                      (x_vid_en = '1' and y_vid_en = '1') else '1';
@@ -533,10 +528,10 @@ gen_medium_err_config:  if (config = 1) generate
   err_hs <= '0' when (x_vid_hs = '0' and y_vid_hs = '0') or
                      (x_vid_hs = '1' and y_vid_hs = '1') else '1';
 
-end generate gen_medium_err_config;
+end generate gen_medium_err_configs;
 
 
-gen_full_err_config:  if (config = 2) generate
+gen_full_err_configs:  if (configs = 2) generate
 
   err_en <= '0' when (x_vid_en = '0' and y_vid_en = '0' and z_vid_en = '0') or
                      (x_vid_en = '1' and y_vid_en = '1' and z_vid_en = '1') else '1';
@@ -547,7 +542,7 @@ gen_full_err_config:  if (config = 2) generate
   err_hs <= '0' when (x_vid_hs = '0' and y_vid_hs = '0' and z_vid_hs = '0') or
                      (x_vid_hs = '1' and y_vid_hs = '1' and z_vid_hs = '1') else '1';
 
-end generate gen_full_err_config;
+end generate gen_full_err_configs;
 
 
 --------------------------------

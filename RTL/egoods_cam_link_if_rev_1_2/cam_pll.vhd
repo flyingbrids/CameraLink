@@ -96,6 +96,7 @@ library unisim;
 use unisim.vcomponents.all;
 
 entity cam_pll is
+generic ( CLK_PERIOD : real:= 31.250 );
 port
  (-- Clock in ports
   CLK_IN1           : in     std_logic;

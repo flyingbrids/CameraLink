@@ -24,7 +24,7 @@ use ieee.std_logic_1164.all;
 
 entity cam_model is
 
-generic ( config : integer );  -- 0: BASE, 1: MEDIUM, 2: FULL
+generic (  config : integer := 1  );  -- 0: BASE, 1: MEDIUM, 2: FULL
 
 port (
 

@@ -2,7 +2,7 @@
 //Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2023.2 (win64) Build 4029153 Fri Oct 13 20:14:34 MDT 2023
-//Date        : Mon Jun 10 16:13:58 2024
+//Date        : Tue Jul 16 14:02:50 2024
 //Host        : L3520-003 running 64-bit major release  (build 9200)
 //Command     : generate_target CPU_system_wrapper.bd
 //Design      : CPU_system_wrapper
@@ -68,8 +68,6 @@ module CPU_system_wrapper
     S_AXIS_S2MM_1_tvalid,
     clk_100M,
     clk_10M,
-    iic_rtl_0_scl_io,
-    iic_rtl_0_sda_io,
     peripheral_aresetn,
     peripheral_reset_0,
     ref_clk,
@@ -146,8 +144,6 @@ module CPU_system_wrapper
   input S_AXIS_S2MM_1_tvalid;
   output clk_100M;
   output clk_10M;
-  inout iic_rtl_0_scl_io;
-  inout iic_rtl_0_sda_io;
   output [0:0]peripheral_aresetn;
   output [0:0]peripheral_reset_0;
   output ref_clk;
@@ -225,14 +221,6 @@ module CPU_system_wrapper
   wire S_AXIS_S2MM_1_tvalid;
   wire clk_100M;
   wire clk_10M;
-  wire iic_rtl_0_scl_i;
-  wire iic_rtl_0_scl_io;
-  wire iic_rtl_0_scl_o;
-  wire iic_rtl_0_scl_t;
-  wire iic_rtl_0_sda_i;
-  wire iic_rtl_0_sda_io;
-  wire iic_rtl_0_sda_o;
-  wire iic_rtl_0_sda_t;
   wire [0:0]peripheral_aresetn;
   wire [0:0]peripheral_reset_0;
   wire ref_clk;
@@ -311,12 +299,6 @@ module CPU_system_wrapper
         .S_AXIS_S2MM_1_tvalid(S_AXIS_S2MM_1_tvalid),
         .clk_100M(clk_100M),
         .clk_10M(clk_10M),
-        .iic_rtl_0_scl_i(iic_rtl_0_scl_i),
-        .iic_rtl_0_scl_o(iic_rtl_0_scl_o),
-        .iic_rtl_0_scl_t(iic_rtl_0_scl_t),
-        .iic_rtl_0_sda_i(iic_rtl_0_sda_i),
-        .iic_rtl_0_sda_o(iic_rtl_0_sda_o),
-        .iic_rtl_0_sda_t(iic_rtl_0_sda_t),
         .peripheral_aresetn(peripheral_aresetn),
         .peripheral_reset_0(peripheral_reset_0),
         .ref_clk(ref_clk),
@@ -336,14 +318,4 @@ module CPU_system_wrapper
         .uart_rtl_0_txd(uart_rtl_0_txd),
         .uart_rtl_0_txrdyn(uart_rtl_0_txrdyn),
         .xband_rst(xband_rst));
-  IOBUF iic_rtl_0_scl_iobuf
-       (.I(iic_rtl_0_scl_o),
-        .IO(iic_rtl_0_scl_io),
-        .O(iic_rtl_0_scl_i),
-        .T(iic_rtl_0_scl_t));
-  IOBUF iic_rtl_0_sda_iobuf
-       (.I(iic_rtl_0_sda_o),
-        .IO(iic_rtl_0_sda_io),
-        .O(iic_rtl_0_sda_i),
-        .T(iic_rtl_0_sda_t));
 endmodule

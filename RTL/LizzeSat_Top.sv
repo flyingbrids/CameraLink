@@ -18,53 +18,7 @@
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
-`define ZED;
 module LizzeSat_Top(
- `ifdef ZED
-  // DDR3 memory
-  inout logic [14:0]DDR_addr
- ,inout logic [2:0]DDR_ba
- ,inout logic DDR_cas_n
- ,inout logic DDR_ck_n
- ,inout logic DDR_ck_p
- ,inout logic DDR_cke
- ,inout logic DDR_cs_n
- ,inout logic [3:0]DDR_dm
- ,inout logic [31:0]DDR_dq
- ,inout logic [3:0]DDR_dqs_n
- ,inout logic [3:0]DDR_dqs_p
- ,inout logic DDR_odt
- ,inout logic DDR_ras_n
- ,inout logic DDR_reset_n
- ,inout logic DDR_we_n
- // fixed IO
- ,inout logic FIXED_IO_ddr_vrn
- ,inout logic FIXED_IO_ddr_vrp
- ,inout logic [53:0]FIXED_IO_mio
- ,inout logic FIXED_IO_ps_clk
- ,inout logic FIXED_IO_ps_porb
- ,inout logic FIXED_IO_ps_srstb
- // switches
- ,input logic SW0
- ,input logic SW1
- ,input logic SW2
- ,input logic SW3 
- ,input logic SW4
- ,input logic SW5
- ,input logic SW6
- // LED
- ,output logic LD0
- ,output logic LD1   
- ,output logic LD2
- ,output logic LD3  
- ,output logic LD4
- ,output logic LD5   
- ,output logic LD6
- ,output logic LD7   
- // I2C
- ,inout  logic iic_rtl_0_scl_io
- ,inout  logic iic_rtl_0_sda_io
- `elsif
    // DDR3 memory
    inout  logic [14:0]DDR_addr
   ,inout  logic [2:0]DDR_ba
@@ -87,9 +41,7 @@ module LizzeSat_Top(
   ,inout  logic  [53:0]FIXED_IO_mio
   ,inout  logic  FIXED_IO_ps_clk
   ,inout  logic  FIXED_IO_ps_porb
-  ,inout  logic  FIXED_IO_ps_srstb   
-  `endif
-  
+  ,inout  logic  FIXED_IO_ps_srstb     
   // camera link
   ,input  logic xclk_p
   ,input  logic xclk_n
@@ -102,8 +54,7 @@ module LizzeSat_Top(
   ,input  logic SerTFG_p 
   ,input  logic SerTFG_n
   ,output logic SerTC_p
-  ,output logic SerTC_n
-  
+  ,output logic SerTC_n  
   //Xband  
  
 );
@@ -226,10 +177,7 @@ CPU_system_wrapper(
     .S_AXIS_S2MM_1_tvalid(S_AXIS_S2MM_1_tvalid),   
     // Device UART
     .uart_rtl_0_rxd  (uart_0_rxd),
-    .uart_rtl_0_txd  (uart_0_txd),
-    // I2C
-    .iic_rtl_0_scl_io (iic_rtl_0_scl_io),
-    .iic_rtl_0_sda_io (iic_rtl_0_sda_io)
+    .uart_rtl_0_txd  (uart_0_txd)
 );    
 
 IBUFDS RX_LVDS 
@@ -245,14 +193,6 @@ OBUFDS TX_LVDS
 	.OB       		(SerTC_n),
 	.O         		(SerTC_p)
 );
-
-`ifdef ZED
-heartBeatPulse #(.FREQ(124000000)) 
-sys_tick(.clk(sys_clk), .rst(sys_rst), .tick(LD6));
-
-heartBeatPulse #(.FREQ(200000000)) 
-sys_tick1(.clk(ref_clk), .rst(sys_rst), .tick(LD7));
-`endif 
 
 // AXI4-Lite Register bank
 logic capture, testMode, cameraSel, serde_locked, camera_in_progress;
