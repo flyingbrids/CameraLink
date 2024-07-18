@@ -29,7 +29,7 @@ input      [3:0]	datain2_p, datain2_n,
 input      [15:0]   lineWidth,
 output     [47:0]	pixel_data_o,   // 4 pixel with 12 bit each px		
 output reg          pixel_vld,
-output              new_frame,
+output reg          new_frame,
 output              frame_valid,
 output              locked,
 input               camera_in_progress,
@@ -58,44 +58,6 @@ wire [7:0]  portE;
 wire [7:0]  portF;	
 wire LVAL1, FVAL1, DVAL1;
 wire LVAL2, FVAL2, DVAL2;
-//assign rx_1 = rxdall[27:0];
-//assign rx_2 = rxdall[55:28];
-
-//assign X0 = rx_1[6:0];
-//assign X1 = rx_1[13:7];
-//assign X2 = rx_1[20:14];
-//assign X3 = rx_1[27:21];
-
-//assign Y0 = rx_2[6:0];
-//assign Y1 = rx_2[13:7];
-//assign Y2 = rx_2[20:14];
-//assign Y3 = rx_2[27:21];
-
-//assign portA = {X3[5],X3[6],X0[1],X0[2],X0[3],X0[4],X0[5],X0[6]};
-//assign portB = {X3[3],X3[4],X1[2],X1[3],X1[4],X1[5],X1[6],X0[0]};
-//assign portC = {X3[1],X3[2],X2[3],X2[4],X2[5],X2[6],X1[0],X1[1]};
-//assign LVAL1 = X2[2];
-//assign FVAL1 = X2[1];
-//assign DVAL1 = X2[0];
-
-//assign portD = {Y3[5],Y3[6],Y0[1],Y0[2],Y0[3],Y0[4],Y0[5],Y0[6]};
-//assign portE = {Y3[3],Y3[4],Y1[2],Y1[3],Y1[4],Y1[5],Y1[6],Y0[0]};
-//assign portF = {Y3[1],Y3[2],Y2[3],Y2[4],Y2[5],Y2[6],Y1[0],Y1[1]};
-//assign LVAL2 = Y2[2];
-//assign FVAL2 = Y2[2];
-//assign DVAL2 = Y2[2];
-
-//top_nto1_pll_diff_rx # (.D(8),.CLKIN_PERIOD(14.286))
-//rx (
-//    .reset    (sys_rst)
-//   ,.datain_p ({datain2_p, datain1_p})
-//   ,.datain_n ({datain2_n, datain1_n})
-//   ,.clkin_p  (clkin1_p)
-//   ,.clkin_n  (clkin1_n)
-//   ,.rx_bufpll_lckd(rx_mmcm_lckdpsbs)
-//   ,.rx_out   (rxdall)
-//   ,.rx_bufg_x1(rxclk_div)
-//);
 
 cam_top_rx # (.configs (0), .CLK_PERIOD(14.286))
 rx1 (
@@ -166,10 +128,10 @@ reg [1:0] frame_valid_state;
 wire fifo_rst;
 reg Fvalid_1, Fvalid_2;
 wire ready_sync_1, ready_sync_2;
-wire FVAL_sync;
+wire FVAL_sync_1, FVAL_sync_2;
 
-assign rd_en = (~empty_1) & (~empty_2) & line_rd;
-assign fifo_rst = (frame_valid_state == 2'd2)? 1'b0: 1'b1;
+assign rd_en = (~empty_1) & (~empty_2 |~cameraSel) & line_rd;
+assign fifo_rst = (frame_valid_state >= 2'd2)? 1'b0: 1'b1;
 
 always @ (posedge rxclk_div_1) begin
      pixel_wr_1 <= rx_mmcm_lckdpsbs_1 & LVAL1 & FVAL1 & DVAL1 & ready_sync_1;      
@@ -198,19 +160,23 @@ always @ (posedge rxclk_div_2) begin
 end 
 
 reg camera_in_progress_d;
+wire frame_valid_1, frame_valid_2;
+assign frame_valid = frame_valid_1 & (frame_valid_2 |~cameraSel);
+
 always @ (posedge sys_clk) begin
      pixel_vld <= rd_en;
-     frame_valid_d <= {frame_valid_d[0], frame_valid};     
-     camera_in_progress_d <= camera_in_progress;
+     frame_valid_d <= {frame_valid_d[0], frame_valid}; 
+     new_frame <= ~frame_valid_d[0] & frame_valid & (frame_valid_state == 2'd2);   
+     camera_in_progress_d <= camera_in_progress;       
      if (locked) begin
-        if ((frame_valid_state == 0) & FVAL_sync) 
+        if ((frame_valid_state == 0) & FVAL_sync_1 & (FVAL_sync_2 | ~cameraSel) ) 
             frame_valid_state <= 2'd1;  
-        else if ((frame_valid_state == 1) & ~FVAL_sync & ~camera_in_progress & cameraSel)
+        else if ((frame_valid_state == 1) & ~FVAL_sync_1 & (~FVAL_sync_2 | ~cameraSel) & ~camera_in_progress )
             frame_valid_state <= 2'd2;  
-        else if ((frame_valid_state == 2) & camera_in_progress_d & ~camera_in_progress)  
-            frame_valid_state <= 2'd3;
-        else if ((frame_valid_state == 3) & ~FVAL_sync & ~camera_in_progress & cameraSel)  
-            frame_valid_state <= 2'd2;
+        else if ((frame_valid_state == 2) & ~FVAL_sync_1 & (~FVAL_sync_2 | ~cameraSel) & camera_in_progress )
+            frame_valid_state <= 2'd3;              
+        else if ((frame_valid_state == 3) & camera_in_progress_d & ~camera_in_progress)  
+            frame_valid_state <= 2'd1;            
      end else 
         frame_valid_state <= 0;     
 end 
@@ -257,8 +223,8 @@ always @ (posedge sys_clk, posedge sys_rst) begin
              line_rd <= 1'b1;
              rd_cnt  <= 16'd0;         
           end else if (line_rd) begin
-             rd_cnt  <= rd_cnt + 16'd4;
-             line_rd <=  (rd_cnt < lineWidth-4)? 1'b1 : 1'b0; 
+             rd_cnt  <= cameraSel? rd_cnt + 16'd4 : rd_cnt + 16'd2;
+             line_rd <= cameraSel? (rd_cnt < lineWidth-4): (rd_cnt < lineWidth-2); 
           end 
       end 
 end 
@@ -271,12 +237,20 @@ CDC_sync FULL_CDC (
  ,.pulse_sync()
 );
 
-CDC_sync FVAL_CDC (
-  .sig_in  (Fvalid_1 & Fvalid_2)
+CDC_sync Fvalid1_CDC (
+  .sig_in  (Fvalid_2)
  ,.clk_b   (sys_clk)
  ,.rst_b   (sys_rst)
- ,.sig_sync(frame_valid)
- ,.pulse_sync(new_frame)
+ ,.sig_sync(frame_valid_1)
+ ,.pulse_sync()
+);
+
+CDC_sync Fvalid2_CDC (
+  .sig_in  (Fvalid_2)
+ ,.clk_b   (sys_clk)
+ ,.rst_b   (sys_rst)
+ ,.sig_sync(frame_valid_2)
+ ,.pulse_sync()
 );
 
 CDC_sync LOCKED_CDC (
@@ -287,11 +261,19 @@ CDC_sync LOCKED_CDC (
  ,.pulse_sync()
 );
 
-CDC_sync FVAL_1_CDC (
-  .sig_in  (FVAL1 & FAVL2)
+CDC_sync FVAL1_CDC (
+  .sig_in  (FVAL1)
  ,.clk_b   (sys_clk)
  ,.rst_b   (sys_rst)
- ,.sig_sync(FVAL_sync)
+ ,.sig_sync(FVAL_sync_1)
+ ,.pulse_sync()
+);
+
+CDC_sync FVAL2_CDC (
+  .sig_in  (FVAL2)
+ ,.clk_b   (sys_clk)
+ ,.rst_b   (sys_rst)
+ ,.sig_sync(FVAL_sync_2)
  ,.pulse_sync()
 );
 
@@ -312,7 +294,7 @@ CDC_sync empty2_CDC (
 );
 
 CDC_sync ready1_CDC (
-  .sig_in  ((frame_valid_state == 2'd2))
+  .sig_in  ((frame_valid_state >= 2'd2))
  ,.clk_b   (rxclk_div_1)
  ,.rst_b   (~rx_mmcm_lckdpsbs_1)
  ,.sig_sync(ready_sync_1)
@@ -320,7 +302,7 @@ CDC_sync ready1_CDC (
 );
 
 CDC_sync ready2_CDC (
-  .sig_in  ((frame_valid_state == 2'd2))
+  .sig_in  ((frame_valid_state >= 2'd2))
  ,.clk_b   (rxclk_div_2)
  ,.rst_b   (~rx_mmcm_lckdpsbs_2)
  ,.sig_sync(ready_sync_2)

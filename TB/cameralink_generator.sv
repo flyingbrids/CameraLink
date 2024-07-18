@@ -126,11 +126,11 @@ assign C = imageData[1][7:0];
 assign Lvalid =  Lval;
 assign Dvalid =  Lval;
 assign Fvalid =  Fval;
-assign TX[0] = {A[6],Dvalid,Fvalid,Lvalid,0,C[5:1],C[7:6],C[0],B[5:3],B[7:6],B[2:0],A[5],A[7],A[4:0]};    
+//assign TX[0] = {A[6],Dvalid,Fvalid,Lvalid,0,C[5:1],C[7:6],C[0],B[5:3],B[7:6],B[2:0],A[5],A[7],A[4:0]};    
 assign D = imageData[2][7:0];
 assign E = {imageData[3][11:8],imageData[2][11:8]}; 
 assign F = imageData[3][7:0]; 
-assign TX[1] = {D[6],Dvalid,Fvalid,Lvalid,0,F[5:1],F[7:6],F[0],E[5:3],E[7:6],E[2:0],D[5],D[7],D[4:0]};    
+//assign TX[1] = {D[6],Dvalid,Fvalid,Lvalid,0,F[5:1],F[7:6],F[0],E[5:3],E[7:6],E[2:0],D[5],D[7],D[4:0]};    
 
 logic [6:0] X [3:0]; 
 logic [6:0] Y [3:0];

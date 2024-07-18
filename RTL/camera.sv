@@ -67,6 +67,17 @@ always @ (posedge sys_clk) begin
       end 
 end 
 
+logic [2:0] reset_cnt;
+logic camera_rst;
+always @ (posedge sys_clk ,posedge sys_rst) begin
+    if (sys_rst) begin 
+       reset_cnt <= '0;
+    end else if ((~camera_in_progress & (cameraSel != cameraSelRegister)) | (|reset_cnt)) begin
+       reset_cnt <= reset_cnt + 1'b1;
+    end  
+end 
+assign camera_rst = (reset_cnt > 0)? 1'b1 : 1'b0;     
+
 assign capture_end  = cameraSelRegister? owl_capture_end : hawk_capture_end;
 assign frame_rst    = cameraSelRegister? owl_new_frame   : hawk_new_frame; 
 
@@ -95,12 +106,13 @@ logic new_capture_d, capture;
 always @ (posedge sys_clk, posedge sys_rst) begin
        if (sys_rst) begin
           new_capture_d <= '0;
+          capture <= '0;
        end else begin
           new_capture_d <= new_capture;
+          capture <= ~new_capture_d & new_capture;
        end 
 end 
 
-assign capture = ~new_capture_d & new_capture;
 
 logic delay_ready;
 
@@ -114,7 +126,7 @@ logic new_frame_cl,frame_valid_cl,pixel_vld_cl;
 logic [47:0] pixel_cl;
 
  cameralink_medium_phy camera_link(
- .sys_rst      (sys_rst),					
+ .sys_rst      (sys_rst | camera_rst),					
  .sys_clk      (sys_clk),	
  .delay_ready  (delay_ready),			
  .clkin1_p     (xclk_p),  

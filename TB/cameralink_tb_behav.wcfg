@@ -12,26 +12,30 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0.000000 us"></ZoomStartTime>
-      <ZoomEndTime time="164.406861 us"></ZoomEndTime>
-      <Cursor1Time time="155.876100 us"></Cursor1Time>
+      <ZoomStartTime time="9.304000 us"></ZoomStartTime>
+      <ZoomEndTime time="162.904001 us"></ZoomEndTime>
+      <Cursor1Time time="129.104000 us"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="163"></NameColumnWidth>
-      <ValueColumnWidth column_width="320"></ValueColumnWidth>
+      <NameColumnWidth column_width="99"></NameColumnWidth>
+      <ValueColumnWidth column_width="164"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="57" />
+   <WVObjectSize size="12" />
    <wvobject fp_name="/cameralink_tb/sys_rst" type="logic">
       <obj_property name="ElementShortName">sys_rst</obj_property>
       <obj_property name="ObjectShortName">sys_rst</obj_property>
    </wvobject>
+   <wvobject fp_name="/cameralink_tb/camera_receiver/sys_clk" type="logic">
+      <obj_property name="ElementShortName">sys_clk</obj_property>
+      <obj_property name="ObjectShortName">sys_clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cameralink_tb/new_frame" type="logic">
+      <obj_property name="ElementShortName">new_frame</obj_property>
+      <obj_property name="ObjectShortName">new_frame</obj_property>
+   </wvobject>
    <wvobject fp_name="/cameralink_tb/frame_cnt" type="array">
       <obj_property name="ElementShortName">frame_cnt[31:0]</obj_property>
       <obj_property name="ObjectShortName">frame_cnt[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/HawkCamera/capture" type="logic">
-      <obj_property name="ElementShortName">capture</obj_property>
-      <obj_property name="ObjectShortName">capture</obj_property>
    </wvobject>
    <wvobject fp_name="/cameralink_tb/camera_receiver/cameraSelRegister" type="logic">
       <obj_property name="ElementShortName">cameraSelRegister</obj_property>
@@ -41,218 +45,28 @@
       <obj_property name="ElementShortName">camera_in_progress</obj_property>
       <obj_property name="ObjectShortName">camera_in_progress</obj_property>
    </wvobject>
-   <wvobject type="divider" fp_name="divider263">
-      <obj_property name="label">hawk</obj_property>
-      <obj_property name="DisplayName">label</obj_property>
+   <wvobject fp_name="/cameralink_tb/camera_receiver/frame_rst" type="logic">
+      <obj_property name="ElementShortName">frame_rst</obj_property>
+      <obj_property name="ObjectShortName">frame_rst</obj_property>
    </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/HawkCamera/serde_locked" type="logic">
+   <wvobject fp_name="/cameralink_tb/camera_receiver/serde_locked" type="logic">
       <obj_property name="ElementShortName">serde_locked</obj_property>
       <obj_property name="ObjectShortName">serde_locked</obj_property>
    </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/HawkCamera/Hawk_Serdes/frame_valid_state" type="array">
-      <obj_property name="ElementShortName">frame_valid_state[1:0]</obj_property>
-      <obj_property name="ObjectShortName">frame_valid_state[1:0]</obj_property>
+   <wvobject fp_name="/cameralink_tb/camera_receiver/camera_link/FVAL1" type="logic">
+      <obj_property name="ElementShortName">FVAL1</obj_property>
+      <obj_property name="ObjectShortName">FVAL1</obj_property>
    </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/HawkCamera/lineCnt" type="array">
-      <obj_property name="ElementShortName">lineCnt[15:0]</obj_property>
-      <obj_property name="ObjectShortName">lineCnt[15:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/HawkCamera/colCnt" type="array">
-      <obj_property name="ElementShortName">colCnt[15:0]</obj_property>
-      <obj_property name="ObjectShortName">colCnt[15:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/HawkCamera/Hawk_Serdes/cameralink_base_fifo_inst/empty" type="logic">
-      <obj_property name="ElementShortName">empty</obj_property>
-      <obj_property name="ObjectShortName">empty</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/HawkCamera/new_frame" type="logic">
-      <obj_property name="ElementShortName">new_frame</obj_property>
-      <obj_property name="ObjectShortName">new_frame</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/HawkCamera/frame_valid" type="logic">
-      <obj_property name="ElementShortName">frame_valid</obj_property>
-      <obj_property name="ObjectShortName">frame_valid</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/HawkCamera/capture_state" type="array">
-      <obj_property name="ElementShortName">capture_state[1:0]</obj_property>
-      <obj_property name="ObjectShortName">capture_state[1:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/HawkCamera/pixel_vld" type="logic">
-      <obj_property name="ElementShortName">pixel_vld</obj_property>
-      <obj_property name="ObjectShortName">pixel_vld</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/HawkCamera/pixel" type="array">
-      <obj_property name="ElementShortName">pixel[23:0]</obj_property>
-      <obj_property name="ObjectShortName">pixel[23:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/HawkCamera/capture_vld" type="logic">
-      <obj_property name="ElementShortName">capture_vld</obj_property>
-      <obj_property name="ObjectShortName">capture_vld</obj_property>
-   </wvobject>
-   <wvobject type="divider" fp_name="divider264">
-      <obj_property name="label">owl</obj_property>
-      <obj_property name="DisplayName">label</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/owlCamera/i" type="array">
-      <obj_property name="ElementShortName">i[31:0]</obj_property>
-      <obj_property name="ObjectShortName">i[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/owlCamera/j" type="array">
-      <obj_property name="ElementShortName">j[31:0]</obj_property>
-      <obj_property name="ObjectShortName">j[31:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/owlCamera/imageData" type="array">
-      <obj_property name="ElementShortName">imageData[3:0][11:0]</obj_property>
-      <obj_property name="ObjectShortName">imageData[3:0][11:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/owlCamera/shiftCnt" type="array">
-      <obj_property name="ElementShortName">shiftCnt[2:0]</obj_property>
-      <obj_property name="ObjectShortName">shiftCnt[2:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/datain1_p" type="array">
-      <obj_property name="ElementShortName">datain1_p[7:0]</obj_property>
-      <obj_property name="ObjectShortName">datain1_p[7:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/OwlCamera/datain2_p" type="array">
-      <obj_property name="ElementShortName">datain2_p[3:0]</obj_property>
-      <obj_property name="ObjectShortName">datain2_p[3:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/OwlCamera/datain1_p" type="array">
-      <obj_property name="ElementShortName">datain1_p[3:0]</obj_property>
-      <obj_property name="ObjectShortName">datain1_p[3:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/OwlCamera/owl_camera_link/pixel_data_in_1" type="array">
-      <obj_property name="ElementShortName">pixel_data_in_1[23:0]</obj_property>
-      <obj_property name="ObjectShortName">pixel_data_in_1[23:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/OwlCamera/owl_camera_link/pixel_data_in_2" type="array">
-      <obj_property name="ElementShortName">pixel_data_in_2[23:0]</obj_property>
-      <obj_property name="ObjectShortName">pixel_data_in_2[23:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/OwlCamera/serde_locked" type="logic">
-      <obj_property name="ElementShortName">serde_locked</obj_property>
-      <obj_property name="ObjectShortName">serde_locked</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/OwlCamera/lineCnt" type="array">
-      <obj_property name="ElementShortName">lineCnt[15:0]</obj_property>
-      <obj_property name="ObjectShortName">lineCnt[15:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/OwlCamera/colCnt" type="array">
-      <obj_property name="ElementShortName">colCnt[15:0]</obj_property>
-      <obj_property name="ObjectShortName">colCnt[15:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/OwlCamera/new_frame" type="logic">
-      <obj_property name="ElementShortName">new_frame</obj_property>
-      <obj_property name="ObjectShortName">new_frame</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/OwlCamera/frame_valid" type="logic">
-      <obj_property name="ElementShortName">frame_valid</obj_property>
-      <obj_property name="ObjectShortName">frame_valid</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/OwlCamera/capture_vld" type="logic">
-      <obj_property name="ElementShortName">capture_vld</obj_property>
-      <obj_property name="ObjectShortName">capture_vld</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/OwlCamera/capture_state" type="array">
-      <obj_property name="ElementShortName">capture_state[1:0]</obj_property>
-      <obj_property name="ObjectShortName">capture_state[1:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/OwlCamera/owl_camera_link/empty_1" type="logic">
-      <obj_property name="ElementShortName">empty_1</obj_property>
-      <obj_property name="ObjectShortName">empty_1</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/OwlCamera/owl_camera_link/empty_2" type="logic">
-      <obj_property name="ElementShortName">empty_2</obj_property>
-      <obj_property name="ObjectShortName">empty_2</obj_property>
-   </wvobject>
-   <wvobject type="divider" fp_name="divider59">
-      <obj_property name="label">DMA</obj_property>
-      <obj_property name="DisplayName">label</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/DMAWrite_inst/data_in" type="array">
-      <obj_property name="ElementShortName">data_in[47:0]</obj_property>
-      <obj_property name="ObjectShortName">data_in[47:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/DMAWrite_inst/DMA_fifo_buf_0" type="array">
-      <obj_property name="ElementShortName">DMA_fifo_buf_0[167:0]</obj_property>
-      <obj_property name="ObjectShortName">DMA_fifo_buf_0[167:0]</obj_property>
+   <wvobject fp_name="/cameralink_tb/camera_receiver/camera_link/FVAL2" type="logic">
+      <obj_property name="ElementShortName">FVAL2</obj_property>
+      <obj_property name="ObjectShortName">FVAL2</obj_property>
    </wvobject>
    <wvobject fp_name="/cameralink_tb/camera_receiver/DMAWrite_inst/data_vld" type="logic">
       <obj_property name="ElementShortName">data_vld</obj_property>
       <obj_property name="ObjectShortName">data_vld</obj_property>
    </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/DMAWrite_inst/DMA_fifo_inst/din" type="array">
-      <obj_property name="ElementShortName">din[191:0]</obj_property>
-      <obj_property name="ObjectShortName">din[191:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/DMAWrite_inst/DMA_fifo_wr" type="logic">
-      <obj_property name="ElementShortName">DMA_fifo_wr</obj_property>
-      <obj_property name="ObjectShortName">DMA_fifo_wr</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/DMAWrite_inst/shift_cnt" type="array">
-      <obj_property name="ElementShortName">shift_cnt[2:0]</obj_property>
-      <obj_property name="ObjectShortName">shift_cnt[2:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/DMAWrite_inst/data_end" type="logic">
-      <obj_property name="ElementShortName">data_end</obj_property>
-      <obj_property name="ObjectShortName">data_end</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/DMAWrite_inst/handshake" type="logic">
-      <obj_property name="ElementShortName">handshake</obj_property>
-      <obj_property name="ObjectShortName">handshake</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/DMAWrite_inst/handshakeCnt" type="array">
-      <obj_property name="ElementShortName">handshakeCnt[1:0]</obj_property>
-      <obj_property name="ObjectShortName">handshakeCnt[1:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/DMAWrite_inst/DMA_data_next" type="array">
-      <obj_property name="ElementShortName">DMA_data_next[2:0][63:0]</obj_property>
-      <obj_property name="ObjectShortName">DMA_data_next[2:0][63:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/DMAWrite_inst/fifoUpdate" type="logic">
-      <obj_property name="ElementShortName">fifoUpdate</obj_property>
-      <obj_property name="ObjectShortName">fifoUpdate</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/DMAWrite_inst/empty" type="logic">
-      <obj_property name="ElementShortName">empty</obj_property>
-      <obj_property name="ObjectShortName">empty</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/DMAWrite_inst/init_update" type="logic">
-      <obj_property name="ElementShortName">init_update</obj_property>
-      <obj_property name="ObjectShortName">init_update</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/DMAWrite_inst/DMAdataUpdate" type="logic">
-      <obj_property name="ElementShortName">DMAdataUpdate</obj_property>
-      <obj_property name="ObjectShortName">DMAdataUpdate</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/DMAWrite_inst/S_AXIS_S2MM_0_tdata" type="array">
-      <obj_property name="ElementShortName">S_AXIS_S2MM_0_tdata[63:0]</obj_property>
-      <obj_property name="ObjectShortName">S_AXIS_S2MM_0_tdata[63:0]</obj_property>
-   </wvobject>
    <wvobject fp_name="/cameralink_tb/camera_receiver/DMAWrite_inst/S_AXIS_S2MM_0_tlast" type="logic">
       <obj_property name="ElementShortName">S_AXIS_S2MM_0_tlast</obj_property>
       <obj_property name="ObjectShortName">S_AXIS_S2MM_0_tlast</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/DMAWrite_inst/S_AXIS_S2MM_0_tready" type="logic">
-      <obj_property name="ElementShortName">S_AXIS_S2MM_0_tready</obj_property>
-      <obj_property name="ObjectShortName">S_AXIS_S2MM_0_tready</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/DMAWrite_inst/S_AXIS_S2MM_0_tvalid" type="logic">
-      <obj_property name="ElementShortName">S_AXIS_S2MM_0_tvalid</obj_property>
-      <obj_property name="ObjectShortName">S_AXIS_S2MM_0_tvalid</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/DMAWrite_inst/totalDataCnt" type="array">
-      <obj_property name="ElementShortName">totalDataCnt[25:0]</obj_property>
-      <obj_property name="ObjectShortName">totalDataCnt[25:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cameralink_tb/camera_receiver/DMAWrite_inst/dataXferedCnt" type="array">
-      <obj_property name="ElementShortName">dataXferedCnt[25:0]</obj_property>
-      <obj_property name="ObjectShortName">dataXferedCnt[25:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
 </wave_config>
