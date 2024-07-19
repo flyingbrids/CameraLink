@@ -41,18 +41,29 @@ module LizzeSat_Top(
   ,inout  logic  [53:0]FIXED_IO_mio
   ,inout  logic  FIXED_IO_ps_clk
   ,inout  logic  FIXED_IO_ps_porb
-  ,inout  logic  FIXED_IO_ps_srstb   
+  ,inout  logic  FIXED_IO_ps_srstb     
   // camera link
-  ,input  logic hawk_clk_n
-  ,input  logic hawk_clk_p
-  ,input  logic owl_clk_1_n
-  ,input  logic owl_clk_1_p  
-  ,input  logic owl_clk_2_n
-  ,input  logic owl_clk_2_p
-  ,input  logic [3:0] data_hawk_p
-  ,input  logic [3:0] data_hawk_n
-  ,input  logic [7:0] data_owl_p
-  ,input  logic [7:0] data_owl_n 
+  ,input  logic xclk_p
+  ,input  logic xclk_n
+  ,input  logic [3:0] x_p
+  ,input  logic [3:0] x_n
+  ,input  logic yclk_p
+  ,input  logic yclk_n
+  ,input  logic [3:0] y_p
+  ,input  logic [3:0] y_n
+  ,input  logic SerTFG_p 
+  ,input  logic SerTFG_n
+  ,output logic SerTC_p
+  ,output logic SerTC_n  
+  //Xband  
+  ,output logic tx1_clk_p
+  ,output logic tx1_clk_n
+  ,output logic tx1_data_p
+  ,output logic tx1_data_n	   
+  ,output logic tx2_clk_p
+  ,output logic tx2_clk_n
+  ,output logic tx2_data_p
+  ,output logic tx2_data_n	
 );
 
 logic sys_clk, ref_clk;
@@ -85,6 +96,23 @@ logic [7:0]S_AXIS_S2MM_0_tkeep;
 logic S_AXIS_S2MM_0_tlast;
 logic S_AXIS_S2MM_0_tready;
 logic S_AXIS_S2MM_0_tvalid;
+logic uart_0_rxd,uart_0_txd;
+
+logic [31:0]M_AXIS_MM2S_0_tdata;
+logic [3:0]M_AXIS_MM2S_0_tkeep;
+logic M_AXIS_MM2S_0_tlast;
+logic M_AXIS_MM2S_0_tready;
+logic M_AXIS_MM2S_0_tvalid;
+
+logic [31:0]S_AXIS_S2MM_1_tdata;
+logic [3:0]S_AXIS_S2MM_1_tkeep;
+logic S_AXIS_S2MM_1_tlast;
+logic S_AXIS_S2MM_1_tready;
+logic S_AXIS_S2MM_1_tvalid;
+
+logic xband_rst;
+logic clk_100M;
+logic clk_10M;
 
 CPU_system_wrapper(
      // DDR3 memory 
@@ -113,6 +141,9 @@ CPU_system_wrapper(
     // clock & reset
     .sys_clk           (sys_clk),
     .ref_clk           (ref_clk),
+    .clk_100M          (clk_100M),
+    .clk_10M           (clk_10M),
+    .xband_rst         (xband_rst),
     .peripheral_reset_0(sys_rst),
     .peripheral_aresetn(sys_rst_n),
     // AXI4-Lite 
@@ -140,11 +171,35 @@ CPU_system_wrapper(
     .S_AXIS_S2MM_0_tkeep (S_AXIS_S2MM_0_tkeep),
     .S_AXIS_S2MM_0_tlast (S_AXIS_S2MM_0_tlast),
     .S_AXIS_S2MM_0_tready(S_AXIS_S2MM_0_tready),
-    .S_AXIS_S2MM_0_tvalid(S_AXIS_S2MM_0_tvalid)
+    .S_AXIS_S2MM_0_tvalid(S_AXIS_S2MM_0_tvalid),    
+    .M_AXIS_MM2S_0_tdata(M_AXIS_MM2S_0_tdata),
+    .M_AXIS_MM2S_0_tkeep(M_AXIS_MM2S_0_tkeep),
+    .M_AXIS_MM2S_0_tlast(M_AXIS_MM2S_0_tlast),
+    .M_AXIS_MM2S_0_tready(M_AXIS_MM2S_0_tready),
+    .M_AXIS_MM2S_0_tvalid(M_AXIS_MM2S_0_tvalid),
+    .S_AXIS_S2MM_1_tdata(S_AXIS_S2MM_1_tdata),
+    .S_AXIS_S2MM_1_tkeep(S_AXIS_S2MM_1_tkeep),
+    .S_AXIS_S2MM_1_tlast(S_AXIS_S2MM_1_tlast),
+    .S_AXIS_S2MM_1_tready(S_AXIS_S2MM_1_tready),
+    .S_AXIS_S2MM_1_tvalid(S_AXIS_S2MM_1_tvalid),   
     // Device UART
-//    .uart_rtl_0_rxd  (uart_hawk_rxd),
-//    .uart_rtl_0_txd  (uart_hawk_txd),
+    .uart_rtl_0_rxd  (uart_0_rxd),
+    .uart_rtl_0_txd  (uart_0_txd)
 );    
+
+IBUFDS RX_LVDS 
+(
+	.I    			(SerTFG_p),
+	.IB       		(SerTFG_n),
+	.O         		(uart_0_rxd)
+);
+
+OBUFDS TX_LVDS 
+(
+	.I    			(uart_0_txd),
+	.OB       		(SerTC_n),
+	.O         		(SerTC_p)
+);
 
 // AXI4-Lite Register bank
 logic capture, testMode, cameraSel, serde_locked, camera_in_progress;
@@ -153,8 +208,14 @@ logic [15:0] HawkImageHeight;
 logic [15:0] OwlImageWidth;
 logic [15:0] OwlImageHeight;
 logic [31:0] timeOut;
+logic [31:0] DMAdataXferedCnt;
+logic xband_new_frame, MM2S_overflow, S2MM_overflow;
+logic [31:0] xband_rec_bytes;
+logic [31:0] xband_rec_dataCnt;
+logic [1:0]  loopback;
+logic bitswap;
 
-axi_register axi_register_bank(
+axi_register_interface axi_register_bank(
 	    .S_AXI_ACLK    (sys_clk),
 		.S_AXI_ARESETN (sys_rst_n),
 		// Register data
@@ -167,7 +228,17 @@ axi_register axi_register_bank(
         .OwlImageWidth   (OwlImageWidth),
         .serde_locked      (serde_locked),
         .camera_in_progress(camera_in_progress),
-        .timeOut           (timeOut),		
+        .timeOut           (timeOut),
+        .HwVersion         ({24'h1,1'b0,SW6,SW5,SW4,SW3,SW2,SW1,SW0}),
+        .ledTest           ({LD5,LD4,LD3,LD2,LD1,LD0}),		
+        .DMAdataXferedCnt  (DMAdataXferedCnt),  
+        .xband_new_frame   (xband_new_frame),
+        .MM2S_overflow     (MM2S_overflow),
+        .S2MM_overflow     (S2MM_overflow),
+        .xband_rec_bytes   (xband_rec_bytes),
+        .xband_rec_dataCnt (xband_rec_dataCnt),
+        .loopback          (loopback),
+        .bitswap           (bitswap),
 		// AXI4Lite 
 		.S_AXI_AWADDR  (AXI_0_awaddr),
 		.S_AXI_AWPROT  (AXI_0_awprot),
@@ -189,20 +260,18 @@ axi_register axi_register_bank(
 		.S_AXI_RVALID  (AXI_0_rvalid),
 		.S_AXI_RREADY  (AXI_0_rready)
 	);
-
+	
 // camera
 camera camera_receiver(
        // camera link
-       .hawk_clk_n   (hawk_clk_n)
-      ,.hawk_clk_p   (hawk_clk_p)
-      ,.owl_clk_1_n  (owl_clk_1_n)
-      ,.owl_clk_1_p  (owl_clk_1_p)
-      ,.owl_clk_2_n  (owl_clk_2_n)
-      ,.owl_clk_2_p  (owl_clk_2_p)
-      ,.data_hawk_p  (data_hawk_p)
-      ,.data_hawk_n  (data_hawk_n)
-      ,.data_owl_p   (data_owl_p)
-      ,.data_owl_n   (data_owl_n )
+       .xclk_p      (xclk_p)
+      ,.xclk_n      (xclk_n)
+      ,.x_p         (x_p)
+      ,.x_n         (x_n)
+      ,.yclk_p      (yclk_p)
+      ,.yclk_n      (yclk_n)
+      ,.y_p         (y_p)
+      ,.y_n         (y_n)
       // system 
       ,.ref_clk      (ref_clk)
       ,.sys_clk      (sys_clk)
@@ -210,19 +279,56 @@ camera camera_receiver(
       ,.new_capture  (capture)
       ,.cameraSel    (cameraSel)
       ,.testMode     (testMode)
+      ,.timeOut      (timeOut)
       ,.hawk_image_height (HawkImageHeight)
       ,.hawk_image_width  (HawkImageWidth)
       ,.owl_image_height  (OwlImageHeight)
       ,.owl_image_width   (OwlImageWidth)
       ,.serde_locked      (serde_locked)
       ,.camera_in_progress(camera_in_progress)
-      ,.timeOut           (timeOut)
       // DMA
       ,.S_AXIS_S2MM_0_tdata (S_AXIS_S2MM_0_tdata)
       ,.S_AXIS_S2MM_0_tkeep (S_AXIS_S2MM_0_tkeep)
       ,.S_AXIS_S2MM_0_tlast (S_AXIS_S2MM_0_tlast)
       ,.S_AXIS_S2MM_0_tready(S_AXIS_S2MM_0_tready)
-      ,.S_AXIS_S2MM_0_tvalid(S_AXIS_S2MM_0_tvalid)               
+      ,.S_AXIS_S2MM_0_tvalid(S_AXIS_S2MM_0_tvalid) 
+      ,.dataXferedCnt       (DMAdataXferedCnt)              
+);
+
+// xband
+Xband Xband_LVDS
+(
+	   .sys_clk                (sys_clk)
+	  ,.sys_rst                (sys_rst)
+	  ,.clk_10M                (clk_10M)
+	  ,.clk_100M               (clk_100M)
+	  ,.ref_clk                (ref_clk)
+	  ,.xband_rst              (xband_rst)
+	  ,.new_frame              (xband_new_frame)
+	  ,.MM2S_overflow          (MM2S_overflow)
+	  ,.S2MM_overflow          (S2MM_overflow)
+	  ,.expBytes               (xband_rec_bytes)
+	  ,.dataCnt                (xband_rec_dataCnt)
+	  ,.loopback               (loopback)
+	  ,.bitswap                (bitswap)
+	  ,.tx1_clk_p              (tx1_clk_p)
+	  ,.tx1_clk_n              (tx1_clk_n)
+	  ,.tx1_data_p             (tx1_data_p)
+	  ,.tx1_data_n	           (tx1_data_n)
+	  ,.tx2_clk_p              (tx2_clk_p)
+	  ,.tx2_clk_n              (tx2_clk_n)
+	  ,.tx2_data_p             (tx2_data_p)
+	  ,.tx2_data_n	           (tx2_data_n)
+	  // AXIS interface
+	  ,.M_AXIS_MM2S_0_tdata    (M_AXIS_MM2S_0_tdata)
+      ,.M_AXIS_MM2S_0_tkeep    (M_AXIS_MM2S_0_tkeep)
+      ,.M_AXIS_MM2S_0_tready   (M_AXIS_MM2S_0_tready)
+      ,.M_AXIS_MM2S_0_tvalid   (M_AXIS_MM2S_0_tvalid)
+	  ,.S_AXIS_S2MM_1_tdata    (S_AXIS_S2MM_1_tdata)
+      ,.S_AXIS_S2MM_1_tkeep    (S_AXIS_S2MM_1_tkeep)
+      ,.S_AXIS_S2MM_1_tlast    (S_AXIS_S2MM_1_tlast)
+      ,.S_AXIS_S2MM_1_tready   (S_AXIS_S2MM_1_tready)
+      ,.S_AXIS_S2MM_1_tvalid   (S_AXIS_S2MM_1_tvalid)
 );
     
 endmodule

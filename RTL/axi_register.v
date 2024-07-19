@@ -36,9 +36,11 @@ module axi_register #(
         output reg [15:0] HawkImageHeight,
         output reg [15:0] OwlImageWidth,
         output reg [15:0] OwlImageHeight,    
-        output reg [31:0] timeOut,        
+        output reg [31:0] timeOut,    
+        output reg [5:0]  ledTest,  
         
-        input wire  serde_locked,camera_in_progress,   
+        input wire  serde_locked,camera_in_progress, 
+        input wire [31:0] HwVersion, 
 		// User ports ends
 		// Do not modify the ports beyond this line
 
@@ -1697,8 +1699,9 @@ module axi_register #(
 	        7'h3D   : reg_data_out <= slv_reg61;
 	        7'h3E   : reg_data_out <= slv_reg62;
 	        7'h3F   : reg_data_out <= slv_reg63;
-	        7'h40   : reg_data_out <= slv_reg64;
-	        7'h41   : reg_data_out <= slv_reg65;
+	        // RO register start 
+	        7'h40   : reg_data_out <= HwVersion;
+	        7'h41   : reg_data_out <= {30'd0,serde_locked,camera_in_progress};
 	        7'h42   : reg_data_out <= slv_reg66;
 	        7'h43   : reg_data_out <= slv_reg67;
 	        7'h44   : reg_data_out <= slv_reg68;
@@ -1795,6 +1798,7 @@ module axi_register #(
          OwlImageWidth <= slv_reg2[15:0];
          OwlImageHeight <= slv_reg2[31:16];   
          timeOut <= slv_reg3; 
+         ledTest <= slv_reg4[5:0];
      end   
 
 	// User logic ends

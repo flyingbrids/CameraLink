@@ -3,6 +3,7 @@
 *.vho
 *.log
 CPU_system/
+ip_repo/
 LizzieSate/
 IP/*/*.xdc
 IP/*/*.xml
@@ -16,6 +17,14 @@ IP/*/*/*.v
 IP/*/*/*.vhd
 IP/*/*/*.vhdl
 IP/*/*/*.txt
+IP/*/*/*/*.xdc
+IP/*/*/*/*.xml
+IP/*/*/*/*.vh
+IP/*/*/*/*.v
+IP/*/*/*/*.vhd
+IP/*/*/*/*.vhdl
+IP/*/*/*/*.txt
+PS/
 
 # Ignore build output directory
 build/

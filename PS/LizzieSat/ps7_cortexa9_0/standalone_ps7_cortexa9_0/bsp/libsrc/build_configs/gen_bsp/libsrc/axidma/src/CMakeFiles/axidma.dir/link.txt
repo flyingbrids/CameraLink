@@ -1,2 +1,0 @@
-arm-none-eabi-ar qc libaxidma.a CMakeFiles/axidma.dir/xaxidma.c.obj CMakeFiles/axidma.dir/xaxidma_bd.c.obj CMakeFiles/axidma.dir/xaxidma_bdring.c.obj CMakeFiles/axidma.dir/xaxidma_g.c.obj CMakeFiles/axidma.dir/xaxidma_selftest.c.obj CMakeFiles/axidma.dir/xaxidma_sinit.c.obj
-C:/Xilinx/Vitis/2023.2/gnu/aarch32/nt/gcc-arm-none-eabi/bin/arm-none-eabi-ranlib.exe libaxidma.a
