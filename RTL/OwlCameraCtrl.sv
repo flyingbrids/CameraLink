@@ -19,39 +19,26 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 module OwlCameraCtrl(
-        input  logic  clkin1_p
-       ,input  logic  clkin1_n	
-       ,input  logic [3:0] datain1_p 
-       ,input  logic [3:0] datain1_n
-       ,input  logic  clkin2_p
-       ,input  logic  clkin2_n	
-       ,input  logic [3:0] datain2_p 
-       ,input  logic [3:0] datain2_n       
+        input  logic        frame_valid_cl
+       ,input  logic        new_frame_cl
+       ,input  logic        pixel_vld_cl
+       ,input  logic [47:0] pixel_cl 
        ,input  logic [15:0] imageWidth
        ,input  logic [15:0] imageHeight
        ,input  logic sys_clk
-       ,input  logic delay_ready
        ,input  logic sys_rst
        ,input  logic capture // pulse
        ,input  logic testMode
-       ,output logic serde_locked
        ,output logic new_frame
        ,output logic [47:0] pixel
        ,output logic data_vld
        ,output logic capture_end
-       ,input  logic camera_in_progress
-       ,input  logic cameraSel
 );
 
-logic [47:0] pixel_cl;
-logic pixel_vld_cl;
 logic [47:0] pixel_test;
 logic pixel_vld_test;
 logic pixel_vld;
-
-logic new_frame_cl, frame_valid_cl;
 logic frame_valid;
-
 logic test_mode_lat;  
 logic test_mode_start;
 logic test_mode_end;
@@ -60,28 +47,6 @@ assign new_frame   = new_frame_cl | test_mode_start;
 assign frame_valid = frame_valid_cl | test_mode_lat;
 assign pixel       = test_mode_lat? pixel_test :  pixel_cl;
 assign pixel_vld   = test_mode_lat? pixel_vld_test : pixel_vld_cl;
-    
- cameralink_medium_phy owl_camera_link(
- .sys_rst      (sys_rst),					
- .sys_clk      (sys_clk),	
- .delay_ready  (delay_ready),			
- .clkin1_p     (clkin1_p),  
- .clkin1_n     (clkin1_n),	
- .datain1_p    (datain1_p), 
- .datain1_n    (datain1_n),
- .clkin2_p     (clkin2_p),   
- .clkin2_n     (clkin2_n),	
- .datain2_p    (datain2_p), 
- .datain2_n    (datain2_n),
- .pixel_data_o (pixel_cl),   // 4 pixel with 12 bit each px		
- .pixel_vld    (pixel_vld_cl),
- .new_frame    (new_frame_cl),
- .frame_valid  (frame_valid_cl),
- .locked       (serde_locked),
- .camera_in_progress (camera_in_progress),
- .cameraSel    (cameraSel),
- .lineWidth    (imageWidth)
- );    
 
 logic [15:0] lineCnt;
 logic [15:0] colCnt;
@@ -154,8 +119,10 @@ logic [15:0] lineCnt_test;
 logic [15:0] colCnt_test;
 logic [7:0]  lineBreakCnt;
 
-assign pixel_test[23:0] = lineCnt_test + colCnt_test;
-assign pixel_test[47:24]= lineCnt_test + colCnt_test + 1'b1;
+assign pixel_test[11:0] = lineCnt_test + colCnt_test;
+assign pixel_test[23:12] = lineCnt_test + colCnt_test + 2;
+assign pixel_test[35:24] = lineCnt_test + colCnt_test + 1;
+assign pixel_test[47:36]= lineCnt_test + colCnt_test + 3;
 
 always @ (posedge sys_clk, posedge sys_rst) begin
      if (sys_rst) begin

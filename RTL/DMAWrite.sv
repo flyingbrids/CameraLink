@@ -31,6 +31,7 @@ module DMAWrite(
   ,output logic S_AXIS_S2MM_0_tlast
   ,input  logic S_AXIS_S2MM_0_tready
   ,output logic S_AXIS_S2MM_0_tvalid
+  ,output logic [25:0] dataXferedCnt
 );
 
 logic reset;
@@ -149,7 +150,6 @@ end
 
 assign non_vld = handshake & (handshakeCnt == 2'd2) & empty;
 
-logic [25:0] dataXferedCnt;
 logic S_AXIS_S2MM_0_tlast_lat;
 always @ (posedge sys_clk, posedge reset) begin
       if (reset) begin 

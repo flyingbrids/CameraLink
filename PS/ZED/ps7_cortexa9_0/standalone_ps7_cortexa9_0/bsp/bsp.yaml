@@ -1,0 +1,1100 @@
+sdt: hw_artifacts\ps7_cortexa9_0_baremetal.dts
+family: Zynq
+path: C:\Project\CameraLink\PS\ZED\ps7_cortexa9_0\standalone_ps7_cortexa9_0\bsp
+os: standalone
+os_info:
+  standalone:
+    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\lib\bsp\standalone_v9_0
+os_config:
+  standalone:
+    standalone_stdin:
+      name: standalone_stdin
+      permission: read_write
+      type: string
+      value: ps7_uart_0
+      default: ps7_uart_0
+      options:
+      - None
+      - axi_uart16550_0
+      - ps7_uart_0
+      - ps7_uart_1
+      - ps7_coresight_comp_0
+      description: stdin peripheral
+    standalone_stdout:
+      name: standalone_stdout
+      permission: read_write
+      type: string
+      value: ps7_uart_0
+      default: ps7_uart_0
+      options:
+      - None
+      - axi_uart16550_0
+      - ps7_uart_0
+      - ps7_uart_1
+      - ps7_coresight_comp_0
+      description: stdout peripheral
+toolchain_file: cortexa9_toolchain.cmake
+specs_file: Xilinx.spec
+proc: ps7_cortexa9_0
+proc_config:
+  ps7_cortexa9_0:
+    proc_archiver:
+      name: proc_archiver
+      permission: readonly
+      type: string
+      value: arm-none-eabi-gcc-ar.exe
+      default: arm-none-eabi-gcc-ar.exe
+      options: []
+      description: Archiver
+    proc_assembler:
+      name: proc_assembler
+      permission: readonly
+      type: string
+      value: arm-none-eabi-gcc
+      default: arm-none-eabi-gcc
+      options: []
+      description: Assembler
+    proc_compiler:
+      name: proc_compiler
+      permission: readonly
+      type: string
+      value: arm-none-eabi-gcc.exe
+      default: arm-none-eabi-gcc.exe
+      options: []
+      description: Compiler
+    proc_compiler_flags:
+      name: proc_compiler_flags
+      permission: readonly
+      type: string
+      value: ' -O2 -DSDT -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard;-c'
+      default: ' -O2 -DSDT -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard;-c'
+      options: []
+      description: Compiler Flags
+    proc_extra_compiler_flags:
+      name: proc_extra_compiler_flags
+      permission: read_write
+      type: string
+      value: ' -g -Wall -Wextra -fno-tree-loop-distribute-patterns'
+      default: ' -g -Wall -Wextra -fno-tree-loop-distribute-patterns'
+      options: []
+      description: Extra Compiler Flags
+template: empty_application
+compiler_flags: ''
+include_folder: include
+lib_folder: lib
+libsrc_folder: libsrc
+drv_info:
+  axi_dma_0:
+    driver: axidma
+    ip_name: axi_dma
+    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\axidma_v9_17
+    examples:
+      xaxidma_example_simple_poll.c: []
+      xaxidma_example_selftest.c: []
+  axi_dma_1:
+    driver: axidma
+    ip_name: axi_dma
+    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\axidma_v9_17
+    examples:
+      xaxidma_example_simple_poll.c: []
+      xaxidma_example_selftest.c: []
+  axi_iic_0:
+    driver: iic
+    ip_name: axi_iic
+    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\iic_v3_10
+    examples:
+      xiic_low_level_dynamic_eeprom_example.c: []
+      xiic_low_level_eeprom_example.c: []
+      xiic_low_level_tempsensor_example.c: []
+      xiic_selftest_example.c: []
+  axi_uart16550_0:
+    driver: uartns550
+    ip_name: axi_uart16550
+    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\uartns550_v3_9
+    examples:
+      xuartns550_hello_world_example.c: []
+      xuartns550_low_level_example.c: []
+      xuartns550_polled_example.c: []
+      xuartns550_selftest_example.c: []
+  ps7_afi_0: None
+  ps7_afi_1: None
+  ps7_afi_2: None
+  ps7_afi_3: None
+  ps7_coresight_comp_0:
+    driver: coresightps_dcc
+    ip_name: ps7_coresight_comp
+    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\coresightps_dcc_v1_9
+  ps7_ddrc_0: None
+  ps7_dev_cfg_0:
+    driver: devcfg
+    ip_name: ps7_dev_cfg
+    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\devcfg_v3_8
+    examples:
+      xdevcfg_interrupt_example.c: []
+      xdevcfg_polled_example.c: []
+      xdevcfg_reg_readback_example.c: []
+      xdevcfg_selftest_example.c: []
+  ps7_dma_ns: None
+  ps7_dma_s:
+    driver: dmaps
+    ip_name: ps7_dma
+    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\dmaps_v2_9
+    examples:
+      xdmaps_example_w_intr.c: []
+  ps7_ethernet_0:
+    driver: emacps
+    ip_name: ps7_ethernet
+    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\emacps_v3_19
+    examples:
+      xemacps_example_intr_dma.c:
+      - xemacps_example_util.c
+      - xemacps_example.h
+  ps7_globaltimer_0: None
+  ps7_gpio_0:
+    driver: gpiops
+    ip_name: ps7_gpio
+    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\gpiops_v3_12
+    examples:
+      xgpiops_intr_example.c: []
+      xgpiops_polled_example.c: []
+  ps7_gpv_0: None
+  ps7_intc_dist_0:
+    driver: scugic
+    ip_name: ps7_intc_dist
+    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\scugic_v5_2
+  ps7_iop_bus_config_0: None
+  ps7_ocmc_0: None
+  ps7_pl310_0: None
+  ps7_pmu_0: None
+  ps7_qspi_0:
+    driver: qspips
+    ip_name: ps7_qspi
+    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\qspips_v3_11
+    examples:
+      xqspips_flash_intr_example.c: []
+      xqspips_flash_polled_example.c: []
+      xqspips_dual_flash_lqspi_example.c: []
+      xqspips_dual_flash_stack_lqspi_example.c: []
+      xqspips_flash_lqspi_example.c: []
+      xqspips_g128_flash_example.c: []
+      xqspips_selftest_example.c: []
+  ps7_qspi_linear_0: None
+  ps7_scuc_0: None
+  ps7_scutimer_0:
+    driver: scutimer
+    ip_name: ps7_scutimer
+    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\scutimer_v2_5
+    examples:
+      xscutimer_polled_example.c: []
+      xscutimer_intr_example.c: []
+  ps7_scuwdt_0:
+    driver: scuwdt
+    ip_name: ps7_scuwdt
+    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\scuwdt_v2_5
+    examples:
+      xscuwdt_intr_example.c: []
+      xscuwdt_polled_example.c: []
+  ps7_sd_0:
+    driver: sdps
+    ip_name: ps7_sdio
+    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\sdps_v4_2
+    examples:
+      xsdps_raw_example.c: []
+  ps7_slcr_0: None
+  ps7_spi_1:
+    driver: spips
+    ip_name: ps7_spi
+    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\spips_v3_9
+    examples:
+      xspips_eeprom_intr_example.c: []
+      xspips_eeprom_polled_example.c: []
+      xspips_flash_intr_example.c: []
+      xspips_flash_polled_example.c: []
+      xspips_selftest_example.c: []
+      xspips_slave_polled_example.c: []
+      xpips_tpm_polled_example.c: []
+  ps7_uart_0:
+    driver: uartps
+    ip_name: ps7_uart
+    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\uartps_v3_13
+    examples:
+      xuartps_hello_world_example.c: []
+      xuartps_intr_example.c: []
+      xuartps_low_echo_example.c: []
+      xuartps_polled_example.c: []
+      xuartps_selftest_example.c: []
+  ps7_uart_1:
+    driver: uartps
+    ip_name: ps7_uart
+    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\uartps_v3_13
+    examples:
+      xuartps_hello_world_example.c: []
+      xuartps_intr_example.c: []
+      xuartps_low_echo_example.c: []
+      xuartps_polled_example.c: []
+      xuartps_selftest_example.c: []
+  ps7_xadc_0:
+    driver: xadcps
+    ip_name: ps7_xadc
+    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\XilinxProcessorIPLib\drivers\xadcps_v2_7
+    examples:
+      xadcps_intr_example.c: []
+      xadcps_polled_printf_example.c: []
+lib_info:
+  xiltimer:
+    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\lib\sw_services\xiltimer_v1_3
+  lwip213:
+    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\ThirdParty\sw_services\lwip213_v1_1
+  xilffs:
+    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\lib\sw_services\xilffs_v5_1
+    examples:
+      xilffs_polled_example.c: []
+  xilrsa:
+    path: C:\Xilinx\Vitis\2023.2\data\embeddedsw\lib\sw_services\xilrsa_v1_7
+lib_config:
+  xiltimer:
+    XILTIMER_en_interval_timer:
+      name: XILTIMER_en_interval_timer
+      permission: read_write
+      type: boolean
+      value: 'false'
+      default: 'false'
+      options:
+      - 'true'
+      - 'false'
+      description: Enable Interval Timer
+    XILTIMER_sleep_timer:
+      name: XILTIMER_sleep_timer
+      permission: read_write
+      type: string
+      value: ps7_scutimer_0
+      default: ps7_scutimer_0
+      options:
+      - Default
+      - ps7_scutimer_0
+      description: This parameter is used to select specific timer for sleep functionality
+    XILTIMER_tick_timer:
+      name: XILTIMER_tick_timer
+      permission: read_write
+      type: string
+      value: None
+      default: None
+      options:
+      - None
+      - ps7_scutimer_0
+      description: This parameter is used to select specific timer for tick functionality
+  lwip213:
+    lwip213_api_mode:
+      name: lwip213_api_mode
+      permission: read_write
+      type: string
+      value: RAW_API
+      default: RAW_API
+      options:
+      - RAW_API
+      - SOCKET_API
+      description: Mode of operation for lwIP (RAW API/Sockets API)
+    lwip213_arp_queueing:
+      name: lwip213_arp_queueing
+      permission: read_write
+      type: integer
+      value: '1'
+      default: '1'
+      options:
+      - '0'
+      - '1'
+      description: If enabled outgoing packets are queued during hardware address
+        resolution.
+    lwip213_arp_table_size:
+      name: lwip213_arp_table_size
+      permission: read_write
+      type: integer
+      value: '10'
+      default: '10'
+      options: []
+      description: Number of active hardware address IP address pairs cached.
+    lwip213_debug:
+      name: lwip213_debug
+      permission: read_write
+      type: boolean
+      value: 'false'
+      default: 'false'
+      options:
+      - 'true'
+      - 'false'
+      description: Turn on lwIP Debug?
+    lwip213_debug_options:
+      name: lwip213_debug_options
+      permission: read_write
+      type: boolean
+      value: 'true'
+      default: 'true'
+      options:
+      - 'true'
+      - 'false'
+      description: Turn on lwIP Debug?
+    lwip213_default_tcp_recvmbox_size:
+      name: lwip213_default_tcp_recvmbox_size
+      permission: read_write
+      type: integer
+      value: '200'
+      default: '200'
+      options: []
+      description: Size of TCP receive mbox queue.
+    lwip213_default_udp_recvmbox_size:
+      name: lwip213_default_udp_recvmbox_size
+      permission: read_write
+      type: integer
+      value: '100'
+      default: '100'
+      options: []
+      description: Size of UDP receive mbox queue.
+    lwip213_dhcp:
+      name: lwip213_dhcp
+      permission: read_write
+      type: boolean
+      value: 'false'
+      default: 'false'
+      options:
+      - 'true'
+      - 'false'
+      description: Is DHCP required?
+    lwip213_dhcp_does_arp_check:
+      name: lwip213_dhcp_does_arp_check
+      permission: read_write
+      type: boolean
+      value: 'false'
+      default: 'false'
+      options:
+      - 'true'
+      - 'false'
+      description: ARP check on offered addresses?
+    lwip213_dhcp_options:
+      name: lwip213_dhcp_options
+      permission: read_write
+      type: boolean
+      value: 'true'
+      default: 'true'
+      options:
+      - 'true'
+      - 'false'
+      description: Is DHCP required?
+    lwip213_icmp_debug:
+      name: lwip213_icmp_debug
+      permission: read_write
+      type: boolean
+      value: 'false'
+      default: 'false'
+      options:
+      - 'true'
+      - 'false'
+      description: Debug ICMP protocol
+    lwip213_icmp_options:
+      name: lwip213_icmp_options
+      permission: read_write
+      type: boolean
+      value: 'true'
+      default: 'true'
+      options:
+      - 'true'
+      - 'false'
+      description: ICMP Options
+    lwip213_icmp_ttl:
+      name: lwip213_icmp_ttl
+      permission: read_write
+      type: integer
+      value: '255'
+      default: '255'
+      options: []
+      description: ICMP TTL value
+    lwip213_igmp_debug:
+      name: lwip213_igmp_debug
+      permission: read_write
+      type: boolean
+      value: 'false'
+      default: 'false'
+      options:
+      - 'true'
+      - 'false'
+      description: Debug IGMP protocol
+    lwip213_igmp_options:
+      name: lwip213_igmp_options
+      permission: read_write
+      type: boolean
+      value: 'false'
+      default: 'false'
+      options:
+      - 'true'
+      - 'false'
+      description: IGMP Options
+    lwip213_ip_debug:
+      name: lwip213_ip_debug
+      permission: read_write
+      type: boolean
+      value: 'false'
+      default: 'false'
+      options:
+      - 'true'
+      - 'false'
+      description: Debug IP layer
+    lwip213_ip_default_ttl:
+      name: lwip213_ip_default_ttl
+      permission: read_write
+      type: integer
+      value: '255'
+      default: '255'
+      options: []
+      description: Global default TTL used by transport layers
+    lwip213_ip_forward:
+      name: lwip213_ip_forward
+      permission: read_write
+      type: integer
+      value: '0'
+      default: '0'
+      options:
+      - '0'
+      - '1'
+      description: Enable forwarding IP packets across network interfaces.
+    lwip213_ip_frag:
+      name: lwip213_ip_frag
+      permission: read_write
+      type: integer
+      value: '1'
+      default: '1'
+      options:
+      - '0'
+      - '1'
+      description: Fragment outgoing IP packets if their size exceeds MTU
+    lwip213_ip_frag_max_mtu:
+      name: lwip213_ip_frag_max_mtu
+      permission: read_write
+      type: integer
+      value: '1500'
+      default: '1500'
+      options: []
+      description: Assumed max MTU on any interface for IP frag buffer
+    lwip213_ip_options:
+      name: lwip213_ip_options
+      permission: read_write
+      type: integer
+      value: '0'
+      default: '0'
+      options:
+      - '0'
+      - '1'
+      description: 1 = IP options are allowed (but not parsed). 0 = packets with IP
+        options are dropped
+    lwip213_ip_reass_max_pbufs:
+      name: lwip213_ip_reass_max_pbufs
+      permission: read_write
+      type: integer
+      value: '128'
+      default: '128'
+      options: []
+      description: Reassembly PBUF Queue Length
+    lwip213_ip_reassembly:
+      name: lwip213_ip_reassembly
+      permission: read_write
+      type: integer
+      value: '1'
+      default: '1'
+      options:
+      - '0'
+      - '1'
+      description: Reassemble incoming fragmented IP packets
+    lwip213_ipv6_enable:
+      name: lwip213_ipv6_enable
+      permission: read_write
+      type: boolean
+      value: 'false'
+      default: 'false'
+      options:
+      - 'true'
+      - 'false'
+      description: IPv6 enable value
+    lwip213_ipv6_options:
+      name: lwip213_ipv6_options
+      permission: read_write
+      type: boolean
+      value: 'true'
+      default: 'true'
+      options:
+      - 'true'
+      - 'false'
+      description: IPv6 Options
+    lwip213_lwip_tcpip_core_locking_input:
+      name: lwip213_lwip_tcpip_core_locking_input
+      permission: read_write
+      type: boolean
+      value: 'false'
+      default: 'false'
+      options:
+      - 'true'
+      - 'false'
+      description: TCPIP input core locking
+    lwip213_mem_size:
+      name: lwip213_mem_size
+      permission: read_write
+      type: integer
+      value: '131072'
+      default: '131072'
+      options: []
+      description: Size of the heap memory (bytes).
+    lwip213_memp_n_pbuf:
+      name: lwip213_memp_n_pbuf
+      permission: read_write
+      type: integer
+      value: '16'
+      default: '16'
+      options: []
+      description: Number of memp struct pbufs. Set this high if application sends
+        lot of data out of ROM
+    lwip213_memp_n_sys_timeout:
+      name: lwip213_memp_n_sys_timeout
+      permission: read_write
+      type: integer
+      value: '8'
+      default: '8'
+      options: []
+      description: Number of simultaneously active timeouts
+    lwip213_memp_n_tcp_pcb:
+      name: lwip213_memp_n_tcp_pcb
+      permission: read_write
+      type: integer
+      value: '32'
+      default: '32'
+      options: []
+      description: Number of active TCP PCBs. One per active TCP connection
+    lwip213_memp_n_tcp_pcb_listen:
+      name: lwip213_memp_n_tcp_pcb_listen
+      permission: read_write
+      type: integer
+      value: '8'
+      default: '8'
+      options: []
+      description: Number of listening TCP connections
+    lwip213_memp_n_tcp_seg:
+      name: lwip213_memp_n_tcp_seg
+      permission: read_write
+      type: integer
+      value: '256'
+      default: '256'
+      options: []
+      description: Number of simultaneously queued TCP segments
+    lwip213_memp_n_udp_pcb:
+      name: lwip213_memp_n_udp_pcb
+      permission: read_write
+      type: integer
+      value: '4'
+      default: '4'
+      options: []
+      description: Number of active UDP PCBs. One per active UDP connection
+    lwip213_memp_num_api_msg:
+      name: lwip213_memp_num_api_msg
+      permission: read_write
+      type: integer
+      value: '16'
+      default: '16'
+      options: []
+      description: Number of api msg structures (socket mode only)
+    lwip213_memp_num_netbuf:
+      name: lwip213_memp_num_netbuf
+      permission: read_write
+      type: integer
+      value: '8'
+      default: '8'
+      options: []
+      description: Number of struct netbufs (socket mode only)
+    lwip213_memp_num_netconn:
+      name: lwip213_memp_num_netconn
+      permission: read_write
+      type: integer
+      value: '16'
+      default: '16'
+      options: []
+      description: Number of struct netconns (socket mode only)
+    lwip213_memp_num_tcpip_msg:
+      name: lwip213_memp_num_tcpip_msg
+      permission: read_write
+      type: integer
+      value: '64'
+      default: '64'
+      options: []
+      description: Number of tcpip msg structures (socket mode only)
+    lwip213_n_rx_coalesce:
+      name: lwip213_n_rx_coalesce
+      permission: read_write
+      type: integer
+      value: '1'
+      default: '1'
+      options: []
+      description: Setting for RX Interrupt coalescing.
+    lwip213_n_rx_descriptors:
+      name: lwip213_n_rx_descriptors
+      permission: read_write
+      type: integer
+      value: '64'
+      default: '64'
+      options: []
+      description: Number of RX Buffer Descriptors to be used in SDMA mode
+    lwip213_n_tx_coalesce:
+      name: lwip213_n_tx_coalesce
+      permission: read_write
+      type: integer
+      value: '1'
+      default: '1'
+      options: []
+      description: Setting for TX Interrupt coalescing.
+    lwip213_n_tx_descriptors:
+      name: lwip213_n_tx_descriptors
+      permission: read_write
+      type: integer
+      value: '64'
+      default: '64'
+      options: []
+      description: Number of TX Buffer Descriptors to be used in SDMA mode
+    lwip213_netif_debug:
+      name: lwip213_netif_debug
+      permission: read_write
+      type: boolean
+      value: 'false'
+      default: 'false'
+      options:
+      - 'true'
+      - 'false'
+      description: Debug network interface layer
+    lwip213_no_sys_no_timers:
+      name: lwip213_no_sys_no_timers
+      permission: read_write
+      type: boolean
+      value: 'true'
+      default: 'true'
+      options:
+      - 'true'
+      - 'false'
+      description: Drops support for sys_timeout when NO_SYS==1
+    lwip213_pbuf_debug:
+      name: lwip213_pbuf_debug
+      permission: read_write
+      type: boolean
+      value: 'false'
+      default: 'false'
+      options:
+      - 'true'
+      - 'false'
+      description: Debug pbuf layer
+    lwip213_pbuf_link_hlen:
+      name: lwip213_pbuf_link_hlen
+      permission: read_write
+      type: integer
+      value: '16'
+      default: '16'
+      options: []
+      description: Number of bytes that should be allocated for a link level header.
+    lwip213_pbuf_pool_bufsize:
+      name: lwip213_pbuf_pool_bufsize
+      permission: read_write
+      type: integer
+      value: '1700'
+      default: '1700'
+      options: []
+      description: Size of each pbuf in pbuf pool.
+    lwip213_pbuf_pool_size:
+      name: lwip213_pbuf_pool_size
+      permission: read_write
+      type: integer
+      value: '256'
+      default: '256'
+      options: []
+      description: Number of buffers in pbuf pool.
+    lwip213_socket_mode_thread_prio:
+      name: lwip213_socket_mode_thread_prio
+      permission: read_write
+      type: integer
+      value: '2'
+      default: '2'
+      options: []
+      description: Priority of threads in socket mode
+    lwip213_stats:
+      name: lwip213_stats
+      permission: read_write
+      type: boolean
+      value: 'false'
+      default: 'false'
+      options:
+      - 'true'
+      - 'false'
+      description: Turn on lwIP statistics?
+    lwip213_stats_options:
+      name: lwip213_stats_options
+      permission: read_write
+      type: boolean
+      value: 'true'
+      default: 'true'
+      options:
+      - 'true'
+      - 'false'
+      description: Turn on lwIP statistics?
+    lwip213_sys_debug:
+      name: lwip213_sys_debug
+      permission: read_write
+      type: boolean
+      value: 'false'
+      default: 'false'
+      options:
+      - 'true'
+      - 'false'
+      description: Debug sys arch layer
+    lwip213_tcp:
+      name: lwip213_tcp
+      permission: read_write
+      type: boolean
+      value: 'true'
+      default: 'true'
+      options:
+      - 'true'
+      - 'false'
+      description: Is TCP required ?
+    lwip213_tcp_debug:
+      name: lwip213_tcp_debug
+      permission: read_write
+      type: boolean
+      value: 'false'
+      default: 'false'
+      options:
+      - 'true'
+      - 'false'
+      description: Debug TCP layer
+    lwip213_tcp_keepalive:
+      name: lwip213_tcp_keepalive
+      permission: read_write
+      type: boolean
+      value: 'false'
+      default: 'false'
+      options:
+      - 'true'
+      - 'false'
+      description: Enable keepalive processing with default interval
+    lwip213_tcp_maxrtx:
+      name: lwip213_tcp_maxrtx
+      permission: read_write
+      type: integer
+      value: '12'
+      default: '12'
+      options: []
+      description: TCP Maximum retransmission value
+    lwip213_tcp_mss:
+      name: lwip213_tcp_mss
+      permission: read_write
+      type: integer
+      value: '1460'
+      default: '1460'
+      options: []
+      description: TCP Maximum segment size (bytes)
+    lwip213_tcp_options:
+      name: lwip213_tcp_options
+      permission: read_write
+      type: boolean
+      value: 'true'
+      default: 'true'
+      options:
+      - 'true'
+      - 'false'
+      description: Is TCP required ?
+    lwip213_tcp_queue_ooseq:
+      name: lwip213_tcp_queue_ooseq
+      permission: read_write
+      type: integer
+      value: '1'
+      default: '1'
+      options:
+      - '0'
+      - '1'
+      description: Should TCP queue segments arriving out of order. Set to 0 if your
+        device is low on memory
+    lwip213_tcp_snd_buf:
+      name: lwip213_tcp_snd_buf
+      permission: read_write
+      type: integer
+      value: '8192'
+      default: '8192'
+      options: []
+      description: TCP sender buffer space (bytes)
+    lwip213_tcp_synmaxrtx:
+      name: lwip213_tcp_synmaxrtx
+      permission: read_write
+      type: integer
+      value: '4'
+      default: '4'
+      options: []
+      description: TCP Maximum SYN retransmission value
+    lwip213_tcp_ttl:
+      name: lwip213_tcp_ttl
+      permission: read_write
+      type: integer
+      value: '255'
+      default: '255'
+      options: []
+      description: TCP TTL value
+    lwip213_tcp_wnd:
+      name: lwip213_tcp_wnd
+      permission: read_write
+      type: integer
+      value: '2048'
+      default: '2048'
+      options: []
+      description: TCP Window (bytes)
+    lwip213_tcpip_mbox_size:
+      name: lwip213_tcpip_mbox_size
+      permission: read_write
+      type: integer
+      value: '200'
+      default: '200'
+      options: []
+      description: Size of TCPIP mbox queue.
+    lwip213_temac_emac_number:
+      name: lwip213_temac_emac_number
+      permission: read_write
+      type: integer
+      value: '0'
+      default: '0'
+      options: []
+      description: Zynq Ethernet Interface number
+    lwip213_temac_phy_link_speed:
+      name: lwip213_temac_phy_link_speed
+      permission: read_write
+      type: string
+      value: CONFIG_LINKSPEED1000
+      default: CONFIG_LINKSPEED_AUTODETECT
+      options:
+      - CONFIG_LINKSPEED10
+      - CONFIG_LINKSPEED100
+      - CONFIG_LINKSPEED1000
+      - CONFIG_LINKSPEED_AUTODETECT
+      description: link speed as negotiated by the PHY
+    lwip213_temac_tcp_ip_rx_checksum_offload:
+      name: lwip213_temac_tcp_ip_rx_checksum_offload
+      permission: read_write
+      type: boolean
+      value: 'false'
+      default: 'false'
+      options:
+      - 'true'
+      - 'false'
+      description: Offload TCP and IP Receive checksum calculation (hardware support
+        required)
+    lwip213_temac_tcp_ip_tx_checksum_offload:
+      name: lwip213_temac_tcp_ip_tx_checksum_offload
+      permission: read_write
+      type: boolean
+      value: 'false'
+      default: 'false'
+      options:
+      - 'true'
+      - 'false'
+      description: Offload TCP and IP Transmit checksum calculation (hardware support
+        required)
+    lwip213_temac_tcp_rx_checksum_offload:
+      name: lwip213_temac_tcp_rx_checksum_offload
+      permission: read_write
+      type: boolean
+      value: 'false'
+      default: 'false'
+      options:
+      - 'true'
+      - 'false'
+      description: Offload TCP Receive checksum calculation (hardware support required)
+    lwip213_temac_tcp_tx_checksum_offload:
+      name: lwip213_temac_tcp_tx_checksum_offload
+      permission: read_write
+      type: boolean
+      value: 'false'
+      default: 'false'
+      options:
+      - 'true'
+      - 'false'
+      description: Offload TCP Transmit checksum calculation (hardware support required)
+    lwip213_temac_use_jumbo_frames:
+      name: lwip213_temac_use_jumbo_frames
+      permission: read_write
+      type: boolean
+      value: 'false'
+      default: 'false'
+      options:
+      - 'true'
+      - 'false'
+      description: use jumbo frames
+    lwip213_udp:
+      name: lwip213_udp
+      permission: read_write
+      type: boolean
+      value: 'true'
+      default: 'true'
+      options:
+      - 'true'
+      - 'false'
+      description: Is UDP required
+    lwip213_udp_debug:
+      name: lwip213_udp_debug
+      permission: read_write
+      type: boolean
+      value: 'false'
+      default: 'false'
+      options:
+      - 'true'
+      - 'false'
+      description: Debug UDP layer
+    lwip213_udp_options:
+      name: lwip213_udp_options
+      permission: read_write
+      type: boolean
+      value: 'true'
+      default: 'true'
+      options:
+      - 'true'
+      - 'false'
+      description: UDP Options
+    lwip213_udp_ttl:
+      name: lwip213_udp_ttl
+      permission: read_write
+      type: integer
+      value: '255'
+      default: '255'
+      options: []
+      description: UDP TTL value
+  xilffs:
+    XILFFS_enable_exfat:
+      name: XILFFS_enable_exfat
+      permission: read_write
+      type: boolean
+      value: 'false'
+      default: 'false'
+      options:
+      - 'true'
+      - 'false'
+      description: 0:Disable exFAT, 1:Enable exFAT(Also Enables LFN)
+    XILFFS_enable_multi_partition:
+      name: XILFFS_enable_multi_partition
+      permission: read_write
+      type: boolean
+      value: 'false'
+      default: 'false'
+      options:
+      - 'true'
+      - 'false'
+      description: 0:Single partition, 1:Enable multiple partition
+    XILFFS_fs_interface:
+      name: XILFFS_fs_interface
+      permission: read_write
+      type: integer
+      value: '1'
+      default: '1'
+      options:
+      - '1'
+      - '2'
+      description: Enables file system with selected interface. Enter 1 for SD. Enter
+        2 for RAM
+    XILFFS_num_logical_vol:
+      name: XILFFS_num_logical_vol
+      permission: read_write
+      type: integer
+      value: '2'
+      default: '2'
+      options: []
+      description: Number of volumes (logical drives, from 1 to 10) to be used.
+    XILFFS_ramfs_size:
+      name: XILFFS_ramfs_size
+      permission: read_write
+      type: integer
+      value: '3145728'
+      default: '3145728'
+      options: []
+      description: RAM FS size
+    XILFFS_ramfs_start_addr:
+      name: XILFFS_ramfs_start_addr
+      permission: read_write
+      type: string
+      value: ''
+      default: ''
+      options: []
+      description: RAM FS start address
+    XILFFS_read_only:
+      name: XILFFS_read_only
+      permission: read_write
+      type: boolean
+      value: 'false'
+      default: 'false'
+      options:
+      - 'true'
+      - 'false'
+      description: Enables the file system in Read_Only mode if true. ZynqMP fsbl
+        will set this to true
+    XILFFS_set_fs_rpath:
+      name: XILFFS_set_fs_rpath
+      permission: read_write
+      type: integer
+      value: '0'
+      default: '0'
+      options:
+      - '0'
+      - '1'
+      - '2'
+      description: Configures relative path feature (valid values 0 to 2).
+    XILFFS_use_chmod:
+      name: XILFFS_use_chmod
+      permission: read_write
+      type: boolean
+      value: 'false'
+      default: 'false'
+      options:
+      - 'true'
+      - 'false'
+      description: Enables use of CHMOD functionality for changing attributes (valid
+        only with read_only set to false)
+    XILFFS_use_lfn:
+      name: XILFFS_use_lfn
+      permission: read_write
+      type: integer
+      value: '0'
+      default: '0'
+      options:
+      - '0'
+      - '1'
+      - '2'
+      - '3'
+      description: 'Enables the Long File Name(LFN) support if non-zero. Disabled
+        by default: 0, LFN with static working buffer: 1, Dynamic working buffer:
+        2 (on stack) or 3 (on heap)'
+    XILFFS_use_mkfs:
+      name: XILFFS_use_mkfs
+      permission: read_write
+      type: boolean
+      value: 'true'
+      default: 'true'
+      options:
+      - 'true'
+      - 'false'
+      description: Disable(0) or Enable(1) f_mkfs function. ZynqMP fsbl will set this
+        to false
+    XILFFS_use_strfunc:
+      name: XILFFS_use_strfunc
+      permission: read_write
+      type: integer
+      value: '0'
+      default: '0'
+      options:
+      - '0'
+      - '1'
+      - '2'
+      description: Enables the string functions (valid values 0 to 2).
+    XILFFS_word_access:
+      name: XILFFS_word_access
+      permission: read_write
+      type: boolean
+      value: 'true'
+      default: 'true'
+      options:
+      - 'true'
+      - 'false'
+      description: Enables word access for misaligned memory access platform
+  xilrsa: {}
