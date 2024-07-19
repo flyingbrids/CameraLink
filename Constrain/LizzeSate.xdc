@@ -56,11 +56,30 @@ set_property IOSTANDARD LVDS_25 [get_ports {y_n[0]}]
 set_property PACKAGE_PIN R22 [get_ports SerTFG_p]
 set_property PACKAGE_PIN T22 [get_ports SerTFG_n]
 set_property PACKAGE_PIN T21 [get_ports SerTC_p]
-
+set_property PACKAGE_PIN U22 [get_ports SerTC_n]
 set_property IOSTANDARD LVDS_25 [get_ports SerTFG_p]
 set_property IOSTANDARD LVDS_25 [get_ports SerTFG_n]
 set_property IOSTANDARD LVDS_25 [get_ports SerTC_p]
 set_property IOSTANDARD LVDS_25 [get_ports SerTC_n]
+
+#LVDS XBAND
+set_property PACKAGE_PIN Y21  [get_ports tx1_clk_p]
+set_property PACKAGE_PIN AA21 [get_ports tx1_clk_n]
+set_property PACKAGE_PIN AA22 [get_ports tx1_data_p]
+set_property PACKAGE_PIN AB22 [get_ports tx1_data_n]
+set_property PACKAGE_PIN W21  [get_ports tx2_clk_p]
+set_property PACKAGE_PIN Y22  [get_ports tx2_clk_n]
+set_property PACKAGE_PIN AA20 [get_ports tx2_data_p]
+set_property PACKAGE_PIN AB20 [get_ports tx2_data_n]
+
+set_property IOSTANDARD LVDS_25 [get_ports tx1_clk_p]
+set_property IOSTANDARD LVDS_25 [get_ports tx1_clk_n]
+set_property IOSTANDARD LVDS_25 [get_ports tx1_data_p]
+set_property IOSTANDARD LVDS_25 [get_ports tx1_data_n]
+set_property IOSTANDARD LVDS_25 [get_ports tx2_clk_p]
+set_property IOSTANDARD LVDS_25 [get_ports tx2_clk_n]
+set_property IOSTANDARD LVDS_25 [get_ports tx2_data_p]
+set_property IOSTANDARD LVDS_25 [get_ports tx2_data_n]
 
 #clock
 set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets camera_receiver/camera_link/rx1/gen_base_configs.u00_cam_ibuf/CLK_IN1]

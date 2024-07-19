@@ -56,7 +56,14 @@ module LizzeSat_Top(
   ,output logic SerTC_p
   ,output logic SerTC_n  
   //Xband  
- 
+  ,output logic tx1_clk_p
+  ,output logic tx1_clk_n
+  ,output logic tx1_data_p
+  ,output logic tx1_data_n	   
+  ,output logic tx2_clk_p
+  ,output logic tx2_clk_n
+  ,output logic tx2_data_p
+  ,output logic tx2_data_n	
 );
 
 logic sys_clk, ref_clk;
@@ -206,6 +213,7 @@ logic xband_new_frame, MM2S_overflow, S2MM_overflow;
 logic [31:0] xband_rec_bytes;
 logic [31:0] xband_rec_dataCnt;
 logic [1:0]  loopback;
+logic bitswap;
 
 axi_register_interface axi_register_bank(
 	    .S_AXI_ACLK    (sys_clk),
@@ -230,6 +238,7 @@ axi_register_interface axi_register_bank(
         .xband_rec_bytes   (xband_rec_bytes),
         .xband_rec_dataCnt (xband_rec_dataCnt),
         .loopback          (loopback),
+        .bitswap           (bitswap),
 		// AXI4Lite 
 		.S_AXI_AWADDR  (AXI_0_awaddr),
 		.S_AXI_AWPROT  (AXI_0_awprot),
@@ -293,6 +302,7 @@ Xband Xband_LVDS
 	  ,.sys_rst                (sys_rst)
 	  ,.clk_10M                (clk_10M)
 	  ,.clk_100M               (clk_100M)
+	  ,.ref_clk                (ref_clk)
 	  ,.xband_rst              (xband_rst)
 	  ,.new_frame              (xband_new_frame)
 	  ,.MM2S_overflow          (MM2S_overflow)
@@ -300,6 +310,15 @@ Xband Xband_LVDS
 	  ,.expBytes               (xband_rec_bytes)
 	  ,.dataCnt                (xband_rec_dataCnt)
 	  ,.loopback               (loopback)
+	  ,.bitswap                (bitswap)
+	  ,.tx1_clk_p              (tx1_clk_p)
+	  ,.tx1_clk_n              (tx1_clk_n)
+	  ,.tx1_data_p             (tx1_data_p)
+	  ,.tx1_data_n	           (tx1_data_n)
+	  ,.tx2_clk_p              (tx2_clk_p)
+	  ,.tx2_clk_n              (tx2_clk_n)
+	  ,.tx2_data_p             (tx2_data_p)
+	  ,.tx2_data_n	           (tx2_data_n)
 	  // AXIS interface
 	  ,.M_AXIS_MM2S_0_tdata    (M_AXIS_MM2S_0_tdata)
       ,.M_AXIS_MM2S_0_tkeep    (M_AXIS_MM2S_0_tkeep)

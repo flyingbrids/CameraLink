@@ -25,6 +25,7 @@
         output reg xband_new_frame,        
         output reg [31:0] xband_rec_bytes,
         output reg [1:0]  loopback,
+        output reg        bitswap,
         
         input wire  serde_locked,camera_in_progress, 
         input wire [31:0] HwVersion, 
@@ -730,6 +731,7 @@
          cameralinkRst <= slv_reg0[3];
          xband_new_frame <= slv_reg0[4];
          loopback        <= slv_reg0[6:5];
+         bitswap         <= slv_reg0[7];
          HawkImageWidth <= slv_reg1[15:0];
          HawkImageHeight<= slv_reg1[31:16];
          OwlImageWidth <= slv_reg2[15:0];

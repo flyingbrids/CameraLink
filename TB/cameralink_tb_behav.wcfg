@@ -12,15 +12,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="9.304000 us"></ZoomStartTime>
-      <ZoomEndTime time="162.904001 us"></ZoomEndTime>
-      <Cursor1Time time="129.104000 us"></Cursor1Time>
+      <ZoomStartTime time="72,405.334 ns"></ZoomStartTime>
+      <ZoomEndTime time="76,285.335 ns"></ZoomEndTime>
+      <Cursor1Time time="73,052.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="99"></NameColumnWidth>
-      <ValueColumnWidth column_width="164"></ValueColumnWidth>
+      <NameColumnWidth column_width="197"></NameColumnWidth>
+      <ValueColumnWidth column_width="58"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="12" />
+   <WVObjectSize size="14" />
    <wvobject fp_name="/cameralink_tb/sys_rst" type="logic">
       <obj_property name="ElementShortName">sys_rst</obj_property>
       <obj_property name="ObjectShortName">sys_rst</obj_property>
@@ -33,6 +33,10 @@
       <obj_property name="ElementShortName">new_frame</obj_property>
       <obj_property name="ObjectShortName">new_frame</obj_property>
    </wvobject>
+   <wvobject fp_name="/cameralink_tb/camera_receiver/testMode" type="logic">
+      <obj_property name="ElementShortName">testMode</obj_property>
+      <obj_property name="ObjectShortName">testMode</obj_property>
+   </wvobject>
    <wvobject fp_name="/cameralink_tb/frame_cnt" type="array">
       <obj_property name="ElementShortName">frame_cnt[31:0]</obj_property>
       <obj_property name="ObjectShortName">frame_cnt[31:0]</obj_property>
@@ -44,6 +48,10 @@
    <wvobject fp_name="/cameralink_tb/camera_in_progress" type="logic">
       <obj_property name="ElementShortName">camera_in_progress</obj_property>
       <obj_property name="ObjectShortName">camera_in_progress</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cameralink_tb/camera_receiver/cameraState" type="array">
+      <obj_property name="ElementShortName">cameraState[1:0]</obj_property>
+      <obj_property name="ObjectShortName">cameraState[1:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/cameralink_tb/camera_receiver/frame_rst" type="logic">
       <obj_property name="ElementShortName">frame_rst</obj_property>

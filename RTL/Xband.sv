@@ -22,17 +22,26 @@
 module Xband(
 	   input  logic sys_clk
 	  ,input  logic sys_rst
+	  ,input  logic ref_clk
 	  ,input  logic clk_10M
 	  ,input  logic clk_100M
 	  ,input  logic xband_rst
 	  ,input  logic new_frame
 	  ,output logic MM2S_overflow
 	  ,output logic S2MM_overflow
+	  ,input  logic bitswap
 	  ,input  logic [1:0] loopback
 	  ,input  logic [31:0] expBytes
 	  ,output logic [31:0] dataCnt 
 	  // Xband LVDS
-	  
+	  ,output logic tx1_clk_p
+	  ,output logic tx1_clk_n
+	  ,output logic tx1_data_p
+	  ,output logic tx1_data_n	   
+	  ,output logic tx2_clk_p
+	  ,output logic tx2_clk_n
+	  ,output logic tx2_data_p
+	  ,output logic tx2_data_n		  
 	  // AXIS interface
 	  ,input  logic [31:0]  M_AXIS_MM2S_0_tdata
       ,input  logic [3:0]   M_AXIS_MM2S_0_tkeep
@@ -145,7 +154,31 @@ Xband_TX
     , .dataout_val  (data_out_val)
 );
 
+serializer xband_Tx1 (
+       .data       (data_out_10bit)
+      ,.ref_clk    (ref_clk)
+      ,.bitswap    (bitswap)
+      ,.dataout_p (tx1_data_p)
+      ,.dataout_n (tx1_data_n)
+      ,.clk_p      (tx1_clk_p)
+      ,.clk_n      (tx1_clk_n)
+      ,.txclk      (clk_100M)
+      ,.reset_int  (xband_rst)
+      ,.pixel_clk  (clk_10M)
+);
 
+serializer xband_Tx2 (
+       .data       (data_out_10bit)
+      ,.ref_clk    (ref_clk) 
+      ,.bitswap    (bitswap) 
+      ,.dataout_p (tx2_data_p)
+      ,.dataout_n (tx2_data_n)
+      ,.clk_p      (tx2_clk_p)
+      ,.clk_n      (tx2_clk_n)
+      ,.txclk      (clk_100M)
+      ,.reset_int  (xband_rst)
+      ,.pixel_clk  (clk_10M)
+);
 //************************************************RX SIDE**********************************************
 dec_8b10b_n #(
     .nw (1)
