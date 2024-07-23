@@ -43,8 +43,8 @@ logic test_mode_lat;
 logic test_mode_start;
 logic test_mode_end;
 
-assign new_frame   = new_frame_cl | test_mode_start;
-assign frame_valid = frame_valid_cl | test_mode_lat;
+assign new_frame   = testMode? test_mode_start : new_frame_cl;
+assign frame_valid = testMode? test_mode_lat : frame_valid_cl;
 assign pixel       = test_mode_lat? pixel_test :  pixel_cl;
 assign pixel_vld   = test_mode_lat? pixel_vld_test : pixel_vld_cl;
 
@@ -147,6 +147,5 @@ always @ (posedge sys_clk, posedge sys_rst) begin
         lineBreakCnt <= '0; 
      end 
 end     
-
     
 endmodule

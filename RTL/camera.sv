@@ -67,6 +67,17 @@ always @ (posedge sys_clk) begin
       end 
 end 
 
+logic [2:0] reset_cnt;
+logic camera_rst;
+always @ (posedge sys_clk ,posedge sys_rst) begin
+    if (sys_rst) begin 
+       reset_cnt <= '0;
+    end else if ((~camera_in_progress & (cameraSel != cameraSelRegister)) | (|reset_cnt)) begin
+       reset_cnt <= reset_cnt + 1'b1;
+    end  
+end 
+assign camera_rst = (reset_cnt > 0)? 1'b1 : 1'b0;     
+
 assign capture_end  = cameraSelRegister? owl_capture_end : hawk_capture_end;
 assign frame_rst    = cameraSelRegister? owl_new_frame   : hawk_new_frame; 
 
@@ -95,12 +106,13 @@ logic new_capture_d, capture;
 always @ (posedge sys_clk, posedge sys_rst) begin
        if (sys_rst) begin
           new_capture_d <= '0;
+          capture <= '0;
        end else begin
           new_capture_d <= new_capture;
+          capture <= ~new_capture_d & new_capture;
        end 
 end 
 
-assign capture = ~new_capture_d & new_capture;
 
 logic delay_ready;
 
@@ -114,7 +126,7 @@ logic new_frame_cl,frame_valid_cl,pixel_vld_cl;
 logic [47:0] pixel_cl;
 
  cameralink_medium_phy camera_link(
- .sys_rst      (sys_rst),					
+ .sys_rst      (sys_rst | camera_rst),					
  .sys_clk      (sys_clk),	
  .delay_ready  (delay_ready),			
  .clkin1_p     (xclk_p),  
@@ -145,7 +157,7 @@ HawkCameraCtrl HawkCamera
        ,.imageHeight         (hawk_image_height)
        ,.sys_clk             (sys_clk)
        ,.sys_rst             (sys_rst)
-       ,.capture             (capture)
+       ,.capture             (capture & ~cameraSelRegister)
        ,.testMode            (testMode)
        ,.new_frame           (hawk_new_frame)
        ,.pixel               (hawk_pixel)
@@ -153,7 +165,7 @@ HawkCameraCtrl HawkCamera
        ,.capture_end         (hawk_capture_end)
  );
 
-OwlCameraCtrl OwlCamera
+ OwlCameraCtrl OwlCamera
  (
         .frame_valid_cl       (frame_valid_cl & cameraSelRegister)
        ,.new_frame_cl         (new_frame_cl   & cameraSelRegister)
@@ -163,7 +175,7 @@ OwlCameraCtrl OwlCamera
        ,.imageHeight          (owl_image_height)
        ,.sys_clk              (sys_clk)
        ,.sys_rst              (sys_rst)
-       ,.capture              (capture)
+       ,.capture              (capture & cameraSelRegister)
        ,.testMode             (testMode)
        ,.new_frame            (owl_new_frame)
        ,.pixel                (owl_pixel)
@@ -195,7 +207,7 @@ ila_0 ila_camera (
 ,.probe0 (cameraSelRegister)
 ,.probe1 (testMode)
 ,.probe2 (dataXferedCnt)
-,.probe3 (S_AXIS_S2MM_0_tready)
+,.probe3 (S_AXIS_S2MM_0_tlast)
 ,.probe4 (S_AXIS_S2MM_0_tvalid)
 ,.probe5 (frame_rst)
 ,.probe6 (capture_end)

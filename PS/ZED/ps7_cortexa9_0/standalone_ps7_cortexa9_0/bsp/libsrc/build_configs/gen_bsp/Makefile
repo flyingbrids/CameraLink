@@ -411,32 +411,6 @@ xiltimer/fast:
 	$(MAKE) $(MAKESILENT) -f libsrc/xiltimer/src/CMakeFiles/xiltimer.dir/build.make libsrc/xiltimer/src/CMakeFiles/xiltimer.dir/build
 .PHONY : xiltimer/fast
 
-#=============================================================================
-# Target rules for targets named lwip213
-
-# Build rule for target.
-lwip213: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 lwip213
-.PHONY : lwip213
-
-# fast build rule for target.
-lwip213/fast:
-	$(MAKE) $(MAKESILENT) -f libsrc/lwip213/src/CMakeFiles/lwip213.dir/build.make libsrc/lwip213/src/CMakeFiles/lwip213.dir/build
-.PHONY : lwip213/fast
-
-#=============================================================================
-# Target rules for targets named xilffs
-
-# Build rule for target.
-xilffs: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 xilffs
-.PHONY : xilffs
-
-# fast build rule for target.
-xilffs/fast:
-	$(MAKE) $(MAKESILENT) -f libsrc/xilffs/src/CMakeFiles/xilffs.dir/build.make libsrc/xilffs/src/CMakeFiles/xilffs.dir/build
-.PHONY : xilffs/fast
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -457,7 +431,6 @@ help:
 	@echo "... emacps"
 	@echo "... gpiops"
 	@echo "... iic"
-	@echo "... lwip213"
 	@echo "... qspips"
 	@echo "... scugic"
 	@echo "... scutimer"
@@ -467,7 +440,6 @@ help:
 	@echo "... uartns550"
 	@echo "... uartps"
 	@echo "... xadcps"
-	@echo "... xilffs"
 	@echo "... xilstandalone"
 	@echo "... xiltimer"
 .PHONY : help
