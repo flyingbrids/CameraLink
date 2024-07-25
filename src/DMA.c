@@ -50,10 +50,12 @@ int InitXbandDMA ()
     return Status; 
 }
 
-int ImageReceive (int NumofBytes) 
+int ImageReceive (int NumofBytes, u8* Array) 
 {
    u8 *RxBufferPtr;
-   RxBufferPtr = (u8 *)IMG_BUFFER_BASE;
+   u8 *RxBufferHeaderPtr;
+   RxBufferPtr = (u8 *)PAYLOAD_BUFFER;
+   RxBufferHeaderPtr = (u8 *) PAYLOAD_BUFFER_HEADER;
    int TimeOut = POLL_TIMEOUT_COUNTER;
    /* Flush the buffers before the DMA transfer, in case the Data Cache
 	 * is enabled
@@ -78,14 +80,46 @@ int ImageReceive (int NumofBytes)
        XAxiDma_Reset(&ImageDMA);
        return XST_FAILURE;
     }       
+    // Modify header data to notify the top-level sw that memory is ready to grab
+    RxBufferHeaderPtr[0] = 0xFF;
+    memcpy(RxBufferHeaderPtr+1,Array,20);
+    RxBufferHeaderPtr[21] = NumofBytes & 0xff;
+    RxBufferHeaderPtr[22] = (NumofBytes >> 8) & 0xff;
+    RxBufferHeaderPtr[23] = (NumofBytes >> 16)  & 0xff;
+    RxBufferHeaderPtr[24] = (NumofBytes >> 24)  & 0xff; 
 
+    // wait for the handshake .... 
+
+    return Status;
+}
+
+int XbandTransmit (int NumofBytes)  {
+    NewXbandFrame ();
+    u8 *TxBufferPtr;
+    TxBufferPtr = (u8 *)TX_BUFFER_BASE;
+    usleep(100);
+	int Status = XAxiDma_SimpleTransfer(&XbandDMA, (UINTPTR) TxBufferPtr,
+						NumofBytes, XAXIDMA_DMA_TO_DEVICE);
+    int TimeOut = POLL_TIMEOUT_COUNTER;
+	if (Status != XST_SUCCESS) {
+		return XST_FAILURE;
+	}
+ 	while (TimeOut) {
+		if (!(XAxiDma_Busy(&XbandDMA, XAXIDMA_DEVICE_TO_DMA)) &&
+			!(XAxiDma_Busy(&XbandDMA, XAXIDMA_DMA_TO_DEVICE))) {
+			break;
+		}
+		TimeOut--;
+		usleep(1U);
+	}   
+    memset(TxBufferPtr, 0x00, NumofBytes); // zero out the buffer for handshake
     return Status;
 }
 
 int XbandLoopBackTest (int NumofBytes) {
     u8 *RxBufferPtr;
     u8 *TxBufferPtr;
-    RxBufferPtr = (u8 *)XBAND_BUFFER_BASE;
+    RxBufferPtr = (u8 *)PAYLOAD_BUFFER;
     TxBufferPtr = (u8 *)TX_BUFFER_BASE;
     int TimeOut = POLL_TIMEOUT_COUNTER;
     u8 Value = 0x0A;
@@ -134,22 +168,23 @@ int XbandLoopBackTest (int NumofBytes) {
 			usleep(1U);
 		}
 
-		Status = CheckData(NumofBytes);
+		Status = CheckData(NumofBytes, Value, 1);
 		if (Status != XST_SUCCESS) {
 			return XST_FAILURE;
 		}
 	}
+    FPGA_WriteReg(0,0x00000000); // set normal mode
     return Status;
 }
 
-static int CheckData(int NumofBytes)
+static int CheckData(int NumofBytes, u8 Value, u8 loopback)
 {
 	u8 *RxPacket;
 	int Index = 0;
-	u8 Value;
-
-	RxPacket = (u8 *) XBAND_BUFFER_BASE;
-	Value = 0x0A;
+    if (loopback)
+	    RxPacket = (u8 *) PAYLOAD_BUFFER;
+    else  
+	    RxPacket = (u8 *) TX_BUFFER_BASE;
 
 	/* Invalidate the DestBuffer before receiving the data, in case the
 	 * Data Cache is enabled
@@ -164,7 +199,8 @@ static int CheckData(int NumofBytes)
 
 			return XST_FAILURE;
 		}
-		Value = (Value + 1) & 0xFF;
+        if (loopback)
+		    Value = (Value + 1) & 0xFF;
 	}
 
 	return XST_SUCCESS;

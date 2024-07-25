@@ -88,7 +88,7 @@ void FPGARegisterInit ()
    SetHawkImageSize(1944,1472);
    SelectOwl();
    EnableTestMode();
-   SetCaptureTimeOut(0xffff0000);   
+   SetCaptureTimeOut(0x0000FFFF);   
 }
 
 u32 ReadPLVersion () {

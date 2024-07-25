@@ -116,11 +116,11 @@ end
 
 logic delay_ready;
 
-IDELAYCTRL icontrol (              			
-	.REFCLK			(ref_clk),
-	.RST			(sys_rst),
-	.RDY			(delay_ready)
-);	
+//IDELAYCTRL icontrol (              			
+//	.REFCLK			(ref_clk),
+//	.RST			(sys_rst),
+//	.RDY			(delay_ready)
+//);	
 
 logic new_frame_cl,frame_valid_cl,pixel_vld_cl;
 logic [47:0] pixel_cl;
