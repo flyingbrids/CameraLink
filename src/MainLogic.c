@@ -1,18 +1,19 @@
-#include <stdio.h>
-#include "xparameters.h"
-#include "xil_printf.h"
-#include "xdebug.h"
-#include "sleep.h"
-#include "FPGARegisterConfig.h"
-#include "DMA.h"
-#include "xuartps_hw.h"
-#include "xuartps.h"
-#include "main.h"
+#include "main.h" 
 
-u32 current_camera_val;
+XIicPs Iic;
+u8 I2CBuffer[1] = {0x00}; // vorgao need to send 0x01 via I2C after camera link bus is ready
+                          // and reset to 0x00 via I2C before camera link being switched 
+u8 owl_init_status;
+u8 hawk_init_status;
 
- int APP_Init () {
-     int status;     
+u8 *SensorActivate;
+u8 *SensorSelect;
+
+void APP_Init () {
+     int status;  
+     owl_init_status = 0x01;
+     hawk_init_status = 0x01;  
+     memset((u8*)TX_BUFFER_BASE, 0x00, XBAND_FILE_SIZE);
      status = InitImageDMA();
      if (status != XST_SUCCESS)
      {
@@ -42,112 +43,13 @@ u32 current_camera_val;
      if (status != XST_SUCCESS)
      {
          xil_printf("failed to initiate SPI to HEO Camera \r\n");
-     }       
-     return status;
+     }   
+     status = iic_init (I2CBuffer, &Iic);
+     if (status != XST_SUCCESS)
+     {
+         xil_printf("failed to initiate I2C \r\n");
+     }  
  }
-
-void CmdHelp()
-{
-    // Print menu information
-    xil_printf("\r\n");
-    xil_printf("* *****MENU***** *\r\n");
-    xil_printf("* ************** *\r\n");
-    xil_printf("* %c  capture 1 frame image from owl camera \r\n", OWL_CAMERA_SINGLE_FRAME_CAPTURE);
-    xil_printf("* %c  capture 1 frame image from hawk camera \r\n",  HAWK_CAMERA_SINGLE_FRAME_CAPTURE);
-    xil_printf("* %c  transfer 1 frame test data form owl camera \r\n", OWL_CAMERA_TEST_CAPTURE );
-    xil_printf("* %c  transfer 1 frame test data form hawk camera \r\n", HAWK_CAMERA_TEST_CAPTURE);
-    xil_printf("* %c  transfer 1 frame data to Xband \r\n", XBAND_STROBE);
-}
-
-unsigned char Kbhit()
-{
-    return (unsigned char)(XUartPs_IsReceiveData(XPAR_XUARTPS_1_BASEADDR));
-}
-
-
-char CmdRead()
-{
-    static char cmd[1] = {0};
-    setvbuf(stdin, NULL, _IONBF, 0);
-
-    // Get character from stdin
-    if (Kbhit()) {
-        cmd[0] = getchar();
-        xil_printf(" %c", cmd[0]);
-    }
-    else  {
-        cmd[0] = 0;
-    }
-
-    return cmd[0];
-}
-unsigned int tx_data;
-
-int DataRead () {
-	setvbuf(stdin, NULL, _IONBF, 0);
-	char data;
-	tx_data = 0;
-	for (int i = 0; i < 10; i++) {
-	    while (!Kbhit());
-	    data = getchar();
-	    if ((data>= 0x30) && (data <= 0x39)){
-	       	tx_data = tx_data*10 + (data - 0x30);
-	       	xil_printf("%c", data);
-	    }
-	    else if ((data == '\r') & (tx_data >= 0)) {
-	       	return XST_SUCCESS;
-	    }
-	    else {
-	       	xil_printf("\n\rinvalid input 1!\n\r");
-	       	return XST_FAILURE;
-	    }
-	 }
-	return XST_SUCCESS;
-}
-
-void camera_link_receive (u32 camera_val) {
-     u32 imageSize = GetHawkImageSize();
-     int totalImageBytes;     
-     int imagePixels;
-     int status;
-     current_camera_val = IsOwlSelected(); 
-     u8 sensor_1[20] = "Owl Camera";
-     u8 sensor_0[20] = "Hawk Camera";
-     u8 sensor[20];
-     if (camera_val)
-         memcpy (sensor, sensor_1,20);
-     else 
-         memcpy (sensor, sensor_0,20);
-
-     // trigger routine             
-    if ((current_camera_val == 0) & (camera_val != 0)) {
-        SelectOwl();     
-        imageSize = GetOwlImageSize(); 
-        usleep(15000); // delay to allow cameralink switching and re-calibration
-    }  
-    else if ((current_camera_val == 0) & (camera_val == 0)) {
-        imageSize = GetHawkImageSize();  
-    }  
-    else if ((current_camera_val != 0) & (camera_val != 0)) {
-        imageSize = GetOwlImageSize();  
-    } 
-    else if ((current_camera_val != 0) & (camera_val == 0)) {
-        SelectHawk ();
-        imageSize = GetHawkImageSize();
-        usleep(15000); 
-    }                  
-    imagePixels = (imageSize >> 16) *(imageSize & 0xffff);
-    totalImageBytes = (imagePixels * 3) >> 1; // each pixel is (12bits) 1.5 bytes 
-    if((IsTestMode() !=0) || (ReadCameraLinkStatus() !=0)){ 
-        status = ImageReceive(totalImageBytes,sensor);
-        if (status == XST_SUCCESS)
-            xil_printf("successfully transfered 1 frame of image, total bytes %d\r\n", ReadImageDMABytesXfered()); 
-        else 
-            xil_printf("transfer failed! \r\n");           
-    }  
-    else 
-        xil_printf("camera is not ready! \r\n");
-}
 
  int main () {
      APP_Init (); 
@@ -155,20 +57,53 @@ void camera_link_receive (u32 camera_val) {
      make_crc_table();
      xil_printf("\r\n--- Entering main() --- \r\n");
      xil_printf("PL version is %d\r\n", ReadPLVersion());
-     CmdHelp();
+     #ifdef UART_DEBUG 
+        CmdHelp();
+     #else 
+        SensorActivate =  (u8 *)SENSOR_COMMAND_MEM;
+        SensorSelect = (u8 *) SENSOR_SEL_MEM;
+     #endif 
      while (1){
-        char cmd = CmdRead();
+        char cmd;
+        #ifdef UART_DEBUG 
+            cmd = CmdRead();
+        #else 
+            if (CheckData(XBAND_FILE_SIZE,0x00,0) == XST_SUCCESS) {
+               if (*SensorActivate > 0x00)
+                  cmd = *SensorSelect;
+               else 
+                  cmd = 0x00;
+            }
+            else
+               cmd = XBAND_STROBE;
+        #endif   
         switch (cmd) {
         case HEO_CAMERA_SINGLE_FRAME_CAPTURE:{
             spips_read ();            
         }
         break; 
         case OWL_CAMERA_SINGLE_FRAME_CAPTURE: {
+            #ifndef UART_DEBUG
+              while (I2CBuffer[0] == 0x00);
+              if (owl_init_status) {
+                 owl_register_write(); // just init register once 
+                 owl_init_status = 0x00;
+                 usleep(1000);
+              }               
+            #endif 
             DisableTestMode(); 
             camera_link_receive (1);
         }
         break;     
         case HAWK_CAMERA_SINGLE_FRAME_CAPTURE:{
+            #ifndef UART_DEBUG
+              while (I2CBuffer[0] == 0x00);
+              if (hawk_init_status) {
+                 hawk_register_write(); // just init register once 
+                 hawk_init_status = 0x00;
+                 usleep(1000);
+              }              
+            #endif             
             DisableTestMode(); 
             camera_link_receive (0);
         }
@@ -183,24 +118,36 @@ void camera_link_receive (u32 camera_val) {
             camera_link_receive (0);
         }
         break; 
-        case XBAND_STROBE: {
-             xil_printf("\r\n Please specify number of bytes (in decimal) to transfer\r\n");
-             if (DataRead() == XST_SUCCESS) {                	 
-                if (XbandTransmit(tx_data) == XST_SUCCESS)	 
-                    xil_printf ("\n\r successfully transfer %d bytes to xband!\n\r", tx_data);
-                else 
-                    xil_printf ("transfer failed!\n\r");      
-             }
-             else 
-                xil_printf ("data input invalid!\n\r");
-             
+        case XBAND_STROBE: {                         
+             #ifdef UART_DEBUG 
+                    unsigned int tx_data; 
+                    xil_printf("\r\n Please specify number of bytes (in decimal) to transfer\r\n");
+                    if (DataRead(&tx_data) == XST_SUCCESS) {                	 
+                        if (XbandTransmit(tx_data) == XST_SUCCESS)	 
+                            xil_printf ("\n\r successfully transfer %d bytes to xband!\n\r", tx_data);
+                        else 
+                            xil_printf ("transfer failed!\n\r");      
+                    }
+                    else 
+                        xil_printf ("data input invalid!\n\r");
+             #else 
+                    if (XbandTransmit(XBAND_FILE_SIZE) == XST_SUCCESS)	 
+                        xil_printf ("\n\r successfully transfer %d bytes to xband!\n\r", XBAND_FILE_SIZE);
+                    else 
+                        xil_printf ("transfer failed!\n\r");                          
+             #endif             
         }        
         default:
            usleep(1);
         } 
-        usleep(150);
      }
      return 1;
 } 
      
-  
+void Handler(void *CallBackRef, u32 Event)
+{
+
+	if (0 != (Event & XIICPS_EVENT_COMPLETE_RECV)) { // I2C receive interrupt
+		XIicPs_SlaveRecv(&Iic, I2CBuffer, 1);  // restart I2C receive
+	}
+}

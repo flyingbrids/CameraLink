@@ -1,7 +1,4 @@
-#include "xparameters.h"	/* SDK generated parameters */
 #include "xspips.h"		/* SPI device driver */
-#include "xil_printf.h"
-#include "DMA.h"
 #include "main.h"
 
 static XSpiPs SpiInstance;
@@ -13,7 +10,7 @@ static XSpiPs SpiInstance;
 int spips_int () {
    	int Status;
 	XSpiPs_Config *SpiConfig;
-    SpiConfig = XSpiPs_LookupConfig(XPAR_XSPIPS_0_BASEADDR);
+    SpiConfig = XSpiPs_LookupConfig(XPAR_XSPIPS_1_BASEADDR);
     if (NULL == SpiConfig) {
 		return XST_FAILURE;
 	}
@@ -75,6 +72,8 @@ void spips_read () {
        xil_printf ("HEO image timeout\r\n");
     
     // wait for the handshake 
-    
+    #ifndef UART_DEBUG 
+        while (RxBufferHeaderPtr[0] == 0xFF);
+    #endif 
 }
 

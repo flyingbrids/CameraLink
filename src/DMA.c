@@ -1,5 +1,5 @@
-#include "DMA.h"
-#include "FPGARegisterConfig.h"
+#include "main.h"
+#include "xaxidma.h"
 
 XAxiDma ImageDMA;
 XAxiDma XbandDMA;
@@ -89,7 +89,9 @@ int ImageReceive (int NumofBytes, u8* Array)
     RxBufferHeaderPtr[24] = (NumofBytes >> 24)  & 0xff; 
 
     // wait for the handshake .... 
-
+    #ifndef UART_DEBUG 
+        while (RxBufferHeaderPtr[0] == 0xFF);
+    #endif 
     return Status;
 }
 
@@ -97,7 +99,7 @@ int XbandTransmit (int NumofBytes)  {
     NewXbandFrame ();
     u8 *TxBufferPtr;
     TxBufferPtr = (u8 *)TX_BUFFER_BASE;
-    usleep(100);
+    //usleep(100);
 	int Status = XAxiDma_SimpleTransfer(&XbandDMA, (UINTPTR) TxBufferPtr,
 						NumofBytes, XAXIDMA_DMA_TO_DEVICE);
     int TimeOut = POLL_TIMEOUT_COUNTER;
@@ -177,7 +179,7 @@ int XbandLoopBackTest (int NumofBytes) {
     return Status;
 }
 
-static int CheckData(int NumofBytes, u8 Value, u8 loopback)
+int CheckData(int NumofBytes, u8 Value, u8 loopback)
 {
 	u8 *RxPacket;
 	int Index = 0;

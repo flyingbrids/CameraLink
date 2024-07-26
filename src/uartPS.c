@@ -1,7 +1,4 @@
-#include "xparameters.h"
-#include "xuartps.h"
-#include "xil_printf.h"
-#include "sleep.h"
+#include "main.h" 
 
 #define	XUARTPS_BASEADDRESS		XPAR_XUARTPS_0_BASEADDR
 
