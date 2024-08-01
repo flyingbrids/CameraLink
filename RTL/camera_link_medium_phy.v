@@ -185,7 +185,7 @@ assign pixel_data_o = {pixel_data_o_2,pixel_data_o_1};
 
 wire full, full_sync;
 
-camera_medium_fifo cameralink_fifo_inst_1
+async_fifo cameralink_fifo_inst_1
 (
    .din   (pixel_data_in_1)
   ,.wr_en (pixel_wr_1 & ~fifo_rst)
@@ -195,10 +195,11 @@ camera_medium_fifo cameralink_fifo_inst_1
   ,.rd_en (rd_en)
   ,.rst   (sys_rst | fifo_rst)
   ,.wr_clk (rxclk_div_1)
-  ,.rd_clk (sys_clk)  
+  ,.rd_clk (sys_clk)
+  ,.prog_full_thresh(cameraSel? lineWidth[11:2] : lineWidth[10:1] )  
 );
 
-camera_medium_fifo cameralink_fifo_inst_2
+async_fifo cameralink_fifo_inst_2
 (
    .din   (pixel_data_in_2)
   ,.wr_en (pixel_wr_2 & ~fifo_rst)
@@ -207,7 +208,8 @@ camera_medium_fifo cameralink_fifo_inst_2
   ,.rd_en (rd_en)
   ,.rst   (sys_rst | fifo_rst)
   ,.wr_clk (rxclk_div_2)
-  ,.rd_clk (sys_clk)  
+  ,.rd_clk (sys_clk) 
+  ,.prog_full_thresh(cameraSel? lineWidth[11:2] : lineWidth[10:1])  
 );
 
 reg [15:0] rd_cnt;

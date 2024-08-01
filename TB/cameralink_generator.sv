@@ -49,17 +49,11 @@ function int convert2Pixel (string pixel); // covert image.hex file into 12 bits
   int pixelNibble;
   pixeldata = 0;
   for (int index =0; index < 4; index++) begin
-    if (index == 2)
-      continue;
     if ((pixel[index] >8'h29) & (pixel[index] < 8'h40)) begin // ASCII value to data
-      pixelNibble = pixel[index] - 8'h30;
+      pixelNibble = pixel[index] - 8'h30;      
+      pixeldata = pixeldata*10 + pixelNibble;
     end else
-      pixelNibble = pixel[index] - 8'h37;
-    case (index)
-      0: pixeldata = pixeldata + (pixelNibble << 4);
-      1: pixeldata = pixeldata +  pixelNibble;
-      3: pixeldata = pixeldata + (pixelNibble << 8);	  
-    endcase
+      continue;	  
   end
   return pixeldata;
 endfunction
@@ -74,7 +68,7 @@ task automatic load_image;
   begin
     // file process
     while (~frame_end) begin
-    file = $fopen("imgr.hex","r");
+    file = $fopen("imgr.txt","r");
     img = $fopen($sformatf("Loadimgr_%0dppc.txt", PIX_PER_TAP),"w"); 
     for (i = 0; i < imageHeight; i++) begin
       Fval = 1;

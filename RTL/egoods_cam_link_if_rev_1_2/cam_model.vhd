@@ -24,7 +24,12 @@ use ieee.std_logic_1164.all;
 
 entity cam_model is
 
-generic (  config : integer := 1  );  -- 0: BASE, 1: MEDIUM, 2: FULL
+generic (  configs : integer;   -- 0: BASE, 1: MEDIUM, 2: FULL
+           bit_period: time;
+           frame_period: time;
+           IMAGE_WIDTH: integer;
+           IMAGE_HEIGHT: integer
+         ); 
 
 port (
 
@@ -106,7 +111,9 @@ end component;
 
 
 signal  clk     : std_logic := '0';
-
+signal  pixel_clk:std_logic := '0';
+signal  frame_clk:std_logic := '0';
+signal  frame_clk_reg: std_logic;
 signal  count   : integer;
 
 signal  rand_a  : std_logic_vector(31 downto 0);
@@ -125,6 +132,10 @@ signal  rand_m  : std_logic_vector(31 downto 0);
 signal  rand_n  : std_logic_vector(31 downto 0);
 signal  rand_o  : std_logic_vector(31 downto 0);
 
+signal  line_count  : integer;
+signal  col_count   : integer;
+signal  col_count_next   : integer;
+signal  col_count_max :integer;
 signal  xc      : std_logic;
 signal  x0      : std_logic;
 signal  x1      : std_logic;
@@ -173,8 +184,9 @@ begin
 -- Generate a local serial clock --
 -----------------------------------
 
-clk <= not clk after 2.2321 ns;  -- 224 MHz
-
+clk <= not clk after bit_period;  
+pixel_clk <= not pixel_clk after bit_period*8; 
+frame_clk <= not frame_clk after frame_period/2;
 
 -----------------
 -- Bit counter --
@@ -246,16 +258,43 @@ end process lfsr_regs;
 -- Randomized sync bits --
 --------------------------
 
-dval <= rand_m(0);
-fval <= rand_n(0);
-lval <= rand_o(0);
+--dval <= rand_m(0);
+--fval <= rand_n(0);
+--lval <= rand_o(0);
 
+fval <= '1' when (line_count < IMAGE_HEIGHT) else '0';
+
+valid_regs: process(pixel_clk, reset) begin 
+
+  if reset = '0' then
+     dval <= '0';
+     lval <= '0';  
+     line_count <= 0;
+     col_count <= 0;   
+     frame_clk_reg <= '0';
+  elsif pixel_clk'event and pixel_clk = '1' then     
+     lval <= fval;
+     dval <= lval;
+     frame_clk_reg <= frame_clk;
+     if (dval = '1' and fval = '1' and lval = '1') then
+         if (col_count < col_count_max) then
+            col_count <= col_count_next;   
+         elsif (line_count < IMAGE_HEIGHT) then
+            col_count <= 0; 
+            line_count <= line_count + 1;
+         end if;  
+     elsif (frame_clk_reg = '0' and frame_clk = '1') then 
+            line_count <= 0;
+            col_count <= 0; 
+     end if; 
+  end if;      
+end process valid_regs;
 
 -------------------------------------
 -- Assign random bits to channel X --
 -------------------------------------
 
-gen_base_config:  if (config = 0) generate
+gen_base_configs:  if (configs = 0) generate
 
   -- BASE
   x0 <= rand_a(0);
@@ -266,7 +305,8 @@ gen_base_config:  if (config = 0) generate
   	    rand_c(0);
   x3 <= '0'  when (count = 0) else  -- RES
         rand_d(0);
-
+  col_count_next <= col_count + 2;
+  col_count_max <= IMAGE_WIDTH - 2;
   -- MEDIUM N/C
   y0 <= '0';
   y1 <= '0';
@@ -284,14 +324,14 @@ gen_base_config:  if (config = 0) generate
   yc <= '0';
   zc <= '0';
 
-end generate gen_base_config;
+end generate gen_base_configs;
 
 
 ---------------------------------------
 -- Assign random bits to channel X,Y --
 ---------------------------------------
 
-gen_medium_config:  if (config = 1) generate
+gen_medium_configs:  if (configs = 1) generate
 
   -- BASE
   x0 <= rand_a(0);
@@ -312,7 +352,8 @@ gen_medium_config:  if (config = 1) generate
   	    rand_g(0);
   y3 <= '0'  when (count = 0) else  -- RES
         rand_h(0);
-
+  col_count_next <= col_count + 4;
+  col_count_max <= IMAGE_WIDTH - 4;
   -- FULL N/C
   z0 <= '0';
   z1 <= '0';
@@ -324,14 +365,14 @@ gen_medium_config:  if (config = 1) generate
   yc <= '0' when (count > 1) and (count < 5) else '1';
   zc <= '0';
 
-end generate gen_medium_config;
+end generate gen_medium_configs;
 
 
 -----------------------------------------
 -- Assign random bits to channel X,Y,Z --
 -----------------------------------------
 
-gen_full_config:  if (config = 2) generate
+gen_full_configs:  if (configs = 2) generate
 
   -- BASE
   x0 <= rand_a(0);
@@ -362,13 +403,14 @@ gen_full_config:  if (config = 2) generate
   	    rand_k(0);
   z3 <= '0'  when (count = 0) else  -- RES
         rand_l(0);
-
+  col_count_next <= col_count + 8;
+  col_count_max <= IMAGE_WIDTH - 8;
   -- Clocks are: 2-up/3-down/2-up
   xc <= '0' when (count > 1) and (count < 5) else '1';
   yc <= '0' when (count > 1) and (count < 5) else '1';
   zc <= '0' when (count > 1) and (count < 5) else '1';
 
-end generate gen_full_config;
+end generate gen_full_configs;
 
 
 --------------------------------------------------
