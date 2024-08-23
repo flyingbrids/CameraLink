@@ -28,3 +28,5 @@
  void SetXbandRecBytes (int NumofBytes);
  void SetXbandLocalLoopback () ;
  void SetXbandRemoteLoopback () ;
+ void DisableTestMode ();
+ void EnableTestMode (); 
