@@ -11,6 +11,9 @@ void CmdHelp()
     xil_printf("* %c  transfer 1 frame test data form owl camera \r\n", OWL_CAMERA_TEST_CAPTURE );
     xil_printf("* %c  transfer 1 frame test data form hawk camera \r\n", HAWK_CAMERA_TEST_CAPTURE);
     xil_printf("* %c  transfer 1 frame data to Xband \r\n", XBAND_STROBE);
+    xil_printf("* %c  transfer Ethernet frame\r\n", ETHERNET_FRAME_TX);
+    xil_printf("* %c  Update FPGA Fabric Configuration \r\n", UPDATE_FPGA);
+    xil_printf("* %c  system reset \r\n", SYSTEM_RST);
 }
 
 unsigned char Kbhit()

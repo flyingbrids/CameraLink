@@ -19,6 +19,10 @@
 #define OWL_CAMERA_TEST_CAPTURE ('3')
 #define HAWK_CAMERA_TEST_CAPTURE ('4')
 #define XBAND_STROBE ('5')
+#define ETHERNET_FRAME_TX ('6')
+#define UPDATE_FPGA ('7')
+#define SYSTEM_RST ('8')
+
 
 #define XBAND_FILE_SIZE           0x400000
 #define CAMERA_LINK_DMA           (XPAR_XAXIDMA_0_BASEADDR)

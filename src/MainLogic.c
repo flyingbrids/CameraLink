@@ -1,4 +1,9 @@
 #include "main.h" 
+#include "fsbl.h"
+#include "pcap.h"
+#include "xscuwdt.h"
+#include "xemacps_example.h"
+#include "xil_exception.h"
 
 XIicPs Iic;
 u8 I2CBuffer[1] = {0x00}; // vorgao need to send 0x01 via I2C after camera link bus is ready
@@ -9,10 +14,22 @@ u8 hawk_init_status;
 u8 *SensorActivate;
 u8 *SensorSelect;
 
+void watchdog_rst () {
+    XScuWdt WdtInstancePtr;
+	XScuWdt_Config *ConfigPtr;
+	ConfigPtr = XScuWdt_LookupConfig(XPAR_XSCUWDT_0_BASEADDR);
+	XScuWdt_CfgInitialize(&WdtInstancePtr, ConfigPtr, ConfigPtr->BaseAddr);
+	XScuWdt_SetWdMode(&WdtInstancePtr);
+	XScuWdt_LoadWdt(&WdtInstancePtr, 0x000000f);
+	XScuWdt_Start(&WdtInstancePtr);
+	sleep(1);
+}
+
 void APP_Init () {
      int status;  
      owl_init_status = 0x01;
      hawk_init_status = 0x01;  
+     xil_printf("Start platform device driver init\r\n");
      memset((u8*)TX_BUFFER_BASE, 0x00, XBAND_FILE_SIZE);
      status = InitImageDMA();
      if (status != XST_SUCCESS)
@@ -49,20 +66,50 @@ void APP_Init () {
      {
          xil_printf("failed to initiate I2C \r\n");
      }  
- }
+    status = EmacPsDmaIntrExample(&EmacPsInstance,
+				      XPAR_XEMACPS_0_BASEADDR);
+     if (status != XST_SUCCESS)
+     {
+         xil_printf("failed to initiate ethernet MAC \r\n");
+     }  
 
- int main () {
-     APP_Init (); 
-     FPGARegisterInit();
-     make_crc_table();
-     xil_printf("\r\n--- Entering main() --- \r\n");
-     xil_printf("PL version is %d\r\n", ReadPLVersion());
-     #ifdef UART_DEBUG 
+    //status = EmacPsDmaIntrExample(&EmacPsInstance, XPAR_XEMACPS_0_BASEADDR);
+    //status = EmacPsDmaSingleFrameIntrExample(&EmacPsInstance,0,0x10);
+	
+    if (status != XST_SUCCESS) {
+		xil_printf("failed to Tx ethernet test frame \r\n");
+	}                  
+                      
+    FPGARegisterInit();
+    make_crc_table();
+    xil_printf("\r\n--- Entering main() --- \r\n");
+    xil_printf("PL version is %d\r\n", ReadPLVersion());
+    #ifdef UART_DEBUG 
         CmdHelp();
-     #else 
+    #else 
         SensorActivate =  (u8 *)SENSOR_COMMAND_MEM;
         SensorSelect = (u8 *) SENSOR_SEL_MEM;
-     #endif 
+    #endif 
+ }
+
+void FPGA_config() {     
+     PcapLoadPartition(0x1100000, 0xFFFFFFFF,0x16CFC4, 0x16CFC4, 0);           
+     APP_Init ();
+}
+
+ int main () { 
+     ps7_post_config();
+	 Xil_DCacheFlush();
+	 Xil_DCacheDisable();
+     u32 fabric_status = 0;
+     InitPcap(&fabric_status);
+     xil_printf("FRAME GRABBER LS 2&3 \r\n");
+     if (fabric_status != XDCFG_IXR_PCFG_DONE_MASK){
+        xil_printf("FPGA fabric not configured!\r\n");
+        FPGA_config();        
+     }   
+     else 
+        APP_Init ();
      while (1){
         char cmd;
         #ifdef UART_DEBUG 
@@ -136,7 +183,32 @@ void APP_Init () {
                     else 
                         xil_printf ("transfer failed!\n\r");                          
              #endif             
-        }        
+        }  
+        break;
+        case UPDATE_FPGA : {
+            FPGA_config();
+        }     
+        break; 
+        case SYSTEM_RST: {
+            watchdog_rst();
+        }
+        break;
+        case ETHERNET_FRAME_TX: {
+            u32 offset = 0;
+            int status;
+            while (offset < ETHERNET_SIZE)            
+            { 
+                status = EmacPsDmaSingleFrameIntrExample(&EmacPsInstance,0,offset);
+                if (status != XST_SUCCESS) {
+		            xil_printf("fail to Tx ethernet frame!\r\n");
+                    break;
+	            }
+                offset += PAYLOADSIZE;
+                if (offset >= ETHERNET_SIZE)
+                   xil_printf("Success to Tx ethernet frame!\r\n"); 
+            }    
+            xil_printf("Ethernet done!\r\n");         
+        }
         default:
            usleep(1);
         } 
