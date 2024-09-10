@@ -229,7 +229,7 @@ axi_register_interface axi_register_bank(
         .serde_locked      (serde_locked),
         .camera_in_progress(camera_in_progress),
         .timeOut           (timeOut),
-        .HwVersion         ({24'h1,1'b0,SW6,SW5,SW4,SW3,SW2,SW1,SW0}),
+        .HwVersion         ({24'h2,1'b0,SW6,SW5,SW4,SW3,SW2,SW1,SW0}),
         .ledTest           ({LD5,LD4,LD3,LD2,LD1,LD0}),		
         .DMAdataXferedCnt  (DMAdataXferedCnt),  
         .xband_new_frame   (xband_new_frame),
