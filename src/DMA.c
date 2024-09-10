@@ -1,5 +1,6 @@
 #include "main.h"
 #include "xaxidma.h"
+#include <xil_io.h>
 
 XAxiDma ImageDMA;
 XAxiDma XbandDMA;
@@ -57,6 +58,7 @@ int ImageReceive (int NumofBytes, u8* Array)
    RxBufferPtr = (u8 *)PAYLOAD_BUFFER;
    RxBufferHeaderPtr = (u8 *) PAYLOAD_BUFFER_HEADER;
    int TimeOut = POLL_TIMEOUT_COUNTER;
+   u32 DMAstatus;
    /* Flush the buffers before the DMA transfer, in case the Data Cache
 	 * is enabled
 	*/
@@ -68,6 +70,7 @@ int ImageReceive (int NumofBytes, u8* Array)
 		xil_printf("Can't start ImageDMA transfer : %d\r\n", Status);
         return XST_FAILURE;
 	}
+    DMAstatus = Xil_In32(CAMERA_LINK_DMA + 0x34);
     NewFrameCapture();
     while (TimeOut) {
 		if (!XAxiDma_Busy(&ImageDMA, XAXIDMA_DEVICE_TO_DMA))			    
@@ -77,7 +80,9 @@ int ImageReceive (int NumofBytes, u8* Array)
 	}
     if ((TimeOut == 0) && XAxiDma_Busy(&ImageDMA, XAXIDMA_DEVICE_TO_DMA)){
        xil_printf("Can't finish ImageDMA transfer!\r\n");
+       DMAstatus = Xil_In32(CAMERA_LINK_DMA + 0x34);
        XAxiDma_Reset(&ImageDMA);
+       DMAstatus = Xil_In32(CAMERA_LINK_DMA + 0x34);
        return XST_FAILURE;
     }       
     // Modify header data to notify the top-level sw that memory is ready to grab
@@ -170,7 +175,7 @@ int XbandLoopBackTest (int NumofBytes) {
 			usleep(1U);
 		}
 
-		Status = CheckData(NumofBytes, Value, 1);
+		Status = CheckData(NumofBytes, 0x0A, 1);
 		if (Status != XST_SUCCESS) {
 			return XST_FAILURE;
 		}

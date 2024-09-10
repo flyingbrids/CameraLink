@@ -14,11 +14,9 @@ u8 hawk_init_status;
 u8 *SensorActivate;
 u8 *SensorSelect;
 
+XScuWdt WdtInstancePtr;
+
 void watchdog_rst () {
-    XScuWdt WdtInstancePtr;
-	XScuWdt_Config *ConfigPtr;
-	ConfigPtr = XScuWdt_LookupConfig(XPAR_XSCUWDT_0_BASEADDR);
-	XScuWdt_CfgInitialize(&WdtInstancePtr, ConfigPtr, ConfigPtr->BaseAddr);
 	XScuWdt_SetWdMode(&WdtInstancePtr);
 	XScuWdt_LoadWdt(&WdtInstancePtr, 0x000000f);
 	XScuWdt_Start(&WdtInstancePtr);
@@ -101,6 +99,10 @@ void FPGA_config() {
      ps7_post_config();
 	 Xil_DCacheFlush();
 	 Xil_DCacheDisable();
+	 XScuWdt_Config *ConfigPtr;
+	 ConfigPtr = XScuWdt_LookupConfig(XPAR_XSCUWDT_0_BASEADDR);
+	 XScuWdt_CfgInitialize(&WdtInstancePtr, ConfigPtr, ConfigPtr->BaseAddr);
+     XScuWdt_Stop(&WdtInstancePtr);     
      u32 fabric_status = 0;
      InitPcap(&fabric_status);
      xil_printf("FRAME GRABBER LS 2&3 \r\n");

@@ -38,7 +38,7 @@ void camera_link_receive (u32 camera_val) {
         if (status == XST_SUCCESS)
             xil_printf("successfully transfered 1 frame of image, total bytes %d\r\n", ReadImageDMABytesXfered()); 
         else 
-            xil_printf("transfer failed! \r\n");           
+            xil_printf("transfer total bytes %d\r\n", ReadImageDMABytesXfered());           
     }  
     else 
         xil_printf("camera is not ready! \r\n");

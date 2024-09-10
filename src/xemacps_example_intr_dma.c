@@ -2,6 +2,7 @@
 #include "xemacps_example.h"
 #include "xil_exception.h"
 #include <xil_io.h>
+#include <xil_printf.h>
 
 #ifndef __MICROBLAZE__
 #include "xil_mmu.h"
@@ -369,6 +370,7 @@ LONG EmacPsDmaSingleFrameIntrExample(XEmacPs *EmacPsInstancePtr, u8 loopbackEn, 
 	XEmacPs_Bd *BdRxPtr;
     XEmacPs_Bd BdTemplate;
     u32 EthType = loopbackEn? PayloadSize : 0x0800;
+    u32 TIMEOUT;
 	/*
 	 * Setup RxBD space.
 	 *
@@ -572,11 +574,18 @@ LONG EmacPsDmaSingleFrameIntrExample(XEmacPs *EmacPsInstancePtr, u8 loopbackEn, 
 
 	/* Start transmit */
 	XEmacPs_Transmit(EmacPsInstancePtr);
-
+    
+    TIMEOUT = 100000;
 	/*
 	 * Wait for transmission to complete
 	 */
-	while (!FramesTx);
+	while (!FramesTx) {
+       TIMEOUT--;
+       if (TIMEOUT == 0) {
+           xil_printf ("ethernet frame tx timeout");
+           return XST_FAILURE;
+       }          
+    }
 
 	/*
 	 * Now that the frame has been sent, post process our TxBDs.
@@ -609,7 +618,8 @@ LONG EmacPsDmaSingleFrameIntrExample(XEmacPs *EmacPsInstancePtr, u8 loopbackEn, 
 		return XST_FAILURE;
 	}   
 
-    if ((!loopbackEn) && (Offset + PAYLOADSIZE < ETHERNET_SIZE)){
+    //if ((!loopbackEn) && (Offset + PAYLOADSIZE < ETHERNET_SIZE)){
+    if (!loopbackEn) {    
         XEmacPs_Stop(EmacPsInstancePtr);
         return Status;
     }
