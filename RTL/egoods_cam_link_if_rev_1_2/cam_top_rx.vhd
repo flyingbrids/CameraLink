@@ -112,6 +112,16 @@ port (
 
 end component;
 
+component cam_clkbuf
+
+port (
+
+  di_p  : in  std_logic;
+  di_n  : in  std_logic;
+  do    : out std_logic );
+
+end component;
+
 component cam_pll
 generic ( CLK_PERIOD : real);
 
@@ -278,7 +288,7 @@ begin
 
 gen_base_configs:  if (configs = 0) generate
 
-  u00_cam_ibuf: cam_ibuf port map (di_p => xc_p, di_n => xc_n, do => xc);
+  u00_cam_ibuf: cam_clkbuf port map (di_p => xc_p, di_n => xc_n, do => xc);
   u01_cam_ibuf: cam_ibuf port map (di_p => x0_p, di_n => x0_n, do => x0);
   u02_cam_ibuf: cam_ibuf port map (di_p => x1_p, di_n => x1_n, do => x1);
   u03_cam_ibuf: cam_ibuf port map (di_p => x2_p, di_n => x2_n, do => x2);
